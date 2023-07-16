@@ -1,0 +1,63 @@
+<style>
+    .dtooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dtooltip .tooltiptext {
+      visibility: hidden;
+      width: 140px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 150%;
+      left: 50%;
+      margin-left: -75px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .dtooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+    
+    .dtooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+</style>
+    
+    <div class="dtooltip">
+    <button class="btn btn-secondary" onclick="myFunction()" onmouseout="outFunc()">
+      <span class="tooltiptext" id="myTooltip">Copy</span> <i class="fa-sharp fa-solid fa-link"></i>
+      Copy Page Link
+      </button>
+    </div>
+    
+    <script>
+      function myFunction() {
+        //var copyText = document.getElementById("myInput");
+        //copyText.select();
+        //copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(window.location.href);//text to be copied
+        
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copied to Clipboard!";
+      }
+      
+      function outFunc() {
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copy to clipboard";
+      }
+    </script>

@@ -1,0 +1,60 @@
+<style>
+    .superuser {
+        display: {% if request.user.is_superuser %}initial{% else %}none{% endif %};
+    }
+    #post-title {
+        background-color: #f1f1f1;
+        padding: 2rem 1rem 1rem 1rem;
+        border-radius: 1rem 1rem 0 0;
+    }
+    #post-stamp {
+        font-style: italic;
+        color: #888;
+    }
+    #comment-head {
+        border-radius: 0.6rem 0.6rem 0 0;
+    }
+    #comment {
+        border-radius: 0 0 0.4rem 0.4rem;
+    }
+    #time-stamp {
+        position: absolute;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: #777;
+    }
+    .rule {
+        display: block;
+        width: 100%;
+        height: 0.5rem;
+        background-image: repeating-radial-gradient(circle farthest-side at 5px 10px,#3cb371 10%, #3B71CA 30%, #3cb371);
+        margin: 0 0 4rem 0;
+    }
+    .weight-600 {
+        font-weight: 600;
+    }
+    .example {
+        font-style: italic;
+    }
+    .bg-gray {
+        background-color: #f1f1f1;
+    }
+    .bg-gray-secondary {
+        background-color: #e1e1e1;
+    }
+
+    #intr {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 110%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: slideInDown 0.5s;
+        background-color: rgb(255, 255, 255, 0.9);
+        font-size: 3rem;
+    }
+</style>

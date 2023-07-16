@@ -1,0 +1,5 @@
+0001 $$ What is JavaScript $$ JavaScript is the world's most popular programming language. JavaScript is the programming language of the Web. $$
+0002 $$ For what the JavaScript is used $$ JavaScript is the programming language of the Web. $$
+0003 $$ Where to? $$ In HTML, JavaScript code is inserted between <script> and </script> tags. $$
+0004 $$ External JavaScript Advantages $$ Placing scripts in external files has some advantages: It separates HTML and code, It makes HTML and JavaScript easier to read and maintain, Cached JavaScript files can speed up page loads $$
+0005 $$ JavaScript can "display" data in different ways: $$ Writing into an HTML element, using innerHTML., Writing into the HTML output using document.write()., Writing into an alert box, using window.alert()., Writing into the browser console, using console.log(). $$

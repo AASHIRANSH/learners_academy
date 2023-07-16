@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'static/css/styles.html' %}
+{% include "header.html" %}
+
+{% if messages %}
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissible fade show my-1 d-flex align-items-center" role="alert">
+            {% if message.tags == "success" %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            {% else %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            {% endif %}
+
+            {{message}}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container my-5">
+    <div id="post-title">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h2>{{ post.title }}</h2>
+                <div id="post-stamp">Posted on {{post.date_created}} by {{post.author}}</div>
+            </div>
+            <div>{% include 'static/components/like_dislike.html' %}</div>
+        </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <div id="post-content">{{ post.content|safe }}</div>
+    
+    <h3><i class="fa-solid fa-dumbbell"></i> Exercise <i class="fa-solid fa-dumbbell"></i></h3>
+    <hr>
+    <b>Choose the correct word to fill the blanks</b> ({{post.fill_values}}):
+    <div id="exercise" class="my-4 position-relative">
+        <!-- Result Prompt <div class="hidden">
+            <div id="intr">
+                <div id="result">That was awesome!</div>
+            </div>
+        </div>-->
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Result:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="modal-body" class="modal-body">
+                    ...
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="questions">
+            <ol>
+                {% for q in post.exercise_set.all %}
+                    <li class="mb-2">{{q.answer}}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+    <div class="row col-6 my-5">
+        <div class="col-auto">
+            <button onclick="check()" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Check</button>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-secondary px-4">Show answers</button>
+        </div>
+    </div>
+    <hr>
+    <div class="text-center">
+    {% include 'static/components/like_dislike.html' %} {% include 'static/components/copy_to_clipboard.html' %}
+    </div>
+    <hr>
+</div>
+
+<div class="container-fluid my-5">
+    <div class="row col-12">
+
+        <div class="col-2">
+        </div>
+
+
+        <div class="col-8">
+            <form class="comment-form mb-5" method="post" data-post="{{ post.id }}">
+                {% csrf_token %}
+                <textarea class="form-control mb-2" name="content" placeholder="Add/Write a comment" rows="4"></textarea>
+                <button class="btn btn-primary" type="submit">Comment</button>
+            </form>
+
+            {% for comment in comments %}
+                <div class="mb-4">
+                <div id="comment-head" class="row bg-gray-secondary p-2">
+                    <div class="col-8">
+                        <img style="height:3rem;" src="{{comment.author.profile.image.url}}" class="rounded-circle"/>
+                        <span class="fs-4"> {{ comment.author }}</span>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end p-1">
+                        <div class="dropdown">
+                            <button class="btn" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                {% if request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'edit_comment' comment.pk %}">Edit</a></li>{% endif %}
+
+                                {% if request.user.is_superuser or request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'delete_comment' comment.pk %}">Delete</a></li>{% endif %}
+                                
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item active" href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="comment" class="position-relative bg-gray p-2" style="">
+                
+                    <pre>{{ comment.content }}</pre>
+
+                    <span id="time-stamp">{{ comment.created_at }}</span>
+                </div>
+            </div>
+
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+        </div>
+
+
+        <div class="col-2">
+        </div>
+        
+    </div>
+</div>
+
+<form method="post">
+    {% comment %} {% csrf_token %}
+    {{ form }}
+    <button type="submit">Submit</button> {% endcomment %}
+</form>
+
+<script>//getting all li elements
+    var post_content = document.getElementById("post-content");
+    var li_arr = post_content.getElementsByTagName("li");
+    for (li in li_arr) {
+        li_arr[li].classList.add("example")
+    }
+</script>
+<script>//highlighting the texts by replacing within li elems
+    var target_vals = "{{post.fill_values}}".split(",");
+    var element = document.getElementsByClassName("example");
+    for (line in element) {
+        for (tvx in target_vals) {
+            line_patt = new RegExp(target_vals[tvx],"gi")
+            element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
+        }
+    }
+</script>
+
+<script>//insert select element
+    var q_arr = [];
+    {//q_arr
+        `{% for x in post.exercise_set.all %}
+            ${q_arr.push('{{x.question}}')}
+        {% endfor %}`;
+    }
+    var q_count = q_arr.length;//`{{post.exercise_set.count}}`; //length of questions
+    
+    var pre_values = [] //answer values
+    for ( let x of q_arr ) {
+        for ( let y of target_vals ) {
+            if (x.toLowerCase().includes(y)) {
+                pre_values.push(y)
+            }
+        }
+    };
+
+    var exercise = document.getElementById("exercise"); //parent element of questions
+    var questions = exercise.getElementsByTagName("li"); //question elements array
+
+    // RegExp
+    var target_vals_join = target_vals.join("|");
+    var reg_patt = new RegExp(target_vals_join,"gi")
+    // end RegExp
+    
+    for (line in questions) {
+        questions[line].innerHTML = questions[line].innerHTML.replace(reg_patt, sel());
+        
+        function sel(){
+            var select = `<select id="q-${line}"><option selected="selected"></option>`
+            for (let x of target_vals) {
+                select += `<option value="${x}">${x}</option>`
+            }
+            select += `</select>`
+            return ` ${select} `
+        };
+    }
+</script>
+
+<script>
+    var val_array = [];
+    var exam = 0;
+
+    function check() {
+        //getting selected option values of each select element
+        for (let vl=0; vl < q_count; vl++) {
+            var e = document.getElementById("q-"+vl);
+            val_array.push(e.value)
+            if (e.value == pre_values[vl]) { exam += 1 };
+        }
+
+        console.log(val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
+
+
+        //for BSModal
+        q_arr_html = []
+        for (q in q_arr){
+            q = parseInt(q)
+            res_class = val_array[q]==pre_values[q]?"text-success":"text-danger";
+            res_ic = val_array[q]==pre_values[q]?`<i class="fa-solid fa-circle-check"></i>`:`<i class="fa-solid fa-circle-xmark"></i>`;
+            q_arr_html.push(`<div class="${res_class}">${res_ic} ${q+1}. ${q_arr[q]}</div>`)
+        }
+        var exmod = document.getElementById("modal-body")
+        exmod.innerHTML = `
+            <div class="text-center">
+                <div class="fs-3">You got ${exam} out of ${q_count}</div>
+            </div>
+            <hr>
+            <div class="mb-4">${q_arr_html.join("")}</div>
+
+        `;
+
+        exam = 0;// reset the value
+        val_array = [];
+
+    }
+</script>
+<script src="/static/js/web/jquery-3.6.3.min.js"></script>
+<script src="/static/js/web/bootstrap.bundle.min.js"></script>
+{% endblock body %}

@@ -1,0 +1,11 @@
+<script>
+    var inps = document.getElementsByTagName("input")
+    for (i in inps){
+        var itype = inps[i].type.toLowerCase()
+        if(itype == 'text' || itype == 'number' || itype == 'email') {
+            inps[i].classList.add("form-control")
+        } else if (itype == 'checkbox') {
+            inps[i].classList.add("form-check-input")
+        }
+    }
+</script>

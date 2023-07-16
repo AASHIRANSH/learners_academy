@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load to_and %}
+
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+
+{% include "header.html" %}
+{% include 'messages.html' %}
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="d-flex justify-content-between align-items-baseline">
+            <div class="row col-9 d-flex align-items-baseline">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
+                    {{word.word|to_and}}
+                </div>
+                <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                    {{word.pos}}
+                </div>
+
+                <div class="col-12">
+                    {% if word.grade|length > 0 %}
+                    <div class="col-12 mb-2">
+                        <div id="grade" class="col-12 d-inline fs-5 text-uppercase px-2">
+                            {{word.grade}}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row col-12 mb-3">
+                        {% if pronounce.0|length > 1 %}
+                            <div class="col-auto">
+                                <div class="text-primary fs-5" style="">UK {{pronounce.0}}</div>
+                                <div class="text-danger fs-5" style="">US {{pronounce.1}}</div>
+                            </div>
+                        {% endif %}
+
+                        {% if word.pic %}
+                            <div class="col-auto">
+                                <div class=""><img class="word-image" src="{{word.pic.url}}"/></div>
+                            </div>
+                        {% endif %}
+
+                        {% if word.pic_url|length > 1 %}
+                            <div class="col-auto">
+                                <div class=""><img class="word-image" src="{{word.pic_url}}"/></div>
+                            </div>    
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <div class="col-12 mb-1">
+                    <button class="btn btn-secondary col-12 fs-4">{{rv_count}} / {{rv_total_count}}</button>
+                </div>
+                <div class="col-12 mb-1">
+                    <button title="Easy - Postpone for 6 days" class="btn btn-outline-success col-6 fs-4" onclick="window.location.assign('/english/data?data=easy&word={{word.id}}')" accesskey="s">Easy</button>
+                    <button title="Hard - Postpone for 3 days" class="btn btn-outline-secondary col-5 fs-4" onclick="window.location.assign('/english/data?data=hard&word={{word.id}}')" accesskey="h">Hard</button>
+                </div>
+                <div class="col-12">
+                    <button title="Find Words" class="btn btn-outline-primary col-8 fs-4" onclick="window.location.assign('/english/words/')"><i class="fa-solid fa-book"></i></button>
+                    <button title="Remove" class="btn btn-danger col-3 fs-4" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')"><i class="fa-sharp fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        {% if word.pos != 'idiom' %}
+        {% if word.pos != 'phrasal verb' %}
+        {% if forms|length > 1 %}
+        <div id="forms-cont" class="row">
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Other Forms
+                </button>
+            </div>
+            <div class="col-auto" style="position:absolute;left:16%;translate:0 -35%">
+                <div class="collapse" id="collapseExample">
+                    <div id="forms" class="card card-body">
+                        {% for line in forms %}
+                            <div>&#x2022; {{line}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+        <div id="def-container" class="col-12 rounded-3 mt-3">
+            <div id="def" class="col-12 fs-4 p-2">
+                {{word.definition}}
+            </div>
+        </div>
+
+        <div id="example" class="col-12 fst-italic py-3 overflow-auto">
+            {% for line in example %}
+                <div>
+                    &#x2022; {{line}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% include 'english/flashcards/scripts/script.html' %}
+{% endblock body %}

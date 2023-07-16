@@ -1,0 +1,52 @@
+0001 $$ Ye $$ eat
+0002 $$ Ve $$ and
+0003 $$ Iç $$ drink
+0004 $$ Veya $$ or
+0005 $$ O $$ He, She
+0006 $$ Ben $$ I
+0007 $$ Su $$ water
+0008 $$ Süt $$ milk
+0009 $$ Içer $$ drinks
+0010 $$ Biz $$ we
+0011 $$ Onlar $$ they
+0012 $$ Merhaba $$ Hello
+0013 $$ Günaydın $$ Good Morning
+0014 $$ Iyi $$ Good, fine
+0015 $$ İyi geceler $$ Good Night
+0016 $$ Görüşürüz $$ see you (soon)
+0017 $$ Teşekkür ederim $$ Thank you
+0018 $$ Rica ederim $$ you are welcome
+0019 $$ Hoş geldiniz $$ welcome
+0020 $$ Teşekkürler $$ Thanks
+0021 $$ İyiyim $$ I'm fine/good
+0022 $$ Nasıl $$ how
+0023 $$ Nasılsın $$ How are you?
+0024 $$ Nasılsınız $$ How are you (polite)
+0001 $$ Ye $$ eat
+0002 $$ Ve $$ and
+0003 $$ Iç $$ drink
+0004 $$ Veya $$ or
+0005 $$ O $$ He, She
+0006 $$ Ben $$ I
+0007 $$ Su $$ water
+0008 $$ Süt $$ milk
+0009 $$ Içer $$ drinks
+0010 $$ Biz $$ we
+0011 $$ Onlar $$ they
+0012 $$ Merhaba $$ Hello
+0013 $$ Günaydın $$ Good Morning
+0014 $$ Iyi $$ Good, fine
+0015 $$ İyi geceler $$ Good Night
+0016 $$ Görüşürüz $$ see you (soon)
+0017 $$ Teşekkür ederim $$ Thank you
+0018 $$ Rica ederim $$ you are welcome
+0019 $$ Hoş geldiniz $$ welcome
+0020 $$ Teşekkürler $$ Thanks
+0021 $$ İyiyim $$ I'm fine/good
+0022 $$ Nasıl $$ how
+0023 $$ Nasılsın $$ How are you?
+0024 $$ Nasılsınız $$ How are you (polite)
+0025 $$ iyi sanslar $$ good luck $$
+0026 $$ Mimar : architect $$  $$
+0027 $$ doktor : doctor $$ Ben doktorum. $$
+0028 $$ Işsiz : unemployed $$ Ben iIşsizim $$

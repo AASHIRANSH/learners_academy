@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In / Login{% endblock title %}
+
+{% block body %}
+    {% include 'header.html' %}
+
+    <div class="container-fluid bg-secondary text-center text-white p-4">
+        <h1>Sign Up</h1>
+    </div>
+
+    {% include 'messages.html' %}
+
+    <form action="" method="post" spellcheck="false" novalidate>
+        {% csrf_token %}
+        <div class="container my-5">
+            <div class="flex-center">
+            <div class="row col-10 col-md-8">
+
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{error}}</p>
+                    {% endfor %}
+                {% endif %}
+
+                {% for f in fm %}
+                    <div class="col-sm-6 col-md-6 mb-3">
+                        {{f.label_tag|title}}
+                        {{f}}
+                        {% if f.errors %}
+                            <script>
+                                var id = document.getElementById("{{f.id_for_label}}");
+                                id.classList.add("is-invalid")
+                                id.placeholder = "Please fill this. {{f.errors|striptags}}";
+                            </script>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input p-2 mx-1" id="showpass" onclick="if(id_password1.type==`password`){id_password1.type=`text`;id_password2.type=`text`;}else{id_password1.type=`password`;id_password2.type=`password`}"/>
+                    <label class="form-check-label" for="showpass">Show Password</label>
+                </div>
+            </div>
+            </div>
+
+
+            <div class="text-center">
+                <input type="submit" class="btn btn-success" value="Sign Up"/>
+                <a onclick="window.location.assign('{% url 'sign_in' %}')" class="btn btn-outline-success">Sign In</a>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock body %}

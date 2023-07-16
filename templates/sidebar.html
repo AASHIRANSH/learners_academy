@@ -1,0 +1,34 @@
+<div id="sidebar">
+    <div id="title">
+        <div>
+            <svg style="filter:drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));fill:#f1f1f1;color:green;" xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48">
+            <path d="M860 773V491L479 696 40 456l439-240 441 240v317h-60ZM479 936 189 777V567l290 159 290-159v210L479 936Z"/>
+            </svg>
+        </div>
+        <div>
+            <h2>MUHAMMAD ACADEMY</h2>
+        </div>
+    </div>
+    <hr>
+    <ul>
+        <li id=""><a href="">HOME</a></li>
+        <li id="units"><a>UNITS <img class="f_right transition_05" id="sucollapsee" src="/static/img/icons/chevron_right.svg"/></a>
+            <ul id="sucollapse" class="hide">
+                <li><a href="/learn/1">unit 1</a></li>
+                <li><a href="/learn/2">unit 2</a></li>
+                <li><a href="/learn/3">unit 3</a></li>
+                <li><a href="/learn/4">unit 4</a></li>
+                <li><a href="/learn/5">unit 5</a></li>
+                <li><a href="/learn/6">unit 6</a></li>
+            </ul>
+        </li>
+        <li><a href="">EXERCISES</a></li>
+    </ul>
+</div>
+<script>
+    $('#units').on('click', function() {
+        sucollapse.classList.toggle('hide');
+        sucollapse.classList.toggle('show');
+        sucollapsee.classList.toggle('expand');
+    });
+</script>

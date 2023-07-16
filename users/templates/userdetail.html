@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if user.first_name %}
+        {{user.first_name|capfirst}}'s
+    {% else %}
+        {{user.first_name}}'s
+    {% endif %}
+    Profile | 
+{% endblock title %}
+<body>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+        {% endif %}
+
+        {% for f in form %}
+            {{f.label_tag}}<br>
+            {{f}} {{f.errors|striptags}}<br>
+        {% endfor %}
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>

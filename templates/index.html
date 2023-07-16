@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include "header.html" %}
+{% include "messages.html" %}
+<style>
+  #word-of-the-day {
+    position: relative;
+    display: block;
+    background-color: var(--blue-ii);
+    height: 20rem;
+    width: 100%;
+  }
+  #wod-word {
+    width: 100vw;
+    text-align: center;
+    font-size: 4rem;
+    cursor: pointer;
+  }
+</style>
+<section id="sl">
+  <div id="headersl">
+  </div>
+  <div id="caption">
+    <div id="text">
+      <h1>Learn</h1>
+      <h1>&amp;</h1>
+      <h1>Grow</h1>
+    </div>
+  </div>
+  {% comment %} <div id="title">
+    Starts this May!
+  </div> {% endcomment %}
+</section>
+
+<div id="word-of-the-day" class="my-5">
+    <div class="bg-primary position-absolute top-0 start-0 m-3 rounded-2">
+        <span class="text-white p-1">word of the day</span>
+    </div>
+
+    <div class="bg-blue-ii p-3 text-center">
+        <div class="">{{now|date:"M d Y"}}</div>
+    </div>
+    
+    <div id="wod-word" class="text-secondary">
+        <div class="text-primary" onclick="window.location.assign('{% url 'word' word.id %}')">{{word.word}}</div>
+        <div class="fs-4">{{word.pos}}</div>
+        <div class="fs-5 m-3">{{word.definition}}</div>
+    </div>
+    
+
+</div>
+
+
+{% include "footer.html" %}
+{% endblock body %}

@@ -1,0 +1,90 @@
+<theader class="">
+    <div id="title_bar">
+        <div id="title">
+            <a href="/"><img src="/static/img/graduate.svg"/></a>
+            <a href="/">LEARNERs ACADEMY</a>
+        </div>
+        <div id="user" class="me-5">
+            {% if user.is_authenticated %}
+                <div id="ui_container" class="ui_container pb-4">
+                    <div class="d-none d-md-block">{{user.username}}</div>
+                    <div class="hidden">
+                        <div class="ui_main shadow-lg">
+                            <ul>
+                                {% if user.is_superuser %}
+                                    <li><a href="/admin"><i class="fa-solid fa-toolbox"></i> admin panel</a></li>
+                                {% endif %}
+                                <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i> my account</a></li>
+                                <li><a href="{% url 'profile' %}"><i class="fa-solid fa-gear"></i> settings</a></li>
+                                <li><a href="{% url 'sign_out' %}"><i class="fa-solid fa-right-from-bracket"></i> sign out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'sign_in' %}?next={{request.path}}"><i class="fa-solid fa-right-to-bracket fs-5"></i> login | </a>
+                <a href="{% url 'sign_up' %}">| <i class="fa-solid fa-user-plus fs-5"></i> register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <nav class="shadow-lg">
+        <ul>
+            <li><a href="/">home</a></li>
+            <li id="languages" class="">
+                <a>languages</a>
+                <div class="hidden">
+                    <div class="sub_items_main">
+                        <div class="column">
+                            <div class="heading transition_05">english</div>
+                            <ul>
+                                <li><a href="/english">Home</a></li>
+                                <li class="superuser"><a href="/english/flashcards">Flashcards</a></li>
+                                <li><a href="/english/words/">Flashcards</a></li>
+                                <li class="superuser"><a href="/english">Essential 3000</a></li>
+                            </ul>
+                        </div>
+                        <div class="column superuser">
+                            <div class="heading">arabic</div>
+                            <ul>
+                                <li><a href="{% url 'memorize_quran' %}">memorize quran</a></li>
+                                <li><a href="/">nothing</a></li>
+                            </ul>
+                        </div>
+                        <div class="column superuser">
+                            <div class="heading">german</div>
+                            <ul>
+                                <li><a href="/">nothing</a></li>
+                                <li><a href="/">nothing</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li><a href="{% url 'contact_us' %}?next={{request.path}}">contact us</a></li>
+        </ul>
+    </nav>
+</theader>
+
+<div id="divider"></div>
+<script>
+    var thdr = document.getElementsByTagName("theader")[0].getBoundingClientRect().height
+    var navdr = 0//document.getElementsByTagName("nav")[0].getBoundingClientRect().height
+    const box = thdr+navdr;
+    document.getElementById("divider").style.height = box+"px";
+</script>
+
+<script>
+    var uic = document.getElementById("ui_container")
+    var lang = document.getElementById("languages")
+
+    lang.addEventListener("click", function() {
+        var hidden = this.querySelector(".hidden")
+        hidden.classList.toggle("show")
+    });
+
+    uic.addEventListener("click", function() {
+        var hidden = this.querySelector(".hidden")
+        hidden.classList.toggle("show")
+    });
+</script>

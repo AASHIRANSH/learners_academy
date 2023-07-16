@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'header.html' %}
+<div class="divider_65"></div>
+{% include 'sidebar.html' %}
+<div id="inf"></div>
+
+<div id="body"></div>
+<div class="divider_65"></div>
+<div id="navigation_b"></div>
+
+<!--Alert-->
+<div id="prompt">
+    <div id="prm"></div>
+    <div id="prm2"></div>
+</div>
+<!--End Alert-->
+<script src="/static/js/courses/en_gr/ger_db.js"></script>
+<script src="/static/js/courses/en_gr/gr_prompt.js"></script>
+<script src="/static/js/courses/en_gr/gr_unit__{{id}}.js"></script>
+<script src="/static/js/courses/en_gr/gr_navigate.js"></script>
+<script src="/static/js/courses/keyboard_shortcuts.js"></script>
+
+{% include 'tts_2.html' %}
+
+{% endblock body %}

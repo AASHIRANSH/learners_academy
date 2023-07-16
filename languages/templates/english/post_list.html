@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include "header.html" %}
+
+{% include 'messages.html' %}
+
+<style>
+    #lesson_cont {
+        width: 350px;
+        height: 250px;
+        background: url("/static/img/bgs/education_doodles.svg");
+        background-position: center;
+        background-size: cover;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    #lesson_title {
+        width:100%;
+        height:100%;
+        background-color: #99999999;
+        text-align: center;
+        color: #ffffff;
+        text-shadow: 2px 2px 5px #000000;
+    }
+</style>
+<div class="container my-5">
+    {% if perms.languages.add_post %}
+        <div class="row">
+            <div>
+                <button class="btn btn-secondary" onclick="window.location.assign(`{% url 'post_entry' %}`)">Post</button>
+            </div>
+        </div>
+        <hr>
+    {% endif %}
+{% for post in posts %}
+    <div class="row py-3">
+        <div class="row col-9">
+            <div id="lesson_cont" class="col-12 p-0">
+                <div id="lesson_title" class="d-flex justify-content-center align-items-center">
+                    <div class="">
+                        <div class="fs-2">{{post.topic.name|title}}</div>
+                        <div class="fs-2">...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-5 text-dark">
+                <div class="">
+                    <a class="text-dark" href="{% url 'post_detail' post.pk %}">
+                        <div class="fs-4">{{ post.title }}</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row col-3">
+            <div class="col">
+                <div class="">
+                    <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-thumbs-up fs-5"></i> <span class="badge bg-secondary">{{post.like_set.count}}</span></button>    
+                </div>{{post.date_created}}
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    {% comment %} <form class="comment-form" data-post="{{ post.id }}">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Add a comment"></textarea>
+        <button type="submit">Comment</button>
+    </form> {% endcomment %}
+    {% comment %} <div class="comments" data-post="{{ post.id }}">
+        {% for comment in post.comment_set.all %}
+            {% if not comment.is_deleted %}
+                <div class="comment" data-comment="{{ comment.id }}">
+                    <p>{{ comment.content }}</p>
+                    {% if comment.author == request.user %}
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    {% endif %}
+                    <button class="like-btn" data-action="like">Like ({{ comment.likes.count }})</button>
+                    <button class="dislike-btn" data-action="dislike">Dislike ({{ comment.dislikes.count }})</button>
+                </div>
+                <form class="edit-form" data-comment="{{ comment.id }}">
+                    {% csrf_token %}
+                    <textarea name="content">{{ comment.content }}</textarea>
+                    <button type="submit">Save</button>
+                    <button class="cancel-btn" type="button">Cancel</button>
+                </form>
+            {% endif %}
+        {% endfor %}
+    </div> {% endcomment %}
+{% endfor %}
+</div>
+
+{% endblock body %}

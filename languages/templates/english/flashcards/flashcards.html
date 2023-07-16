@@ -1,0 +1,171 @@
+{% extends 'english/flashcards/flashcards_base.html' %}
+
+{% block title %} FlashCards {% endblock title %}
+{% block body %}
+
+  {% if messages %}
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissible fade show my-1 d-flex align-items-center" role="alert">
+            {% if message.tags == "success" %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            {% else %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            {% endif %}
+
+            {{message}}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+  {% endif %}
+  
+<div id="flashcard" class="box_shadow">
+  <div id="inf" class="{{bg_class}} p8 br8" onmouseover="show('card_1')">
+    <div>Total: {{total}}</div>
+    <div>
+      <button onclick="show('search')" class="btn btn-secondary">Search</button>
+      <button onclick="window.location.assign('/english/flashcards/addcard')" class="btn btn-secondary">Add Card</button><!--onclick="show('add_card')"-->
+      <button onclick="show('edit')" class="btn btn-secondary">Edit</button>
+    </div>
+  </div>
+  <div id="card_1" class="p10">{{card_1}} ({{line}})</div>
+  <div id="card_2" class="p10">{{card_2}}</div>
+</div>
+
+<div class="d-flex justify-content-center">
+  <div class="m-2"><button onclick="location.href='{% url 'easy' %}'" type="button" class="btn btn-danger">Memorized</button></div>
+  <div class="m-2"><button onclick="location.href='{% url 'easy' %}'" type="button" class="btn btn-success" accesskey="s">Addit</button></div>
+  <div class="m-2"><button onclick="location.reload()" type="button" class="btn btn-secondary">Next</button></div>
+</div>
+
+
+<div class="d-flex justify-content-center">
+  <div class="m-2"><button onclick="location.href='/flashcards'" type="button" class="btn btn-secondary">Review</button></div>
+  <div class="m-2"><button onclick="location.href='{% url 'revise' %}'" type="button" class="btn btn-success" accesskey="r">Revise</button></div>
+</div>
+{% comment %} CARD ADD SCREEN {% endcomment %}
+<div id="add_card">
+  <div class="edit">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+      <div class="row col-12">
+        <form action="{% url 'add_card' %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-secondary">Create New Deck</button><br/><br/>
+
+          <!-- deck select -->
+          {% comment %} <select class="form-select" name="deck">
+            <option selected>Select Deck</option>
+            <option value="quran">Qur'an Sharif</option>
+            <option selected value="en_deck">English</option>
+            <option value="tr_deck">Turkish</option>
+            <option value="gr_deck">German</option>
+            <option value="gk_deck">GK</option>
+            <option value="javascript">JavaScript</option>
+          </select><br/> {% endcomment %}
+          
+          <!-- entry -->
+          <div class="row mb-3">
+            <div class="row col-4">
+              <!-- word -->
+              <div class="col-12 mb-2">
+                <label for="word">Word:</label>
+                <input type="text" class="form-control" name="word" id="id_word"></input>
+              </div>
+              <!-- pos -->
+              <div class="col-6">
+                <label for="pos">POS:</label>
+                <select class="form-select" name="pos">
+                  <option value="noun">noun</option>
+                  <option value="verb">verb</option>
+                  <option value="">adjective</option>
+                  <option value="">adverb</option>
+                </select>
+              </div>
+              <!-- grade -->
+              <div class="col-6">
+                <label for="pos">Grade:</label>
+                <select class="form-select" name="grade">
+                  <option value="a1">A1</option>
+                  <option value="a2">A2</option>
+                  <option value="b1">B1</option>
+                  <option value="b2">B2</option>
+                  <option value="c1">C1</option>
+                  <option value="c2">C2</option>
+                </select>
+              </div>
+            </div>
+            <div class="row col-8">
+              <div class="col-4">
+                <label for="pronounce">Pronounce:</label>
+                <textarea class="form-control" name="pronounce" id="c_1" rows="4"></textarea>
+              </div>
+              <!-- definition -->
+              <div class="col-8">
+                <label for="definition">Definition:</label>
+                <textarea class="form-control" name="definition" id="c_1" rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-4">
+              <label for="forms">Other Forms:</label>
+              <textarea class="form-control" rows="6" name="forms" id="c_2"></textarea>
+            </div>
+            <div class="col-8">
+              <label for="c_2">Example Sentences:</label>
+              <textarea class="form-control" rows="6" name="example" id="c_2"></textarea>
+            </div>
+          </div>
+          <input type="submit" value="Submit" class="btn btn-success"/>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% comment %} END CARD ADD{% endcomment %}
+
+
+{% comment %} SEARCH SCREEN {% endcomment %}
+<div id="search">
+  <div class="edit">
+    <div class="container h-100 d-flex justify-content-center align-items-center">
+      <div class="row">
+        <div class="col-12">
+          <textarea onkeydown="search_res()" class="form-control block_feild" name="sc_1" id="search_value"></textarea>
+          <div style="height:450px;overflow-x:hidden;" id="search_result"></div>
+          <div id='loader'></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% comment %}___________________ {% endcomment %}
+
+<script>
+  var deck = JSON.parse("{{flines|escapejs}}");
+  var x = document.getElementById("search_result");
+  var num = 0;
+  function search_res(){
+    var search_result = "";
+    var sval = document.getElementById("search_value").value;
+    for (sv in deck) {
+      if (deck[sv].toLowerCase().includes(sval)) {
+        search_result += "<div class='search-item'>" + deck[sv].slice(7,-4).replace('$$','<br>') + "</div>";
+      }
+    }
+    x.innerHTML = search_result;
+    document.getElementById("loader").style.display = "none";
+  }
+</script>
+{% endblock body %}

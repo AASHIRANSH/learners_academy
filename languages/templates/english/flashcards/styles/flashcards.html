@@ -1,0 +1,47 @@
+<style>
+    #word {
+        font-size: {% if word.word|length > 25 %}{% if word.word|length > 35 %}2{% else %}2.5{% endif %}{% else %}3{% endif %}rem;
+        font-weight: 700;
+    }
+    #pos {
+        font-weight: 350;
+    }
+    #grade {
+        font-weight: 300;
+        color: #777777;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #aaa;
+        border-radius: 0.4rem;
+    }
+    .word-image {
+        width: auto;
+        height: 4rem;
+        border: 2px solid #aaaaaa;
+        border-radius: 10px;
+    }
+    .card-body div:nth-child(3n+1) {
+        font-weight: 200;
+    }
+    .card-body div:nth-child(3n+2) {
+        color: rgb(13,110,253);
+        padding: 0 0 0 1rem;
+    }
+    .card-body div:nth-child(3n+3) {
+        color: rgb(220,53,69);
+        padding: 0 0 0 1rem;
+        margin: 0 0 0.5rem 0;
+    }
+    #def-container {
+        background-color:#0d6efd30;
+        border-left:8px solid #0d6efd;
+    }
+    #def-container #def {
+        font-weight: 350;
+    }
+
+    #example {
+        height: 300px;
+        font-size: 1.5rem;
+    }
+</style>

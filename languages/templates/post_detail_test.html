@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'static/css/styles.html' %}
+{% include "header.html" %}
+
+{% if messages %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
+{% for message in messages %}
+<div class="alert alert-{% if message.tags == " error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissible
+    fade show my-1 d-flex align-items-center" role="alert">
+    {% if message.tags == "success" %}
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+        <use xlink:href="#check-circle-fill" />
+    </svg>
+    {% else %}
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+        <use xlink:href="#exclamation-triangle-fill" />
+    </svg>
+    {% endif %}
+
+    {{message}}
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container">
+    <div class="mb-5">
+        <h2>During</h2>
+        <hr>
+        We use <b>during</b> + noun to talk about when something happens. With <b>during</b>, we answer the question when.
+        <ul class="example">
+            <li>Some people got lost during the journey.</li>
+            <li>I will finish the novel during the summer break.</li>
+            <li>Most burglaries happen during the night.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <h2>For</h2>
+        <hr>
+        We use <b>for + length of time</b> to say how long something happens. With <b>for</b>, we answer the question how long.
+
+        <ul class="example">
+            <li>We have known each other for a long time.</li>
+            <li>I waited for more than an hour, but I finally left.</li>
+            <li>He worked in this company for over twenty years.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <h2>While</h2>
+        <hr>
+        We use <b>while + subject + verb</b> to talk about two things that are happening at the same time.
+
+        <ul class="example">
+            <li>I had breakfast while you were in the shower.</li>
+            <li>I always listen to the radio while I’m cleaning.</li>
+            <li>You shouldn’t use your phone while you are driving.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <h2>During vs for</h2>
+        <hr>
+        <h6>The difference between during and for is that during refers to ‘when’ something happens and for refers to ‘how long’
+        something happens. Compare:</h6>
+
+        <ul class="example">
+            <li>Every day I run for one hour. (=How long do you run?)</li>
+            <li>I usually run during the weekend. (=When do you run?)</li>
+        </ul>
+    </div>
+    
+    <div class="mb-5">
+        <h2>During vs while</h2>
+        <hr>
+        The main difference between during and while is that we use while + clause (subject + verb), and we use during +
+        noun. Compare:
+        <ul class="example">
+            <li>I fell asleep during the film.</li>
+            <li>I fell asleep while I was watching the film.</li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    var element = document.getElementsByClassName("example");
+    var words = ["during"]
+    for (line in element) {
+        element[line].innerHTML = element[line].innerHTML.replace(/during/gi, "<span style='color:#0d6efd;'>during</span>");
+        element[line].innerHTML = element[line].innerHTML.replace(/while/gi, "<span style='color:#0d6efd;'>while</span>");
+        element[line].innerHTML = element[line].innerHTML.replace(/for/gi, "<span style='color:#0d6efd;'>for</span>");
+    }
+</script>
+{% endblock body %}

@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile | {% endblock title %}
+
+{% block body %}
+<style>
+    .button {
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        width: 150px;
+        height: 150px;
+        background: none;
+        border: none;
+        border-radius: 50%; 
+        position: relative;
+        z-index: 0;
+        transition: .3s;
+        cursor: pointer;
+      }
+      .button:before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        padding: 10px;
+        border-radius: 50%; 
+        background: conic-gradient(
+              #ff53bb ,
+              #0000 30deg 120deg,
+              #3cb371 150deg 180deg,
+              #0000 210deg 300deg,
+              #ff53bb 330deg
+          );
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: intersect
+      }
+      .button:after {
+        content: "";
+        position: absolute;
+        inset: -100px;
+        background:
+        radial-gradient(50px at left  50px top 90px,#ff53bb 100%,#0000),
+        radial-gradient(50px at right 50px bottom 90px,#3cb371 100%,#0000);
+        filter: blur(120px);
+        opacity: .5;
+      }
+      
+      .button:before,
+      .button:after {
+        transition:.5s, 99999s 99999s transform;
+      }
+      button:hover {
+        box-shadow: 0 0 0 1px #666;
+      }
+      
+      .button:hover:before,
+      .button:hover:after {
+        transform: rotate(36000deg);
+        transition: .5s,600s linear transform;
+      }
+      .button:before {
+        background-color: #222;
+          border: 2px solid #333;
+      }
+      
+      .button>img{
+          border-radius: 50%;
+          opacity:0.9;
+      }
+</style>
+    {% include 'header.html' %}
+
+    <div class="container_fluid p-4 bg-secondary text-white">
+        <div class="d-flex justify-content-center">
+            <div class="me-3">
+                <img height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
+            </div>
+
+            <div class="d-flex flex-column">
+                <div class="">
+                    {% if user.first_name %}
+                        <h1>{{user.first_name|capfirst}}</h1>
+                    {% else %}
+                        <h1>{{user.username|capfirst}}</h1>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {% if user.is_superuser %}
+                    admin
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!--PERMS BUTTONS-->
+        <div class="d-flex justify-content-between">
+            <div>
+                <button type="button" class="btn btn-primary" onclick="window.location.assign('{% url 'change_profile' %}')">Edit Profile</button>
+            </div>
+
+            <div>
+                {% if perms.languages.add_post %}
+                    <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary">My Posts</button>
+                {% endif %}
+                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary">Flashcards</button>
+            </div>
+        </div>
+        <!--END PROFILE BUTTONS-->
+    </div>
+
+    {% include 'messages.html' %}
+
+    <form action="" method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p>{{error}}</p>
+            {% endfor %}
+        {% endif %}
+
+        <div class="container mt-5">
+            <div class="row">                
+                <div class="col-2 mb-3">
+                    {{form.username.label_tag}}
+                </div>
+                <div class="col-10 mb-3">
+                    {{form.username.value}}
+                    {{form.username.errors}}
+                </div>
+
+                <div class="col-2 mb-3">
+                    {{form.first_name.label_tag}}
+                </div>
+                <div class="col-10 mb-3">
+                    {{form.first_name.value}}
+                    {{form.first_name.errors}}
+                </div>
+
+                <div class="col-2 mb-3">
+                    {{form.last_name.label_tag}}
+                </div>
+                <div class="col-10 mb-3">
+                    {{form.last_name.value}}
+                    {{form.last_name.errors}}
+                </div>
+
+                <div class="col-2 mb-3">
+                    {{form.email.label_tag}}
+                </div>
+                <div class="col-10 mb-3">
+                    {{form.email.value}}
+                    {{form.email.errors}}
+                </div>
+            </div>
+
+        </div>
+    </form>
+{% endblock body %}

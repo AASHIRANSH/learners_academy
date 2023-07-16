@@ -1,0 +1,48 @@
+<script>
+    var def = document.getElementById("def");
+    var tag_b_index = 0;
+    var tag_start = false;
+    for (let x of def.innerHTML) {
+        var tag_b = def.innerHTML.indexOf("**", tag_b_index);
+
+        if (tag_start == false){
+            def.innerHTML = def.innerHTML.replace("**", "<span style='font-weight:600;'>");
+        } else {
+            def.innerHTML = def.innerHTML.replace("**", "</span>");
+        }
+
+        tag_b_index += tag_b;
+        tag_start = tag_start == true?false:true;
+    }
+
+    var element = document.getElementById("example");
+    element.innerHTML = element.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+
+    // function highlight(text) {
+    //     var inputText = document.getElementById("inputText");
+    //     var innerHTML = inputText.innerHTML;
+    //     var index = innerHTML.indexOf(text);
+    //     if (index >= 0) {
+    //         innerHTML = innerHTML.substring(0,index) + "<span class='highlight'>" + innerHTML.substring(index,index+text.length) + "</span>" + innerHTML.substring(index + text.length);
+    //         inputText.innerHTML = innerHTML;
+    //     }
+    // }
+
+    var forms = document.getElementById("forms");
+    forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+    //var n = words.split(" ");
+    //return n[n.length - 1];
+</script>
+
+<!--AUTO REFRESHER SCRIPT-->
+<script>
+    if ("{{refresh}}" == "True") {
+        setTimeout(function() {
+            location.reload();
+        }, 4000);
+    } else {
+        setTimeout(function() {
+            location.reload();
+        }, 60000);
+    };
+</script>

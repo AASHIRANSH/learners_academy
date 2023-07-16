@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock title %} | MUHAMMAD PC</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/animate.min.css"/>
+    <link rel="stylesheet" href="/static/css/styles_fll.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+  </head>
+  <body onkeydown="editEsc(event)">
+  
+    <!-- HEADER -->
+    {% include 'header.html' %}
+    
+    {% block body %}{% endblock body %}
+
+    <script>
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'f' && e.altKey) {
+          e.preventDefault();
+          window.location.href = "revisepostponed?pst=5";
+        }
+      })
+
+      function show(id){
+        document.getElementById(id).style.display = "block";
+      }
+
+      function editEsc(event) {
+        var x = event.key;
+        if (x == 'Escape') {
+          document.getElementById('search').style.display = "none";
+          document.getElementById('add_card').style.display = "none";
+          document.getElementById('edit').style.display = "none";
+        }
+      }
+    </script>
+
+  <script src="/static/js/web/bootstrap.min.js"></script>
+</body>
+</html>

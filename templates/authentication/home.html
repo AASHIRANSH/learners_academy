@@ -1,0 +1,38 @@
+{% extends "users/base.html" %}
+{% block title %} Home Page {% endblock title%}
+{% block content %}
+    <div class="divider_65"></div>
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome</h1>
+        <p class="lead">
+            This is <b>user registration and login system</b> build with django which is
+            a Python-based free and open-source web framework that follows the model–template–views architectural pattern.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Logout</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Sign in</a>
+        </p>
+    </div>
+  
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+
+  {% if user.is_authenticated %}
+    <h3>Hello {{fname}}!</h3>
+    <h4>You're successfully logged in.</h4>
+    <button type="submit"><a href="/signout">SignOut</a></button>
+    {% else %}
+    <button type="submit"><a href="/signup">SignUp</a></button>
+    <br/>
+    <br/>
+    <button type="submit"><a href="/signin">SignIn</a></button>
+  {% endif %}
+
+{% endblock content %}

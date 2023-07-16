@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'header.html' %}
+<div class="divider_65"></div>
+{% include 'sidebar.html' %}
+<div id="inf"></div>
+
+<div id="body"></div>
+<div class="divider_65"></div>
+
+<div id="navigation_b"></div>
+
+<!--Alert-->
+<div id="prompt">
+    <div class="content" id="prm"></div>
+</div>
+<!--End Alert-->
+
+<script>
+    cards = JSON.parse("{{cards|escapejs}}");
+</script>
+<script src="/static/js/courses/en_ar/prompt.js"></script>
+<script src="/static/js/courses/en_ar/unit_{{id}}.js"></script>
+
+{% endblock body %}

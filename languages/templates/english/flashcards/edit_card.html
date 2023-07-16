@@ -1,0 +1,138 @@
+{% extends 'english/flashcards/flashcards_base.html' %}
+
+{% block title %} FlashCards {% endblock title %}
+{% block body %}
+
+{% if messages %}
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissible fade show my-1 d-flex align-items-center" role="alert">
+            {% if message.tags == "success" %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            {% else %}
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            {% endif %}
+
+            {{message}}
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+      <div class="container d-flex justify-content-center my-3">
+        <div class="row col-12">
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- entry -->
+            <div class="row">
+              <div class="row col-4">
+                <div class="col-8">
+                  <label for="id_word_root" class="form-label">Root:</label>
+                  <input type="text" class="form-control" name="word_root" value="{{form.word_root.value}}" id="id_word_root"></input>
+                  {{form.word_root.errors}}
+                </div>
+              </div>
+
+              <div class="row col-6">
+                <div class="col-8">
+                  <div class="mb-3">
+                    <label for="id_pic" class="form-label">Picture:</label>
+                    <input class="form-control" type="file" accept="image/*" name="pic" value="{{form.pic.value}}" id="id_pic">
+                  </div>                  
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="row col-4">
+                <!-- word -->
+                <div class="col-12 mb-2">
+                  {{form.word.label_tag}}
+                  <input type="text" class="form-control" name="word" value="{{form.word.value}}" id="id_word"></input>
+                  {{form.word.errors}}
+                </div>
+                <!-- pos -->
+                <div class="col-6">
+                  <label for="pos">POS:</label>
+                  <select class="form-select" name="pos">
+                    <option value="noun" {% if form.pos.value == 'noun' %}selected{% endif %}>noun</option>
+                    <option value="verb" {% if form.pos.value == 'verb' or '' %}selected{% endif %}>verb</option>
+                    <option value="phrasal verb" {% if form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
+                    <option value="adjective" {% if form.pos.value == 'adjective' %}selected{% endif %}>adjective</option>
+                    <option value="idiom" {% if form.pos.value == 'idiom' %}selected{% endif %}>idiom</option>
+                    <option value="adverb" {% if form.pos.value == 'adverb' %}selected{% endif %}>adverb</option>
+                  </select>
+                </div>
+                <!-- grade -->
+                <div class="col-6">
+                  {{form.grade.label_tag}}
+                  <select class="form-select" name="grade">
+                    <option value="a1" {% if form.grade.value == 'a1' %}selected{% endif %}>A1</option>
+                    <option value="a2" {% if form.grade.value == 'a2' %}selected{% endif %}>A2</option>
+                    <option value="b1" {% if form.grade.value == 'b1' %}selected{% endif %}>B1</option>
+                    <option value="b2" {% if form.grade.value == 'b2' %}selected{% endif %}>B2</option>
+                    <option value="c1" {% if form.grade.value == 'c1' %}selected{% endif %}>C1</option>
+                    <option value="c2" {% if form.grade.value == 'c2' %}selected{% endif %}>C2</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row col-8">
+                <div class="col-4">
+                  {{form.pronounce.label_tag}}
+                  <textarea class="form-control" name="pronounce" id="c_1" rows="4">{{form.pronounce.value}}</textarea>
+                </div>
+                <!-- definition -->
+                <div class="col-8">
+                  <label for="definition">Definition:</label>
+                  <textarea class="form-control" name="definition" id="c_1" rows="4">{{form.definition.value}}</textarea>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-4">
+                <label for="forms">Other Forms:</label>
+                <textarea class="form-control" rows="6" name="forms" id="c_2">{{form.forms.value}}</textarea>
+              </div>
+              <div class="col-8">
+                <label for="c_2">Example Sentences:</label>
+                <textarea class="form-control" rows="6" name="example" id="c_2">{{form.example.value}}</textarea>
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="col-auto mb-2">
+                    {{form.synonyms.label_tag}}
+                </div>
+                <div class="col-3 mb-2">
+                    <textarea class="form-control" name="synonyms" id="id_synonyms" rows="2">{{form.synonyms.value}}</textarea>
+                    {{form.synonyms.errors}}
+                </div>
+                <!--<div class="col-3 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="ref_id" value="true" id="id_ref_id">
+                        <label class="form-check-label" for="id_ref_id">
+                          Ref ID:
+                        </label>
+                      </div>
+                </div>-->
+                <div class="col-3 mb-2">
+                    <input type="submit" value="Submit" class="btn btn-success"/>
+            
+                </div>
+            </div>
+          
+        </form>
+        </div>
+      </div>
+{% endblock body %}

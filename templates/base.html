@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %} Learner's Academy</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/static/css/animate.min.css"/>
+    <link rel="stylesheet" href="/static/css/stylesk.css"/>
+    <link rel="stylesheet" href="/static/css/composs.css"/>
+    <link rel="stylesheet" href="/static/css/responsive.css"/>
+    {% block css %}{% endblock css %}
+
+    <script src="/static/js/web/bootstrap.min.js"></script>
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="/static/fontawesome-free-6.4.0-web/fontawesome-free-6.4.0-web/css/all.min.css">
+    <script src="/static/js/web/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/xrzr1fiseqxgu74n7p5fime2sdkmnlbewzhtz1ubnainccc9/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    {% include 'static/css/styles.html' %}
+    {% block body %}{% endblock body %}
+
+    <script>
+        $(document).ready(function() {
+            $('form button[type="submit"]').on('click', function(e) {
+                e.preventDefault();
+                var form = $(this).parent();
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    success: function(response) {
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Hide Header on on scroll down
+        var didScroll;
+        var lastScrollTop = 0;
+        var delta = 5;
+        var navbarHeight = document.getElementsByTagName('theader')[0].getBoundingClientRect().height //$('theader').outerHeight();
+
+        window.addEventListener("scroll", function(event){
+            didScroll = true;
+        });
+        //$(window).scroll(function(event){
+        //    didScroll = true;
+        //});
+
+        setInterval(function() {
+            if (didScroll) {
+                hasScrolled();
+                didScroll = false;
+            }
+        }, 250);
+
+        function hasScrolled() {
+            var st = $(this).scrollTop();
+            
+            // Make sure they scroll more than delta
+            if(Math.abs(lastScrollTop - st) <= delta)
+                return;
+            
+            // If they scrolled down and are past the navbar, add class .nav-up.
+            // This is necessary so you never see what is "behind" the navbar.
+            if (st > lastScrollTop && st > navbarHeight){
+                // Scroll Down
+                $('theader').removeClass('nav-down').addClass('nav-up');
+            } else {
+                // Scroll Up
+                if(st + $(window).height() < $(document).height()) {
+                    $('theader').removeClass('nav-up').addClass('nav-down');
+                }
+            }
+
+            lastScrollTop = st;
+        }
+    </script>
+
+</body>
+</html>

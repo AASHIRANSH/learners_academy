@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Names Meaning - Muhammad Academy</title>
+    <link rel="stylesheet" href="/static/css/stylesf.css"/>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        #alphabet {
+            display: flex;
+            justify-content: center;
+            flex-flow: row wrap;
+        }
+        .n_button {
+            background-color: #f1f1f1;
+            color: #2e8f5a;
+            font-size: 20px;
+            padding: 10px 20px;
+            border: 0;
+            border-radius: 10px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        .n_button:hover {
+            background-color: #3cb371;
+            color: #f1f1f1;
+            scale: 1.2;
+        }
+    </style>
+</head>
+<body>
+    <div id="alphabet"></div>
+
+    <script>
+        var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+        var alphabet_buttons = [];
+        for (x of alphabet){
+            alphabet_buttons.push(`<button onclick="window.alert('you have selected ${x}')" class="n_button">${x.toUpperCase()}</button>`);
+        }
+        document.querySelector("#alphabet").innerHTML = alphabet_buttons.join(" ");
+    </script>
+</body>
+</html>

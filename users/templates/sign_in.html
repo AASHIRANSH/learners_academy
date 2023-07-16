@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Login |{% endblock title %}
+
+{% block body %}
+    {% include 'header.html' %}
+
+    <div class="container-fluid bg-secondary text-center text-white p-4">
+        <h1>Sign In / Login</h1>
+    </div>
+
+    {% include 'messages.html' %}
+
+    <div class="container my-5">
+        <div class="flex-center">
+            <div class="col-10 col-md-6">
+                <form id="login_form" action="" method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <p>{{error}}</p>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% for f in form %}
+                        <div class="mb-3">
+                            <div class="mb-2">{{f.label_tag}}</div>
+                            {{f}}
+                            {% if f.errors %}
+                            <script>//adding class is-invalid if found errors
+                                var id = document.getElementById("{{f.id_for_label}}");
+                                id.classList.add("is-invalid")
+                                id.placeholder = "Please fill this. {{f.errors|striptags}}";
+                            </script>
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" id="showpass" onclick="if(id_password.type==`password`){id_password.type=`text`}else{id_password.type=`password`}"/>
+                        <label class="form-check-label" for="showpass">Show Password</label>
+                    </div>
+
+                    <div class="">
+                        <input type="submit" class="btn btn-success" value="Sign In"/>
+                        <a onclick="window.location.assign('{% url 'sign_up' %}')" class="btn btn-outline-success">Create an account</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementsByTagName('input').classList.add("form-control");
+    </script>
+{% endblock body %}

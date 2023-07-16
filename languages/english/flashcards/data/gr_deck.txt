@@ -1,0 +1,3 @@
+0001 $$ lecker : delicious $$ Das Sandvich ist lecker. $$
+0002 $$ aufregend : exciting $$ Madina ist aufregend. $$
+0003 $$ der kellner : waiter $$ Wo ist der kellner? $$

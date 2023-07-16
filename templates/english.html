@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'header.html' %}
+<div class="divider_65"></div>
+<div class="inf" id="inf"></div>
+<div class="content">
+    <div id="cardm" class="cardm"></div>
+    <div id="cards" class="cards"></div>
+</div>
+<div id="prompt"><div class="content" id="prm"></div></div>
+
+<script>
+    
+    cards = JSON.parse("{{cards|escapejs}}");
+    len_cards = cards.length;
+    process = [];
+
+    function master(){
+        random_cards = Math.floor(Math.random() * (len_cards));
+        card = cards[random_cards];
+        card_title = card.slice(0,card.indexOf('$$'))
+        card_content = card.slice(card.indexOf('$$')+2,-1)
+        card_content = card_content.split('$$');
+        len_card_content = card_content.length;
+        progress = "";
+        randline = Math.floor(Math.random() * (len_card_content));
+        wordh = card_content[randline];
+        word = wordh.slice(0,card_content[randline].indexOf('&&'));
+        //var mean = card_content[randline].slice(br+2);
+        meaning = "";
+        for (x in card_content) {
+            br = card_content[x].indexOf('&&');
+            mean = card_content[x].slice(br+2);
+            meaning += `
+            <button onclick="clk('btn_${x}')" onmousedown="clkk()" id="btn_${x}" value="${mean}">${mean}</button>`;
+        }
+        
+        document.getElementById('inf').innerHTML = `
+        <div>select the correct match</div>
+        <div id="tt">${process.length}/${len_card_content}</div>`;
+        document.getElementById('cardm').innerHTML = word;
+        document.getElementById('cards').innerHTML = meaning;
+    }
+    
+    function clk(btn){
+        vall = wordh.indexOf(document.getElementById(btn).value);
+        if ( vall > 0){
+            if (process.includes(word)==false){
+                process.push(word);
+            }
+            document.getElementById('prompt').style.display = "block";
+            document.getElementById('prm').style.backgroundColor = "rgb(60, 179, 113)";
+            document.getElementById('prm').innerHTML = "Correct!";
+            master();
+        }else{
+            document.getElementById('prompt').style.display = "block";
+            document.getElementById('prm').style.backgroundColor = "#555";
+            document.getElementById('prm').innerHTML = "Incorrect!";
+        }
+    }
+    function clkk(){
+        document.getElementById('prompt').style.display = "none";
+    }
+
+    master();
+
+    $('button').addClass('nfocus')
+    $('button').on('click', function(){
+        $('button').removeClass('focus');
+        $(this).addClass('focus');
+    });
+</script>
+{% include 'footer.html' %}
+{% endblock body %}
