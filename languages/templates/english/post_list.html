@@ -35,7 +35,7 @@
 {% for post in posts %}
     <div class="row py-3">
         <div class="row col-9">
-            <div id="lesson_cont" class="col-12 p-0">
+            <div id="lesson_cont" class="col-12 p-0" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
                 <div id="lesson_title" class="d-flex justify-content-center align-items-center">
                     <div class="">
                         <div class="fs-2">{{post.topic.name|title}}</div>
@@ -90,4 +90,5 @@
 {% endfor %}
 </div>
 
+{% include 'footer.html' %}
 {% endblock body %}
