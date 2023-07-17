@@ -6,11 +6,49 @@ from django.contrib import messages
 
 # models
 from django.contrib.auth.models import User
-from users.models import Contact
+from users.models import Contact, Friend
 
 
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+
+
+def users(request):
+    datag = request.GET
+    if datag.get("users") == "friends":
+        users = Friend.objects.filter(friend=request.user)
+    else:
+        users = User.objects.all()
+    vars = {
+        "users":users
+    }
+    return render(request, "users.html", vars)
+
+
+def user_detail(request, id):
+    user_obj = User.objects.get(pk=id)
+
+    datap = request.GET
+    if datap.get("action"):
+        if datap.get("action") == "befriend":
+            fr_obj = Friend.objects.filter(user=request.user, friend=user_obj)
+            if fr_obj.exists():
+                if fr_obj[0].is_friend:
+                    messages.error(request, f"You are already a friend of {user_obj.username}")
+                else:
+                    messages.error(request, f"You have already sent friend request to {user_obj.username}")
+            else:
+                Friend.objects.create(user=request.user, friend=user_obj)
+                messages.success(request, f"Friend request has been sent to {user_obj.username}")
+        elif datap.get("action") == "unfriend":
+            Friend.objects.remove(user=request.user)
+            messages.success(request, f"You are not longer friend of {user_obj.username}")
+
+
+    vars = {
+        'user':user_obj
+    }
+    return render(request, "userdetail.html", vars)
 
 
 #Registration
@@ -85,7 +123,8 @@ def user_profile(request):
         vars = {
             'form':fm,
             'p_form': p_form,
-            'user':request.user
+            'user':request.user,
+            "friends":Friend.objects.all()
         }
 
         return render(request, "profile.html", vars)
@@ -131,20 +170,6 @@ def change_profile(request):
     else:
         return HttpResponseRedirect('/users/signin')
  
-
-def user_detail(request, id):
-    if request.user.is_authenticated:
-        pi = User.objects.get(pk=id)
-        if request.user.is_superuser == True:
-            fm = EditAdminProfileForm(instance=pi)
-        else:
-            fm = EditUserProfileForm(instance=pi)
-        vars = {
-            'form':fm
-        }
-        return render(request, "userdetail.html", vars)
-    else:
-        return HttpResponseRedirect('/users/signin')
 
 
 def sign_out(request):

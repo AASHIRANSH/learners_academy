@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Peoples / Users |{% endblock title %}
+
+{% block body %}
+  {% include 'header.html' %}
+
+  <div class="container my-5">
+    {% if users %}
+      {% for user in users %}
+        <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+          <div class="col-auto"><img src="{{user.profile.image.url}}" class="rounded-circle" height="70"/></div>
+          <div class="col-auto">{{user.username}}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      Users not found!
+    {% endif %}
+  </div>
+
+
+{% endblock body %}

@@ -8,20 +8,50 @@
     {% endif %}
     Profile | 
 {% endblock title %}
-<body>
-    <form action="" method="post" novalidate>
-        {% csrf_token %}
-        {% if form.non_field_errors %}
-            {% for error in form.non_field_errors %}
-                <p>{{error}}</p>
-            {% endfor %}
-        {% endif %}
 
-        {% for f in form %}
-            {{f.label_tag}}<br>
-            {{f}} {{f.errors|striptags}}<br>
-        {% endfor %}
-        <input type="submit" value="Save">
-    </form>
+{% block body %}
+{% include 'header.html' %}
+
+    <div class="container_fluid p-4 bg-secondary text-white">
+        <div class="d-flex justify-content-center">
+            <div class="me-3">
+                <img height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
+            </div>
+
+            <div class="d-flex flex-column">
+                <div class="">
+                    {% if user.first_name %}
+                        <h1>{{user.first_name|capfirst}}</h1>
+                    {% else %}
+                        <h1>{{user.username|capfirst}}</h1>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    {% if user.is_superuser %}
+                    admin
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!--PERMS BUTTONS-->
+        <div class="d-flex justify-content-between">
+            <div class="">
+                <button type="button" class="btn btn-primary" onclick="window.location.assign('{% url 'change_profile' %}')">Edit Profile</button>
+            </div>
+
+            <div>
+                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
+                <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary">Befriend</button>
+            </div>
+        </div>
+        <!--END PROFILE BUTTONS-->
+    </div>
+    {% include 'messages.html' %}
+    
+    {% include 'footer.html' %}
+{% endblock body %}
+
 </body>
 </html>

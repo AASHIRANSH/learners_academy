@@ -64,6 +64,7 @@ def post_detail(request, pk):
         }
     return render(request, 'post_detail.html', vars)
 
+
 def exercise(request, pk):
     # user_obj = User.objects.get(username=request.user.username)
     post = get_object_or_404(Post, pk=pk)
@@ -88,6 +89,7 @@ def exercise(request, pk):
         'user_in_like_set': user_in_like_set
         }
     return render(request, 'exercise.html', vars)
+
 
 def post_detail_test(request):
 

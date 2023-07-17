@@ -1,9 +1,15 @@
-{% extends 'english/flashcards/flashcards_base.html' %}
+{% extends 'base.html' %}
 
 {% block title %} FlashCards {% endblock title %}
 {% block body %}
 
   {% include 'messages.html' %}
+
+  <div class="position-absolute top-0 start-0 m-3">
+    <button class="btn btn-outline-secondary" onclick="window.location.assign('/')">
+      <i class="fa-solid fa-house fs-4"></i>
+    </button>
+  </div>
 
   <div class="container d-flex justify-content-center my-3">
     <div class="row col-12">
@@ -51,7 +57,7 @@
           </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-3"><!-- English -->
           <div class="row col-4">
             <!-- word -->
             <div class="col-12 mb-2">
@@ -90,12 +96,30 @@
           <div class="row col-8 mx-0">
             <div class="col-4">
               {{form.pronounce.label_tag}}
-              <textarea class="form-control" name="pronounce" id="c_1" rows="4">{% if edit %}{{form.pronounce.value}}{% endif %}</textarea>
+              <textarea class="form-control" name="pronounce" id="id_pronounce" rows="4">{% if edit %}{{form.pronounce.value}}{% endif %}</textarea>
             </div>
             <!-- definition -->
             <div class="col-8 px-0">
               <label for="definition">Definition:</label>
-              <textarea class="form-control" name="definition" id="c_1" rows="4">{% if edit %}{{form.definition.value}}{% endif %}</textarea>
+              <textarea class="form-control" name="definition" id="id_definition" rows="4">{% if edit %}{{form.definition.value}}{% endif %}</textarea>
+              {{form.definition.errors}}
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3"><!-- Hindi -->
+          <div class="row col-4">
+            <!-- Blank Area -->
+          </div>
+          <div class="row col-8 mx-0">
+            <div class="col-4">
+              {{form.pronounce_hindi.label_tag}}
+              <textarea class="form-control" name="pronounce_hindi" id="id_pronounce_hindi" rows="4">{% if edit %}{{form.pronounce_hindi.value}}{% endif %}</textarea>
+            </div>
+            <!-- definition -->
+            <div class="col-8 px-0">
+              <label for="id_definition_hindi">Definition Hindi:</label>
+              <textarea class="form-control" name="definition_hindi" id="id_definition_hindi" rows="4">{% if edit %}{{form.definition_hindi.value}}{% endif %}</textarea>
+              {{form.definition_hindi.errors}}
             </div>
           </div>
         </div>

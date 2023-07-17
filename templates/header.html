@@ -5,13 +5,13 @@
             <a href="/">LEARNERs ACADEMY</a>
         </div>
         <div id="user" class="me-5">
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 <div id="ui_container" class="ui_container pb-4">
-                    <div class="d-none d-md-block">{{user.username}}</div>
+                    <div class="d-none d-md-block">{{request.user.username}}</div>
                     <div class="hidden">
                         <div class="ui_main shadow-lg">
                             <ul>
-                                {% if user.is_superuser %}
+                                {% if request.user.is_superuser %}
                                     <li><a href="/admin"><i class="fa-solid fa-toolbox"></i> admin panel</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i> my account</a></li>

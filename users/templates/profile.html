@@ -104,6 +104,8 @@
             </div>
 
             <div>
+                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary">My Friends <span class="badge bg-secondary">{{user.friend_set.count}}</span></button>
+                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
                 {% if perms.languages.add_post %}
                     <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary">My Posts</button>
                 {% endif %}
@@ -114,6 +116,16 @@
     </div>
 
     {% include 'messages.html' %}
+    <!-- Friend Requests -->
+    {% for f in friends %}
+        {% if f.friend == user %}
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center m-1" role="alert">
+                You have a friend request from <a href="{% url 'user_detail' f.user.id %}">{{f.user.username}}<a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+    {% endfor %}
+
 
     <form action="" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
@@ -155,6 +167,10 @@
                 <div class="col-10 mb-3">
                     {{form.email.value}}
                     {{form.email.errors}}
+                </div>
+
+                <div class="col-2 mb-3">
+                <button onclick="window.location.assign('{% url 'sign_out' %}')" class="btn btn-danger">Log Out</button>
                 </div>
             </div>
 

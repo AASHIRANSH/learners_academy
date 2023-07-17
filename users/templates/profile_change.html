@@ -128,17 +128,17 @@
         <div class="container my-5">
 
             {% if request.user.is_superuser %}
-                <div class="row">
+                <div class="row col-12">
                     {% for pf in p_form %}
-                        <div class="col-2 mb-3">{{pf.label_tag}}</div>
-                        <div class="col-10 mb-3">
+                        <div class="col-sm-6 col-md-2 mb-3">{{pf.label_tag}}</div>
+                        <div class="col-sm-4 col-md-10 mb-3">
                             {{pf}}
                             {{pf.errors|striptags}}
                         </div>
                     {% endfor %}
                     {% for f in form %}
-                        <div class="col-2 mb-3">{{f.label_tag}}</div>
-                        <div class="col-10 mb-3">{{f}} {{f.errors|striptags}}</div>
+                        <div class="col-sm-6 col-md-2 mb-3">{{f.label_tag}}</div>
+                        <div class="col-sm-4 col-md-10 mb-3">{{f}} {{f.errors|striptags}}</div>
                     {% endfor %}
                 </div>
             {% else %}
@@ -215,11 +215,11 @@
                 </div>
 
             {% endif %}
-            <div id="fbuttons" class="text-center text-white">
-                <input type="submit" value="Save" class="btn btn-primary text-white"/>
-                <a href="{% url 'changepass' %}" class="btn btn-secondary text-white">Change Password</a>
-                <a href="{% url 'changepass2' %}" class="btn btn-secondary text-white">Set Password</a>
-                <a href="{% url 'sign_out' %}" class="btn btn-danger text-white">Sign Out</a>
+            <div id="fbuttons" class="row row-cols-sm-1 row-cols-md-auto text-center text-white">
+                <input type="submit" value="Save" class="btn btn-primary text-white m-1"/>
+                <a href="{% url 'changepass' %}" class="btn btn-secondary text-white m-1">Change Password</a>
+                <a href="{% url 'changepass2' %}" class="btn btn-secondary text-white m-1">Set Password</a>
+                <a href="{% url 'sign_out' %}" class="btn btn-danger text-white m-1">Sign Out</a>
             </div>
         </div>
     </form>
