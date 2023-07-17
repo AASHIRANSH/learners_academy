@@ -51,9 +51,8 @@ h1>span {
   font-size: 0.5em;
 }
 
-h2 {
-  font-size: 30px;
-  line-height: 30px;
+input[type="checkbox"][readonly] {
+  pointer-events: none;
 }
 
 /*LINKS*/

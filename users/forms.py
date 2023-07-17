@@ -31,20 +31,7 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ['username', 'first_name','last_name','email']
         labels = {'email':'Email'}
-        widgets = {
-            'username':forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
-            'first_name':forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
-            'last_name':forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
-            'email':forms.TextInput(
-                attrs={'class': 'form-control'}
-            ),
-        }
+        #widgets = {'username':forms.TextInput(attrs={'class': 'form-control'}),'first_name':forms.TextInput(attrs={'class': 'form-control'}),'last_name':forms.TextInput(attrs={'class': 'form-control'}),'email':forms.TextInput(attrs={'class': 'form-control'})}
         # fields = '__all__' #it can also be used if you want all fields
         # exclude = ['password'] #it will get all fields except for password
         # help_text = {}
@@ -53,10 +40,15 @@ class SignUpForm(UserCreationForm):
 
 class EditUserProfileForm(UserChangeForm):
     # password = None
+    date_joined = forms.DateTimeField(label="Joining Date",required=False, widget=forms.TextInput(attrs={"readonly":""}))
+    is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={"readonly":""}))
+    last_login = forms.CharField(required=False, widget=forms.TextInput(attrs={"readonly":""}))
     class Meta:
         model = User
-        fields = ['username', 'first_name','last_name','email','date_joined','last_login', 'is_active']
-        labels = {'email':'email'}
+        fields = "__all__"
+        #fields = ['username', 'first_name','last_name','email','date_joined','last_login', 'is_active']
+        #widgets = {'date_joined': TextInput(attrs={'cols': 80, 'rows': 20})}
+        #labels = {'email':'email'}
         # exclude = ['']
 
 
@@ -69,9 +61,11 @@ class EditAdminProfileForm(UserChangeForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+    #image = forms.FileField(required=False, widget=forms.FileInput(attrs={"t"}))
+    reputation = forms.CharField(required=False, max_length=100,widget=forms.NumberInput())
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = ["image","reputation"]
 
 
 class ContactForm(forms.ModelForm):

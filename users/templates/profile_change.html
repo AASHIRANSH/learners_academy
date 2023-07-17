@@ -72,7 +72,6 @@
       }
 </style>
     {% include 'header.html' %}
-    {% include 'messages.html' %}
     <div class="container_fluid p-4 bg-secondary text-white">
         <div class="d-flex justify-content-center">
             <div onclick="id_image.click()" class="me-3 position-relative">
@@ -115,9 +114,11 @@
         </div>
         <!--END PROFILE BUTTONS-->
     </div>
+    {% include 'messages.html' %}
 
     <form action="" method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
+
         {% if form.non_field_errors %}
             {% for error in form.non_field_errors %}
                 <p>{{error}}</p>
@@ -125,78 +126,95 @@
         {% endif %}
 
         <div class="container my-5">
-            <!-- Profile Form Loop -->
-            <!--div class="row">
-                {% for pf in p_form %}
-                    <div class="col-2 mb-3">{{pf.label_tag}}</div>
-                    <div class="col-10 mb-3">
-                        {{pf}}
-                        {{pf.errors|striptags}}
+
+            {% if request.user.is_superuser %}
+                <div class="row">
+                    {% for pf in p_form %}
+                        <div class="col-2 mb-3">{{pf.label_tag}}</div>
+                        <div class="col-10 mb-3">
+                            {{pf}}
+                            {{pf.errors|striptags}}
+                        </div>
+                    {% endfor %}
+                    {% for f in form %}
+                        <div class="col-2 mb-3">{{f.label_tag}}</div>
+                        <div class="col-10 mb-3">{{f}} {{f.errors|striptags}}</div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="row">
+                    <div class="d-none col-2 mb-3">
+                        {{p_form.image.label_tag}}
                     </div>
-                {% endfor %}
-                {% for f in form %}
-                    <div class="col-2 mb-3">{{f.label_tag}}</div>
-                    <div class="col-10 mb-3">{{f}} {{f.errors|striptags}}</div>
-                {% endfor %}
-            </div-->
+                    <div class="d-none col-10 mb-3">
+                        <!--{{p_form.image}}-->
+                        <input type="file" name="image" accept="image/*" id="id_image" class="form-control">
+                        {{p_form.image.errors|striptags}}
+                    </div>
+                    
+                    <div class="col-2 mb-3">
+                        {{form.username.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.username}}
+                        {{form.username.errors}}
+                    </div>
 
-            <div class="row">
-                <div class="col-2 mb-3">
-                    {{p_form.image.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    <!--{{p_form.image}}-->
-                    <input type="file" name="image" accept="image/*" id="id_image" class="form-control">
-                    {{p_form.image.errors|striptags}}
-                </div>
-                
-                <div class="col-2 mb-3">
-                    {{form.username.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    {{form.username}}
-                    {{form.username.errors}}
+                    <div class="col-2 mb-3">
+                        {{form.first_name.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.first_name}}
+                        {{form.first_name.errors}}
+                    </div>
+
+                    <div class="col-2 mb-3">
+                        {{form.last_name.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.last_name}}
+                        {{form.last_name.errors}}
+                    </div>
+
+                    <div class="col-2 mb-3">
+                        {{form.email.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.email}}
+                        {{form.email.errors}}
+                    </div>
+                    
+
+                    <div class="col-2 mb-3">
+                        {{form.date_joined.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.date_joined}}
+                    </div>
+                    
+
+                    <div class="col-2 mb-3">
+                        Active: <!-- Label was not defined for this element to prevent the checkbox being clicked -->
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.is_active}}
+                    </div>
+
+
+                    <div class="col-2 mb-3">
+                        {{form.last_login.label_tag}}
+                    </div>
+                    <div class="col-10 mb-3">
+                        {{form.last_login}}
+                    </div>
+                    
+                    <!--{% for f in form %}
+                        <div class="col-2 mb-3">{{f.label_tag}}</div>
+                        <div class="col-10 mb-3">{{f}} {{f.errors|striptags}}</div>
+                    {% endfor %}-->
                 </div>
 
-                <div class="col-2 mb-3">
-                    {{form.first_name.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    {{form.first_name}}
-                    {{form.first_name.errors}}
-                </div>
-
-                <div class="col-2 mb-3">
-                    {{form.last_name.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    {{form.last_name}}
-                    {{form.last_name.errors}}
-                </div>
-
-                <div class="col-2 mb-3">
-                    {{form.email.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    {{form.email}}
-                    {{form.email.errors}}
-                </div>
-                
-                
-                <div class="col-2 mb-3">
-                    {{form.password.label_tag}}
-                </div>
-                <div class="col-10 mb-3">
-                    <a href="{% url 'changepass' %}" class="btn btn-outline-secondary">Change Password</a>
-                </div>
-                
-
-                <!--{% for f in form %}
-                    <div class="col-2 mb-3">{{f.label_tag}}</div>
-                    <div class="col-10 mb-3">{{f}} {{f.errors|striptags}}</div>
-                {% endfor %}-->
-            </div>
-
+            {% endif %}
             <div id="fbuttons" class="text-center text-white">
                 <input type="submit" value="Save" class="btn btn-primary text-white"/>
                 <a href="{% url 'changepass' %}" class="btn btn-secondary text-white">Change Password</a>

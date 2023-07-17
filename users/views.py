@@ -109,7 +109,9 @@ def change_profile(request):
                 fm.save()
                 p_form.save()
                 messages.success(request, f'Profile updated!!')
-            return redirect('profile')
+                return redirect('profile')
+            else:
+                messages.error(request, f'There was an error!!')
         else:
             if request.user.is_superuser:
                 fm = EditAdminProfileForm(instance=request.user)

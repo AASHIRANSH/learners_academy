@@ -327,6 +327,7 @@ def revise(request):
     user = request.user
     rv_obj = Revise.objects.filter(user=user)
     if not rv_obj:
+        messages.warning(request, "You have not added any words yet!")
         return redirect("words")
 
 

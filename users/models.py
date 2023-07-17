@@ -1,12 +1,18 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-# Create your models here.
+
+''' this is to rename the image file uploaded by the user Profile Model below as dp '''
+def content_file_name(instance, filename):
+    ext = filename.split('.')
+    filename = "%s_%s.%s" % (instance.user.username, ext[0], ext[-1])
+    return os.path.join('users/profile_pics', filename)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     reputation = models.IntegerField(default=0)
-    image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to='users/profile_pics')
+    image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
 
     def __str__(self):
         return f'{self.user.username} Profile' #show how we want it to be displayed
