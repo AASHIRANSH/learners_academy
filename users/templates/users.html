@@ -7,14 +7,34 @@
 
   <div class="container my-5">
     {% if users %}
-      {% for user in users %}
-        <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
-          <div class="col-auto"><img src="{{user.profile.image.url}}" class="rounded-circle" height="70"/></div>
-          <div class="col-auto">{{user.username}}</div>
-        </div>
-      {% endfor %}
+      {% if type == "users" %}
+        {% for user in users %}
+            <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+              <div class="col-auto"><img src="{{user.profile.image.url}}" class="rounded-circle" height="70"/></div>
+              <div class="col-auto">{{user.username}}</div>
+            </div>
+        {% endfor %}
+      {% endif %}
+
+      {% if type == "friends" %}
+        {% for friend in users %}
+          {% if friend.user == request.user %}
+            <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
+              <div class="col-auto"><img src="{{friend.friend.profile.image.url}}" class="rounded-circle" height="70"/></div>
+              <div class="col-auto">{{friend.friend.username}}</div>
+            </div>
+          {% endif %}
+          {% if friend.friend == request.user %}
+            <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
+              <div class="col-auto"><img src="{{friend.user.profile.image.url}}" class="rounded-circle" height="70"/></div>
+              <div class="col-auto">{{friend.user.username}}</div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
     {% else %}
-      Users not found!
+      You have not any friends!
     {% endif %}
   </div>
 

@@ -16,24 +16,31 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 def users(request):
     datag = request.GET
     if datag.get("users") == "friends":
-        users = Friend.objects.filter(friend=request.user)
+        users = Friend.objects.all()
+        type = "friends"
     else:
         users = User.objects.all()
+        type = "users"
+
     vars = {
-        "users":users
+        "users":users,
+        "type":type
     }
     return render(request, "users.html", vars)
 
 
 def user_detail(request, id):
     user_obj = User.objects.get(pk=id)
-
+    form = EditUserProfileForm(instance=user_obj)
     datap = request.GET
     if datap.get("action"):
         if datap.get("action") == "befriend":
-            fr_obj = Friend.objects.filter(user=request.user, friend=user_obj)
-            if fr_obj.exists():
-                if fr_obj[0].is_friend:
+            ''' current user object '''
+            fr_other_obj = Friend.objects.filter(user=user_obj, friend=request.user)
+            ''' other user object'''
+            fr_own_obj = Friend.objects.filter(user=request.user, friend=user_obj)
+            if fr_own_obj.exists():
+                if fr_own_obj[0].is_friend:
                     messages.error(request, f"You are already a friend of {user_obj.username}")
                 else:
                     messages.error(request, f"You have already sent friend request to {user_obj.username}")
@@ -46,7 +53,8 @@ def user_detail(request, id):
 
 
     vars = {
-        'user':user_obj
+        'user':user_obj,
+        'form':form
     }
     return render(request, "userdetail.html", vars)
 
@@ -124,7 +132,7 @@ def user_profile(request):
             'form':fm,
             'p_form': p_form,
             'user':request.user,
-            "friends":Friend.objects.all()
+            "friends":Friend.objects.filter(user=request.user) | Friend.objects.filter(friend=request.user)
         }
 
         return render(request, "profile.html", vars)

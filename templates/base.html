@@ -66,5 +66,25 @@
             lastScrollTop = st;
         }
     </script>
+    <script>// Connection Online / Offline Status
+        function updateOnlineStatus(){
+            let content = document.getElementById("content");
+            let textContent = `Your network status is ${navigator.onLine ? "Online" : "Offline"} `;
+            //content.textContent = textContent;
+          }
+        document.addEventListener("DOMContentLoaded", function () {
+        updateOnlineStatus();
+        window.addEventListener('online',  updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        });
+    </script>
+    <script>
+        //localStorage.setItem("name", "John Doe");
+        //localStorage.getItem("name");
+
+        //sessionStorage.setItem("name", "John Doe");
+        //sessionStorage.getItem("name");
+
+    </script>
 </body>
 </html>

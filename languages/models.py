@@ -7,6 +7,7 @@ from django.core import validators
 
 
 class Word(models.Model):
+    official = models.ManyToManyField(User, blank=True)
     ref_id = models.CharField(max_length=50, blank=True, null=True)
     word_root = models.CharField(max_length=100, blank=True, null=True)
     root_pos = models.CharField(max_length=50, blank=True, null=True)

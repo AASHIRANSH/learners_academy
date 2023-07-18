@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign In / Login{% endblock title %}
+{% block title %}Register / Sign Up{% endblock title %}
 
 {% block body %}
     {% include 'header.html' %}
 
     <div class="container-fluid bg-secondary text-center text-white p-4">
-        <h1>Sign Up</h1>
+        <h1>Sign Up / Register</h1>
     </div>
 
     {% include 'messages.html' %}
@@ -17,8 +17,8 @@
             <div class="flex-center">
             <div class="row col-10 col-md-8">
 
-                {% if form.non_field_errors %}
-                    {% for error in form.non_field_errors %}
+                {% if fm.non_field_errors %}
+                    {% for error in fm.non_field_errors %}
                         <p>{{error}}</p>
                     {% endfor %}
                 {% endif %}
@@ -28,7 +28,7 @@
                         {{f.label_tag|title}}
                         {{f}}
                         {% if f.errors %}
-                            <script>
+                            <script>//add is-invalid class to field
                                 var id = document.getElementById("{{f.id_for_label}}");
                                 id.classList.add("is-invalid")
                                 id.placeholder = "Please fill this. {{f.errors|striptags}}";
@@ -52,5 +52,12 @@
         </div>
     </form>
 
-
+    <!--script>
+        var inparr = document.getElementsByTagName('input')
+        inparr.forEach(function(index,arr) {
+            arr[index].classList.add("form-control")
+        });
+    </script-->
+    {% include 'footer.html' %}
+    {% include 'static/components/bs_form.html' %}
 {% endblock body %}

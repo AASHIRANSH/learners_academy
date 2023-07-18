@@ -34,7 +34,12 @@ def post_entry(request):
 
 
 def post_list(request):
-    posts = Post.objects.filter(published=True)
+    datag = request.GET
+    if datag.get("action") == "myposts":
+        posts = Post.objects.filter(author=request.user)
+    else:
+        posts = Post.objects.filter(published=True)
+        
     vars = {'posts': posts}
     return render(request, 'english/post_list.html', vars)
 
@@ -233,7 +238,7 @@ def words(request):
     rv_items = list(Revise.objects.all())
     randitem = random.choice(items)
 
-    if Revise.objects.filter(word=randitem):
+    if Revise.objects.filter(user=request.user, word=randitem):
         visible = 'disabled'
         refresh = 'True'
     else:
@@ -326,6 +331,8 @@ def revise(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     # with open(file_path, "r", encoding="UTF-8") as file:
     #     added_words = file.readlines()
+
+    # NOTE: len(x[0].official.all())
     user = request.user
     rv_obj = Revise.objects.filter(user=user)
     if not rv_obj:

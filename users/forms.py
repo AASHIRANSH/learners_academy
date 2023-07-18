@@ -65,7 +65,8 @@ class ProfileUpdateForm(forms.ModelForm):
     reputation = forms.CharField(required=False, max_length=100,widget=forms.NumberInput())
     class Meta:
         model = Profile
-        fields = ["image","reputation"]
+        fields = "__all__"
+        exclude = ["user"]
 
 
 class ContactForm(forms.ModelForm):

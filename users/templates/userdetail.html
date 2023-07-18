@@ -50,6 +50,44 @@
     </div>
     {% include 'messages.html' %}
     
+    <div class="container mt-5">
+        <div class="row">
+
+            <div class="col-2 mb-3">
+                {{form.username.label_tag}}
+            </div>
+            <div class="col-10 mb-3">
+                {{form.username.value}}
+                {{form.username.errors}}
+            </div>
+
+            <div class="col-2 mb-3">
+                {{form.first_name.label_tag}}
+            </div>
+            <div class="col-10 mb-3">
+                {{form.first_name.value}}
+                {{form.first_name.errors}}
+            </div>
+
+            <div class="col-2 mb-3">
+                {{form.last_name.label_tag}}
+            </div>
+            <div class="col-10 mb-3">
+                {{form.last_name.value}}
+                {{form.last_name.errors}}
+            </div>
+
+            <div class="col-2 mb-3">
+                {{form.email.label_tag}}
+            </div>
+            <div class="col-10 mb-3">
+                {{form.email.value}}
+                {{form.email.errors}}
+            </div>
+        
+        </div>
+    </div>
+
     {% include 'footer.html' %}
 {% endblock body %}
 

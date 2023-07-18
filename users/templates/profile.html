@@ -104,7 +104,7 @@
             </div>
 
             <div>
-                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary">My Friends <span class="badge bg-secondary">{{user.friend_set.count}}</span></button>
+                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary">My Friends <span id="fr" class="badge bg-secondary"></span></button>
                 <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
                 {% if perms.languages.add_post %}
                     <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary">My Posts</button>
@@ -177,5 +177,18 @@
         </div>
     </form>
 
+    <script>
+        var friends_model = [];
+        `{% for c in friends %}
+            {% if c.is_friend %}
+            ${friends_model.push("{{c.user.username}}")}
+            {% endif %}
+        {% endfor %}`
+        console.log(friends_model)
+        document.addEventListener("DOMContentLoaded", function () {
+            var fr = document.getElementById("fr")
+            fr.innerHTML = friends_model.length
+        })
+    </script>
     {% include 'footer.html' %}
 {% endblock body %}
