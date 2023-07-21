@@ -4,6 +4,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core import validators
 
+class Notification(models.Model):
+    type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.type
 
 
 class Word(models.Model):
@@ -31,9 +36,11 @@ class Word(models.Model):
 
 
 class Revise(models.Model):
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     date = models.DateField(auto_now=False, auto_now_add=True)
+    rvcount = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.word.word} ({self.word.pos})"
@@ -56,9 +63,11 @@ class Post(models.Model):
     fill_values = models.CharField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to=f"uploads/posts/{date_created}/{title}", blank=True, null=True)
 
-
+    def is_pub(self):
+        return f"{'published' if self.published else 'unpublished'}"
+    
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title} ({'published' if self.published else 'unpublished'})"
 
 
 class Like(models.Model):
@@ -73,15 +82,27 @@ class Dislike(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+class Exchoice(models.Model):
+    choice = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.choice
+
+
 class Exercise(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
     type = models.CharField(max_length=50, choices=(('fill','Blanks Filling'),('choice','Multiple Choice')))
     question = models.TextField()
-    answer = models.TextField()
-
+    choice = models.ForeignKey(Exchoice, on_delete=models.CASCADE, blank=True, null=True)
+    
     def __str__(self):
         return f"{self.question} ({self.type})"
 ''' End Posts... '''
+
+
+
+
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')

@@ -32,29 +32,72 @@ def users(request):
 def user_detail(request, id):
     user_obj = User.objects.get(pk=id)
     form = EditUserProfileForm(instance=user_obj)
+
     datap = request.GET
+    ''' current user-friend object '''
+    fr_other_obj = Friend.objects.filter(user=user_obj, friend=request.user).first()
+    ''' other user-friend object'''
+    fr_own_obj = Friend.objects.filter(user=request.user, friend=user_obj).first()
     if datap.get("action"):
+        if datap.get("action") == "accept":
+            fr_other_obj.is_friend = True
+            fr_other_obj.save()
+            messages.success(request, f'You have become a friend of "{user_obj.username}"')
+            return HttpResponseRedirect(request.path)
+        
         if datap.get("action") == "befriend":
-            ''' current user object '''
-            fr_other_obj = Friend.objects.filter(user=user_obj, friend=request.user)
-            ''' other user object'''
-            fr_own_obj = Friend.objects.filter(user=request.user, friend=user_obj)
-            if fr_own_obj.exists():
-                if fr_own_obj[0].is_friend:
+            if fr_own_obj:
+                if fr_own_obj.is_friend:
                     messages.error(request, f"You are already a friend of {user_obj.username}")
                 else:
-                    messages.error(request, f"You have already sent friend request to {user_obj.username}")
+                    messages.warning(request, f"You have already sent friend request to {user_obj.username}")
+                    return HttpResponseRedirect(request.path)
+            elif fr_other_obj:
+                if fr_other_obj.is_friend:
+                    messages.error(request, f"You are already a friend of {user_obj.username}")
+                else:
+                    fr_other_obj.is_friend = True
+                    fr_other_obj.save()
+                    messages.success(request, f"Friend request has been sent to {user_obj.username}")
+
             else:
                 Friend.objects.create(user=request.user, friend=user_obj)
                 messages.success(request, f"Friend request has been sent to {user_obj.username}")
-        elif datap.get("action") == "unfriend":
-            Friend.objects.remove(user=request.user)
-            messages.success(request, f"You are not longer friend of {user_obj.username}")
 
+        elif datap.get("action") == "unfriend":
+            fr_obj = Friend.objects.filter(user=request.user, friend=user_obj) | Friend.objects.filter(user=user_obj, friend=request.user)
+            if fr_obj.exists():
+                fr_obj.first().delete()
+            messages.warning(request, f'You are no longer friend of "{user_obj.username}".')
+            return HttpResponseRedirect(request.path)
+
+    if fr_own_obj:
+        if fr_own_obj.is_friend:
+            fr_own_obj = True
+            fr_req = True
+        else:
+            fr_own_obj = True
+            fr_req = "request_sent"
+    else:
+        fr_own_obj = False
+        fr_req = None
+
+    if fr_other_obj:
+        if fr_other_obj.is_friend:
+            fr_other_obj = True
+            fr_req = True
+        else:
+            fr_other_obj = True
+            fr_req = "request_received"
+    else:
+        fr_other_obj = False
+        fr_req = None
 
     vars = {
         'user':user_obj,
-        'form':form
+        'form':form,
+        "is_friend":fr_own_obj or fr_other_obj,
+        "fr_req":fr_req
     }
     return render(request, "userdetail.html", vars)
 

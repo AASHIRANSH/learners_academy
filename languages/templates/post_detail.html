@@ -22,34 +22,21 @@
 {% include 'static/css/styles.html' %}
 {% include "header.html" %}
 
-{% if messages %}
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-        </symbol>
-    </svg>
-    {% for message in messages %}
-        <div class="alert alert-{% if message.tags == "error" %}danger{% else %}{{message.tags}}{% endif %} alert-dismissible fade show my-1 d-flex align-items-center" role="alert">
-            {% if message.tags == "success" %}
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-            {% else %}
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-            {% endif %}
-
-            {{message}}
-
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endfor %}
-{% endif %}
+{% include 'messages.html' %}
 
 <div class="container my-5">
+    {% if perms.languages.change_post %}
+        <div class="row">
+            <div class="col-auto">
+                <button class="btn btn-secondary" onclick="window.location.assign(`{% url 'post_entry' %}?action=editpost&pk={{post.pk}}`)">Edit Post</button>
+            </div>
+            <div  class="col-auto">
+                <button class="btn btn-secondary" onclick="window.location.assign(`{% url 'exercise_entry' %}`)">Add Exercise</button>
+            </div>
+        </div>
+        <hr>
+    {% endif %}
+    
     <div id="post-title">
         <div class="d-flex justify-content-between">
             <div>
@@ -93,12 +80,12 @@
         <div id="questions">
             <ol>
                 {% for q in post.exercise_set.all %}
-                    <li class="mb-2">{{q.answer}}</li>
+                    <li class="mb-2">{{q.question}}</li>
                 {% endfor %}
             </ol>
         </div>
     </div>
-    <div class="row col-6 my-5">
+    <div class="row my-5">
         <div class="col-auto">
             <button onclick="check()" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Check</button>
         </div>
@@ -177,7 +164,7 @@
 
 {% include 'footer.html' %}
 
-<script>//getting all li elements
+<script>//getting all exmple sentences li elements and adding class .example to each
     var post_content = document.getElementById("post-content");
     var li_arr = post_content.getElementsByTagName("li");
     for (li in li_arr) {
@@ -185,7 +172,8 @@
     }
 </script>
 <script>//highlighting the texts by replacing within li elems
-    var target_vals = "{{post.fill_values}}".split(",");
+    var fill_values = "{{post.fill_values}}"
+    var target_vals = fill_values.split(",");
     var element = document.getElementsByClassName("example");
     for (line in element) {
         for (tvx in target_vals) {
@@ -196,6 +184,30 @@
 </script>
 
 <script>//insert select element
+    var exercise = document.getElementById("exercise"); //parent element of questions
+    var questions = exercise.getElementsByTagName("li"); //question elements array
+    var exchoices = [];
+    `{% for ex in post.exercise_set.all %}${exchoices.push("{{ex.choice}}")}{% endfor %}`;
+    // RegExp
+    var target_vals_join = target_vals.join("|");
+    var reg_patt = new RegExp("\\b"+target_vals_join+"\\b","gi")
+    // end RegExp
+    
+    for (line in questions) {
+        questions[line].innerHTML = questions[line].innerHTML.replace(reg_patt, sel());
+        
+        function sel(){
+            var select = `<select id="q-${line}"><option selected="selected"></option>`
+            for (let x of exchoices[line].split(",")) {
+                select += `<option value="${x}">${x}</option>`
+            }
+            select += `</select>`
+            return ` ${select} `
+        };
+    }
+</script>
+
+<script>
     var q_arr = [];
     {//q_arr
         `{% for x in post.exercise_set.all %}
@@ -207,35 +219,14 @@
     var pre_values = [] //answer values
     for ( let x of q_arr ) {
         for ( let y of target_vals ) {
-            if (x.toLowerCase().includes(y)) {
+            let preReg = new RegExp("\\b"+y+"\\b","gi")
+            if (x.toLowerCase().search(preReg) >= 0) {
                 pre_values.push(y)
             }
         }
     };
 
-    var exercise = document.getElementById("exercise"); //parent element of questions
-    var questions = exercise.getElementsByTagName("li"); //question elements array
 
-    // RegExp
-    var target_vals_join = target_vals.join("|");
-    var reg_patt = new RegExp(target_vals_join,"gi")
-    // end RegExp
-    
-    for (line in questions) {
-        questions[line].innerHTML = questions[line].innerHTML.replace(reg_patt, sel());
-        
-        function sel(){
-            var select = `<select id="q-${line}"><option selected="selected"></option>`
-            for (let x of target_vals) {
-                select += `<option value="${x}">${x}</option>`
-            }
-            select += `</select>`
-            return ` ${select} `
-        };
-    }
-</script>
-
-<script>
     var val_array = [];
     var exam = 0;
 
@@ -247,8 +238,9 @@
             if (e.value == pre_values[vl]) { exam += 1 };
         }
 
-        console.log(val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
-
+        console.log("overall:",val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
+        console.log("val_array:",val_array)
+        console.log("pre_values:",pre_values)
 
         //for BSModal
         q_arr_html = []

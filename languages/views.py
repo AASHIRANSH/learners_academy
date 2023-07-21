@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import PostForm, CommentForm, WordsForm
+from .forms import PostForm, ExerciseForm, CommentForm, WordsForm
 #WordsDB Model
-from .models import Word, Revise, Post, Comment, Like, Dislike
+from .models import Word, Revise
+from .models import Post, Exercise, Comment, Like, Dislike
+
 from django.contrib.auth.models import User
 import random, datetime
 
@@ -11,18 +13,62 @@ import random, datetime
 def index(request):
     return render(request, "english/index.html")
 
+def exercise_entry(request):
+    datag = request.GET
+    if datag.get("action") == "editexercise":
+        pk = datag.get("pk")
+        instance = get_object_or_404(Exercise,pk=pk)
+        form = ExerciseForm(instance=instance)
+    else:
+        form = ExerciseForm()
 
-def post_entry(request):
-    form = PostForm()
-    req_post = request.POST
     
     if request.method == "POST":
-        req_post = req_post.copy()
-        req_post.update({'author':request.user})
-        form = PostForm(req_post)
+        datap = request.POST
+        datap = datap.copy()
+        datap.update({'author':request.user})
+        form = ExerciseForm(datap)
+
         if form.is_valid():
             form.save()
-            messages.success(request, "The post was added successfully!")
+
+            if datag.get("action") == "editexercise":
+                messages.success(request, "The exercise was edit successfully!")
+            else:
+                messages.success(request, "The exercise was added successfully!")
+            return redirect("posts")
+        else:
+            messages.error(request, "There was an error!")
+            return redirect("exercise_entry")
+        
+    vars = {
+        "form":form
+    }
+    return render(request, "exercise_entry.html", vars)
+
+def post_entry(request):
+    datag = request.GET
+    if datag.get("action") == "editpost":
+        pk = datag.get("pk")
+        post = Post.objects.get(pk=pk)
+        form = PostForm(instance=post)
+    else:
+        form = PostForm()
+
+    
+    if request.method == "POST":
+        datap = request.POST
+        datap = datap.copy()
+        datap.update({'author':request.user})
+        form = PostForm(datap, instance=post)
+
+        if form.is_valid():
+            form.save()
+
+            if datag.get("action") == "editpost":
+                messages.success(request, "The post was updated successfully!")
+            else:
+                messages.success(request, "The post was added successfully!")
             return redirect("posts")
         else:
             messages.error(request, "There was an error!")
@@ -472,7 +518,9 @@ def data(request):
 
     if data.get('data') == "easy":
         entry = Revise.objects.get(word_id=word)
-        entry.date = today+datetime.timedelta(days=6)
+        rvcount = entry.rvcount
+        entry.date = today+datetime.timedelta(days=6+rvcount)
+        entry.rvcount += 1
         entry.save()
         messages.success(request, "Great! the word will show up after 6 days")
         return HttpResponseRedirect('/english/revise')

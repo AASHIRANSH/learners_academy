@@ -16,6 +16,7 @@ urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('test/', views.post_detail_test, name='post_detail_test'),
     path('exercise/<int:pk>/', views.exercise, name='exercise'),
+    path('exercise/', views.exercise_entry, name='exercise_entry'),
 
     # User Posts
     path('myposts/', views.post_entry, name='my_posts'),

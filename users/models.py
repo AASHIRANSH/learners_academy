@@ -57,6 +57,9 @@ class Friend(models.Model):
     friend = models.ForeignKey(User, related_name="%(class)s_friend", verbose_name="Friend", on_delete=models.CASCADE)
     is_friend = models.BooleanField(default=False)
 
+    def isFriend(self):
+        return self.is_friend
+    
     def __str__(self):
         return f"{self.friend.username} ({self.user.username})"
 

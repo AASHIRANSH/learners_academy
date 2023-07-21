@@ -1,9 +1,14 @@
 from django import forms
-from .models import Post, Word, Comment
+from .models import Post, Exercise, Word, Comment
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
+        fields = "__all__"
+
+class ExerciseForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
         fields = "__all__"
 
 

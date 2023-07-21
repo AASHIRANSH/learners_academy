@@ -29,7 +29,7 @@
                 
                 <div>
                     {% if user.is_superuser %}
-                    admin
+                    Administrator
                     {% endif %}
                 </div>
             </div>
@@ -43,7 +43,34 @@
 
             <div>
                 <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
-                <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary">Befriend</button>
+                {% if is_friend %}
+                    {% if fr_req == "request_received" %}
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+                                Befriend
+                            </button>
+                            <div class="dropdown-menu p-2">
+                                You have a friend request from {{user.username}}.
+                                <button onclick="window.location.assign('?action=accept')" class="btn btn-sm btn-secondary">Accept</button>
+                            </div>
+                        </div>
+                    {% else %}
+                    {% if fr_req == "request_sent" %}
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+                              Befriend
+                            </button>
+                            <div class="dropdown-menu p-2">
+                              You have already sent friend request to {{user.username}}.
+                            </div>
+                        </div>
+                    {% else %}
+                        <button onclick="window.location.assign('?action=unfriend')" class="btn btn-danger">Unfriend</button>
+                    {% endif %}
+                    {% endif %}
+                {% else %}
+                    <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary">Befriend</button>
+                {% endif %}
             </div>
         </div>
         <!--END PROFILE BUTTONS-->
