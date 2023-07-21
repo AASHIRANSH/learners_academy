@@ -54,14 +54,15 @@ class Topic(models.Model):
 
 
 class Post(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
     published = models.BooleanField(default=False)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
     fill_values = models.CharField(max_length=200, blank=True, null=True)
-    image = models.ImageField(upload_to=f"uploads/posts/{date_created}/{title}", blank=True, null=True)
+    image = models.ImageField(upload_to=f"uploads/posts/{created_at}/{title}", blank=True, null=True)
 
     def is_pub(self):
         return f"{'published' if self.published else 'unpublished'}"

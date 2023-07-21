@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block body %}
+
 {% include "header.html" %}
 {% include "messages.html" %}
+
 <style>
   #word-of-the-day {
     position: relative;
@@ -17,6 +19,7 @@
     cursor: pointer;
   }
 </style>
+
 <section id="sl">
   <div id="headersl">
   </div>
@@ -33,21 +36,51 @@
 </section>
 
 <div id="word-of-the-day" class="my-5">
-    <div class="bg-primary position-absolute top-0 start-0 m-3 rounded-2">
-        <span class="text-white p-1">word of the day</span>
-    </div>
+  <div class="bg-primary position-absolute top-0 start-0 m-3 rounded-2">
+    <span class="text-white p-1">word of the day</span>
+  </div>
 
-    <div class="bg-blue-ii p-3 text-center">
-        <div class="">{% now "jS F Y H:i" %}</div>
-    </div>
-    
-    <div id="wod-word" class="text-secondary">
-        <div class="text-primary" onclick="window.location.assign('{% url 'word' word.id %}')">{{word.word}}</div>
-        <div class="fs-4">{{word.pos}}</div>
-        <div class="fs-5 m-3">{{word.definition}}</div>
-    </div>
-    
+  <div class="bg-blue-ii p-3 text-center">
+    <div class="">{{now}}</div>
+  </div>
+  
+  <div id="wod-word" class="text-secondary">
+    <div class="text-primary" onclick="window.location.assign('{% url 'word' word.id %}')">{{word.word}}</div>
+    <div class="fs-4">{{word.pos}}</div>
+    <div class="fs-5 m-3">{{word.definition}}</div>
+  </div>
+</div>
 
+<div class="container my-5">
+  {% for post in posts %}
+    <div class="row py-3">
+      <div class="row col-9">
+          <div id="lesson_cont" class="col-12 p-0" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
+              <div id="lesson_title" class="d-flex justify-content-center align-items-center">
+                  <div class="">
+                      <div class="fs-2">{{post.topic.name|title}}</div>
+                      <div class="fs-2">...</div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-sm-12 col-lg-5 text-dark">
+              <div class="">
+                  <a class="text-dark" href="{% url 'post_detail' post.pk %}">
+                      <div class="fs-4">{{ post.title }}</div>
+                  </a>
+              </div>
+          </div>
+      </div>
+      <div class="row col-3">
+          <div class="col">
+              <div class="">
+                  <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-thumbs-up fs-5"></i> <span class="badge bg-secondary">{{post.like_set.count}}</span></button>    
+              </div>{{post.created_at}}
+          </div>
+      </div>
+    </div>
+    <hr>
+  {% endfor %}
 </div>
 
 

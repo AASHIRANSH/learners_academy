@@ -24,7 +24,7 @@ class TopicView(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostView(admin.ModelAdmin):
-    list_display = ('title','date_created','author')
+    list_display = ('title','created_at','author')
 
     class Media:
         js= ('/static/js/tinyinject.js',)

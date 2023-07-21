@@ -2,6 +2,25 @@
     .superuser {
         display: {% if request.user.is_superuser %}initial{% else %}none{% endif %};
     }
+
+    #lesson_cont {
+        width: 350px;
+        height: 250px;
+        background: url("/static/img/bgs/education_doodles.svg");
+        background-position: center;
+        background-size: cover;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+    #lesson_title {
+        width:100%;
+        height:100%;
+        background-color: #99999999;
+        text-align: center;
+        color: #ffffff;
+        text-shadow: 2px 2px 5px #000000;
+    }
+    
     #post-title {
         background-color: #f1f1f1;
         padding: 2rem 1rem 1rem 1rem;
