@@ -467,33 +467,10 @@ def edit(request):
     form = WordsForm(instance=word_obj)
 
     if request.method == "POST":
-        data_form = WordsForm(request.POST)
+        data_form = WordsForm(request.POST or None, instance=word_obj)
         datap = request.POST
         if data_form.is_valid():
-            word_root = datap.get('word_root')
-            word = datap.get('word')
-            pos = datap.get('pos')
-            grade = datap.get('grade')
-            pronounce = datap.get('pronounce')
-            definition = datap.get('definition')
-            forms = datap.get('forms')
-            example = datap.get('example')
-            synonyms = datap.get('synonyms')
-            compare = datap.get('compare')
-            pic = datap.get('pic')
-
-            word_obj.word_root=word_root
-            word_obj.word=word
-            word_obj.pronounce=pronounce
-            word_obj.pos=pos
-            word_obj.grade=grade
-            word_obj.definition=definition
-            word_obj.forms=forms
-            word_obj.example=example
-            word_obj.synonyms=synonyms
-            word_obj.compare=compare
-            word_obj.pic=pic
-            word_obj.save()
+            data_form.save()
             messages.success(request, "Great! the word was edited!")
             return HttpResponseRedirect('/english/revise')
         else:

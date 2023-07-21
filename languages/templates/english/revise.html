@@ -87,10 +87,19 @@
         {% endif %}
         {% endif %}
 
-        <div id="def-container" class="col-12 rounded-3 mt-3">
-            <div id="def" class="col-12 fs-4 p-2">
-                {{word.definition}}
+        <div id="def-container" class="position-relative col-12 rounded-3 mt-3 p-2 pe-5">
+            <div id="def" class="col-12 fs-4">
+                <span class="fs-6">{% if word.def_inf %}{{word.def_inf}} | {% endif %}</span> {{word.definition}}
             </div>
+            <div class="position-absolute top-0 end-0 m-2">
+                <i onclick="def_lang()" class="fa-solid fa-language fs-3 text-primary cursor-pointer"></i>
+            </div>
+            <script>
+                def_ele = document.getElementById("def")
+                function def_lang() {
+                    def_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
+                }
+            </script>
         </div>
 
         <div id="example" class="col-12 fst-italic py-3 overflow-auto">

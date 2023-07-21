@@ -217,15 +217,15 @@
     var q_count = q_arr.length;//`{{post.exercise_set.count}}`; //length of questions
     
     var pre_values = [] //answer values
-    for ( let x of q_arr ) {
-        for ( let y of target_vals ) {
+    for ( let x in q_arr ) {
+        var prechoice = exchoices[x].split(",")
+        for ( let y of prechoice ) {
             let preReg = new RegExp("\\b"+y+"\\b","gi")
-            if (x.toLowerCase().search(preReg) >= 0) {
+            if (q_arr[x].toLowerCase().search(preReg) >= 0) {
                 pre_values.push(y)
             }
         }
     };
-
 
     var val_array = [];
     var exam = 0;
@@ -241,6 +241,7 @@
         console.log("overall:",val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
         console.log("val_array:",val_array)
         console.log("pre_values:",pre_values)
+        console.log("exchoices:",exchoices)
 
         //for BSModal
         q_arr_html = []

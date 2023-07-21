@@ -19,3 +19,7 @@
 .show {
     display: initial;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

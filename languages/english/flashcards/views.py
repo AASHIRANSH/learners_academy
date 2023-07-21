@@ -338,6 +338,7 @@ def word_entry(request):
         synonyms = data.get('synonyms')
         pic = data.get('pic')
         pic_url = data.get('pic_url')
+        
         '''ref id'''
         ref_id = data.get('ref_id')
         if ref_id is None:
