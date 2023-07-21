@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% block og %}
 <!--
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://dev.to/earthcomfy/getting-started-custom-user-model-5hc" />
-<meta property="og:title" content="Custom User Model in Django" />
-<meta property="og:description" content="Hello everyone. Follow this article to understand about custom user model in Django.     I&#39;ve..." />
-<meta property="og:site_name" content="DEV Community" />
-<meta name="twitter:site" content="@thepracticaldev">
-<meta name="twitter:creator" content="@earthcomfy">
-<meta name="twitter:title" content="Custom User Model in Django">
-<meta name="twitter:description" content="Hello everyone. Follow this article to understand about custom user model in Django.     I&#39;ve...">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:widgets:new-embed-design" content="on">
-<meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta property="og:image" content="https://dev.to/social_previews/article/1024949.png" />
-<meta name="twitter:image:src" content="https://dev.to/social_previews/article/1024949.png">
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://dev.to/earthcomfy/getting-started-custom-user-model-5hc" />
+    <meta property="og:title" content="Custom User Model in Django" />
+    <meta property="og:description" content="Hello everyone. Follow this article to understand about custom user model in Django.     I&#39;ve..." />
+    <meta property="og:site_name" content="DEV Community" />
+    <meta name="twitter:site" content="@thepracticaldev">
+    <meta name="twitter:creator" content="@earthcomfy">
+    <meta name="twitter:title" content="Custom User Model in Django">
+    <meta name="twitter:description" content="Hello everyone. Follow this article to understand about custom user model in Django.     I&#39;ve...">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:widgets:new-embed-design" content="on">
+    <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta property="og:image" content="https://dev.to/social_previews/article/1024949.png" />
+    <meta name="twitter:image:src" content="https://dev.to/social_previews/article/1024949.png">
 -->
 {% endblock og %}
 
@@ -28,10 +28,8 @@
     {% if perms.languages.change_post %}
         <div class="row">
             <div class="col-auto">
-                <button class="btn btn-secondary" onclick="window.location.assign(`{% url 'post_entry' %}?action=editpost&pk={{post.pk}}`)">Edit Post</button>
-            </div>
-            <div  class="col-auto">
-                <button class="btn btn-secondary" onclick="window.location.assign(`{% url 'exercise_entry' %}`)">Add Exercise</button>
+                <button class="btn btn-outline-secondary" onclick="window.location.assign(`{% url 'post_entry' %}?action=editpost&pk={{post.pk}}`)">Edit Post</button>
+                <button class="btn btn-outline-secondary" onclick="window.location.assign(`{% url 'exercise_entry' %}`)">Add Exercise</button>
             </div>
         </div>
         <hr>
@@ -49,14 +47,22 @@
 
     <div class="rule"></div>
 
-    <div id="post-content">{{ post.content|safe }}</div>
+    <div id="post-content" class="mb-5">
+        {{ post.content|safe }}
+    </div>
     
     <h3><i class="fa-solid fa-dumbbell"></i> Exercise <i class="fa-solid fa-dumbbell"></i></h3>
     <hr>
     <b>Choose the correct word to fill the blanks</b> ({{post.fill_values}}):
     <div id="exercise" class="my-4 position-relative">
+        {% if not premium %}
+        <div class="intr">
+            <div class="col"><i class="fa-solid fa-lock"></i> You need premium membership for this</div>
+            <div card="col"><button class="btn btn-primary">Get it</button></div>
+        </div>
+        {% endif %}
         <!-- Result Prompt <div class="hidden">
-            <div id="intr">
+            <div class="intr">
                 <div id="result">That was awesome!</div>
             </div>
         </div>-->
@@ -106,7 +112,6 @@
         <div class="col-2">
         </div>
 
-
         <div class="col-8">
             <form class="comment-form mb-5" method="post" data-post="{{ post.id }}">
                 {% csrf_token %}
@@ -116,33 +121,33 @@
 
             {% for comment in comments %}
                 <div class="mb-4">
-                <div id="comment-head" class="row bg-gray-secondary p-2">
-                    <div class="col-8">
-                        <img style="height:3rem;" src="{{comment.author.profile.image.url}}" class="rounded-circle"/>
-                        <span class="fs-4"> {{ comment.author }}</span>
-                    </div>
-                    <div class="col-4 d-flex justify-content-end p-1">
-                        <div class="dropdown">
-                            <button class="btn" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                {% if request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'edit_comment' comment.pk %}">Edit</a></li>{% endif %}
+                    <div id="comment-head" class="row bg-gray-secondary p-2">
+                        <div class="col-8">
+                            <img style="height:3rem;" src="{{comment.author.profile.image.url}}" class="rounded-circle"/>
+                            <span class="fs-4"> {{ comment.author }}</span>
+                        </div>
+                        <div class="col-4 d-flex justify-content-end p-1">
+                            <div class="dropdown">
+                                <button class="btn" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
+                                    {% if request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'edit_comment' comment.pk %}">Edit</a></li>{% endif %}
 
-                                {% if request.user.is_superuser or request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'delete_comment' comment.pk %}">Delete</a></li>{% endif %}
-                                
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item active" href="#">Separated link</a></li>
-                            </ul>
+                                    {% if request.user.is_superuser or request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'delete_comment' comment.pk %}">Delete</a></li>{% endif %}
+                                    
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item active" href="#">Separated link</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="comment" class="position-relative bg-gray p-2" style="">
-                
-                    <pre>{{ comment.content }}</pre>
+                    <div id="comment" class="position-relative bg-gray p-2" style="">
+                    
+                        <pre>{{ comment.content }}</pre>
 
-                    <span id="time-stamp">{{ comment.created_at }}</span>
+                        <span id="time-stamp">{{ comment.created_at }}</span>
+                    </div>
                 </div>
-            </div>
 
             {% empty %}
                 <p>No comments yet.</p>
