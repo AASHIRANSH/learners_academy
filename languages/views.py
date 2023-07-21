@@ -112,7 +112,7 @@ def post_detail(request, pk):
         'comments': comments,
         'form': form,
         'user_in_like_set': user_in_like_set,
-        "premium":False
+        "premium":True
         }
     return render(request, 'post_detail.html', vars)
 
