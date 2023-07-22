@@ -1,7 +1,7 @@
 <form method="post" action="{% url 'like' post.pk %}" class="d-inline">
     {% csrf_token %}
     {% if request.user.is_authenticated %}
-        <button class="btn btn-outline-primary" type="submit"><i class="fa fa-thumbs-up fs-5"></i> <span class="badge bg-primary">{{post.like_set.count}}</span></button>
+        <button class="btn btn-outline-primary mb-1" type="submit"><i class="fa fa-thumbs-up fs-5"></i> <span class="badge bg-primary">{{post.like_set.count}}</span></button>
     {% else %}
         <div class="btn-group dropup">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="dropdown" aria-expanded="false">
@@ -16,7 +16,7 @@
 <form method="post" action="{% url 'dislike' post.pk %}" class="d-inline">
     {% csrf_token %}
     {% if request.user.is_authenticated %}
-        <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-thumbs-down fs-5"></i> <span class="badge bg-secondary">{{post.dislike_set.count}}</span></button>
+        <button class="btn btn-outline-secondary mb-1" type="submit"><i class="fa fa-thumbs-down fs-5"></i> <span class="badge bg-secondary">{{post.dislike_set.count}}</span></button>
         {% else %}
         <div class="btn-group dropup">
             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">

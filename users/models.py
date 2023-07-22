@@ -50,7 +50,6 @@ class Profile(models.Model):
             return False
 
 
-
 class Friend(models.Model):
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -64,8 +63,6 @@ class Friend(models.Model):
         return f"{self.friend.username} ({self.user.username})"
 
 
-
-    
 class Contact(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=50)
@@ -76,3 +73,10 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name+" "+self.message
+    
+
+class Notification(models.Model):
+    type = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.type

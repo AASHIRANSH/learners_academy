@@ -1,4 +1,15 @@
 <script>
+    //uk_ele = document.getElementById("pruk");
+    //us_ele = document.getElementById("prus");
+    def_ele = document.getElementById("def");
+    function def_lang() {
+        def_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
+        //uk_ele.innerText = `{{word.def_}} {{word.definition_hindi}}`;
+        //us_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
+    };
+</script>
+
+<script>
     var def = document.getElementById("def");
     var tag_b_index = 0;
     var tag_start = false;
@@ -15,19 +26,21 @@
         tag_start = tag_start == true?false:true;
     }
 
+    def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
+
     var element = document.getElementById("example");
     element.innerHTML = element.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-
-    // function highlight(text) {
-    //     var inputText = document.getElementById("inputText");
-    //     var innerHTML = inputText.innerHTML;
-    //     var index = innerHTML.indexOf(text);
-    //     if (index >= 0) {
-    //         innerHTML = innerHTML.substring(0,index) + "<span class='highlight'>" + innerHTML.substring(index,index+text.length) + "</span>" + innerHTML.substring(index + text.length);
-    //         inputText.innerHTML = innerHTML;
-    //     }
-    // }
-
+    {
+        // function highlight(text) {
+        //     var inputText = document.getElementById("inputText");
+        //     var innerHTML = inputText.innerHTML;
+        //     var index = innerHTML.indexOf(text);
+        //     if (index >= 0) {
+        //         innerHTML = innerHTML.substring(0,index) + "<span class='highlight'>" + innerHTML.substring(index,index+text.length) + "</span>" + innerHTML.substring(index + text.length);
+        //         inputText.innerHTML = innerHTML;
+        //     }
+        // }
+    }
     var forms = document.getElementById("forms");
     forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
     //var n = words.split(" ");

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'english/sidebar.html' %}
+
+<div id="body"></div>
+
+<div id="navigation_b"></div>
+
+<!--Alert-->
+<div id="prompt">
+    <div id="prm"></div>
+    <div id="prm2"></div>
+</div>
+<!--End Alert-->
+
+
+<!--MODAL WINDOW-->
+<div class="modall">
+    <div class="modal-content">
+        <div id="modall-content">Hello, I am a modal!</div>
+        <span class="close-button">×</span>
+    </div>
+</div>
+<!--End MODAL WINDOW-->
+{% include 'tts_2.html' %}
+
+<script>
+    //cards = JSON.parse("{{cards|escapejs}}");
+    //words = JSON.parse("{{words|escapejs}}");
+</script>
+<script>
+    ydata = JSON.parse("{{data|escapejs}}");
+</script>
+<script src="/static/js/courses/hi_en/global.js" defer></script>
+<script src="/static/js/courses/hi_en/en_ddse.js" defer></script>
+<script src="/static/js/courses/hi_en/prompter.js" defer></script>
+<script src="/static/js/courses/hi_en/unit_{{id}}.js" defer></script>
+<script src="/static/js/courses/hi_en/navigators.js" defer></script>
+<script src="/static/js/courses/keyboard_shortcuts.js" defer></script>
+
+{% endblock body %}

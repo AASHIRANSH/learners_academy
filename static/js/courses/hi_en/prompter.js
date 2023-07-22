@@ -1,5 +1,5 @@
-prompt = document.getElementById('prompt');
-prm = document.getElementById('prm');
+var prompt = document.getElementById('prompt');
+var prm = document.getElementById('prm');
 
 {//WISH
 wish = ["Good Job!", "Badhiya!", "Correct!", "Right!", "Nicely done!", "Great!", "Yeah!", "Cool!"];
@@ -2347,7 +2347,7 @@ function match_prompt() {//matching cards
         //NAVIGATES TO ANOTHER PAGE OR UNIT
         if (len.length == len_card_content) {
             if (vars[4] == 1) {
-                location.assign(`/learn/${lesson + 1}`);
+                location.assign(`/english/learn/${lesson + 1}`);
             } else {
                 navigate('next');
             }

@@ -74,7 +74,7 @@
 
     {% include 'header.html' %}
 
-    <div class="container_fluid p-4 bg-secondary text-white">
+    <div class="container_fluid p-4 bg-secondary text-white shadow">
         <div class="d-flex justify-content-center">
             <div class="me-3">
                 <img height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
@@ -91,25 +91,26 @@
                 
                 <div>
                     {% if user.is_superuser %}
-                    admin
+                    Administrator
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <!--PERMS BUTTONS-->
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mt-2">
             <div class="">
-                <button type="button" class="btn btn-primary" onclick="window.location.assign('{% url 'change_profile' %}')">Edit Profile</button>
+            
             </div>
 
-            <div>
-                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary">My Friends <span id="fr" class="badge bg-secondary"></span></button>
-                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
+            <div class="d-none d-lg-block">
+                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary"></span></button>
+                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary"><i class="fa-solid fa-people-group"></i> Find People</button>
                 {% if perms.languages.add_post %}
-                    <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary">My Posts</button>
+                    <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary"><i class="fa-solid fa-pen"></i> My Posts</button>
                 {% endif %}
-                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary">Flashcards</button>
+                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
+                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-book"></i> Flashcards</button>
             </div>
         </div>
         <!--END PROFILE BUTTONS-->
@@ -137,40 +138,41 @@
 
         <div class="container mt-5">
             <div class="row">                
-                <div class="col-2 mb-3">
+                <div class="col-3 mb-3">
                     {{form.username.label_tag}}
                 </div>
-                <div class="col-10 mb-3">
+                <div class="col-9 mb-3">
                     {{form.username.value}}
                     {{form.username.errors}}
                 </div>
 
-                <div class="col-2 mb-3">
+                <div class="col-3 mb-3">
                     {{form.first_name.label_tag}}
                 </div>
-                <div class="col-10 mb-3">
+                <div class="col-9 mb-3">
                     {{form.first_name.value}}
                     {{form.first_name.errors}}
                 </div>
 
-                <div class="col-2 mb-3">
+                <div class="col-3 mb-3">
                     {{form.last_name.label_tag}}
                 </div>
-                <div class="col-10 mb-3">
+                <div class="col-9 mb-3">
                     {{form.last_name.value}}
                     {{form.last_name.errors}}
                 </div>
 
-                <div class="col-2 mb-3">
+                <div class="col-3 mb-3">
                     {{form.email.label_tag}}
                 </div>
-                <div class="col-10 mb-3">
+                <div class="col-9 mb-3">
                     {{form.email.value}}
                     {{form.email.errors}}
                 </div>
-
-                <div class="col-2 mb-3">
-                <button onclick="window.location.assign('{% url 'sign_out' %}')" class="btn btn-danger">Log Out</button>
+                <hr>
+                <div class="col-auto mb-3">
+                <button type="button" class="btn btn-primary" onclick="window.location.assign('{% url 'change_profile' %}')"><i class="fa-solid fa-gear"></i> Edit Profile</button>
+                <button onclick="window.location.assign('{% url 'sign_out' %}')" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
                 </div>
             </div>
 

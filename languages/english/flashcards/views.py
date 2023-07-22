@@ -335,6 +335,7 @@ def word_entry(request):
         definition_hindi = data.get('definition_hindi')
         forms = data.get('forms')
         example = data.get('example')
+        tip = data.get('tip')
         synonyms = data.get('synonyms')
         pic = data.get('pic')
         pic_url = data.get('pic_url')
@@ -369,6 +370,7 @@ def word_entry(request):
                 definition_hindi=definition_hindi,
                 forms=forms,
                 example=example,
+                tip=tip,
                 synonyms=synonyms,
                 pic=pic,
                 pic_url=pic_url,

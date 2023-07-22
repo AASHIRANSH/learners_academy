@@ -12,10 +12,10 @@
 {% block body %}
 {% include 'header.html' %}
 
-    <div class="container_fluid p-4 bg-secondary text-white">
+    <div class="container_fluid p-4 bg-gray-100 shadow">
         <div class="d-flex justify-content-center">
             <div class="me-3">
-                <img height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
+                <img src="{{user.profile.image.url}}" class="profile-pic p-1 shadow bg-white"/><!-- former class rounded-circle, account-img -->
             </div>
 
             <div class="d-flex flex-column">
@@ -38,11 +38,11 @@
         <!--PERMS BUTTONS-->
         <div class="d-flex justify-content-between">
             <div class="">
-                <button type="button" class="btn btn-primary" onclick="window.location.assign('{% url 'change_profile' %}')">Edit Profile</button>
+                <!-- Start Buttons -->
             </div>
 
             <div>
-                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary">Find People</button>
+                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-success"><i class="fa-solid fa-message"></i> Message</button>
                 {% if is_friend %}
                     {% if fr_req == "request_received" %}
                         <div class="btn-group dropup">
@@ -65,11 +65,11 @@
                             </div>
                         </div>
                     {% else %}
-                        <button onclick="window.location.assign('?action=unfriend')" class="btn btn-danger">Unfriend</button>
+                        <button onclick="window.location.assign('?action=unfriend')" class="btn btn-danger"><i class="fa-solid fa-hands"></i> Unfriend</button>
                     {% endif %}
                     {% endif %}
                 {% else %}
-                    <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary">Befriend</button>
+                    <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary"><i class="fa-solid fa-handshake"></i> Befriend</button>
                 {% endif %}
             </div>
         </div>

@@ -1,26 +1,49 @@
 from django.contrib import admin
-from .models import Word, Revise, Topic, Post, Comment, Like, Dislike, Exercise, Exchoice
+from .models import Topic, Post, Comment, Like, Dislike, Exercise, Exchoice
+from .models import Word, Revise, Vocabulary, WordOfTheDay, Quote
 
 # Register your models here.
 @admin.register(Exercise)
 class ExerciseView(admin.ModelAdmin):
     list_display = ['post','question']
 
+
+
 @admin.register(Exchoice)
 class ExchoiceView(admin.ModelAdmin):
     list_display = ['choice']
+
+
 
 @admin.register(Word)
 class WordsView(admin.ModelAdmin):
     list_display = ['word','pos']
 
+
+
+@admin.register(WordOfTheDay)
+class WODView(admin.ModelAdmin):
+    list_display = ['word','created_at']
+
+
+
+@admin.register(Vocabulary)
+class VocabView(admin.ModelAdmin):
+    list_display = ['name']
+
+
+
 @admin.register(Revise)
 class ReviseView(admin.ModelAdmin):
     list_display = ['word','user']
 
+
+
 @admin.register(Topic)
 class TopicView(admin.ModelAdmin):
     list_display = ('name',)
+
+
 
 @admin.register(Post)
 class PostView(admin.ModelAdmin):
@@ -40,3 +63,9 @@ class LikeView(admin.ModelAdmin):
 @admin.register(Dislike)
 class DislikeView(admin.ModelAdmin):
     list_display = ('post','user','created_at')
+
+
+
+@admin.register(Quote)
+class QuoteView(admin.ModelAdmin):
+    list_display = ('quote','author')

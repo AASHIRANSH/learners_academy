@@ -38,8 +38,8 @@
     <div id="post-title">
         <div class="d-flex justify-content-between">
             <div>
-                <h2>{{ post.title }}</h2>
-                <div id="post-stamp">Posted on {{post.date_created}} by {{post.author}}</div>
+                <h2 class="text-primary">{{ post.title }}</h2>
+                <div id="post-stamp">Posted on {{post.created_at}} by {{post.author}}</div>
             </div>
             <div>{% include 'static/components/like_dislike.html' %}</div>
         </div>
@@ -53,7 +53,7 @@
     
     <h3><i class="fa-solid fa-dumbbell"></i> Exercise <i class="fa-solid fa-dumbbell"></i></h3>
     <hr>
-    <b>Choose the correct word to fill the blanks</b> ({{post.fill_values}}):
+    <b>Choose the correct word to fill in the blanks</b>:
     <div id="exercise" class="my-4 position-relative">
         {% if not premium %}
         <div class="intr">
@@ -125,6 +125,7 @@
                         <div class="col-8">
                             <img style="height:3rem;" src="{{comment.author.profile.image.url}}" class="rounded-circle"/>
                             <span class="fs-4"> {{ comment.author }}</span>
+                            <i class="fa-solid fa-comments"></i>
                         </div>
                         <div class="col-4 d-flex justify-content-end p-1">
                             <div class="dropdown">

@@ -108,7 +108,11 @@
         </div>
         <div class="row mb-3"><!-- Hindi -->
           <div class="row col-4">
-            <!-- Blank Area -->
+            <div class="col-12 mb-2">
+              {{form.tip.label_tag}}
+              <textarea class="form-control" name="tip" id="id_tip" rows="4"></textarea>
+              {{form.tip.errors}}
+            </div>
           </div>
           <div class="row col-8 mx-0">
             <div class="col-4">

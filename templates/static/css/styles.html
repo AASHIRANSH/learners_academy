@@ -3,6 +3,11 @@
         display: {% if request.user.is_superuser %}initial{% else %}none{% endif %};
     }
 
+    .r-title {
+        display: inline-block;
+        border-radius: 0.8rem 0.8rem 0 0;
+    }
+
     #lesson_cont {
         width: 350px;
         height: 250px;
@@ -74,5 +79,34 @@
         font-size: 3rem;
         padding: 1rem 5rem;
         border-radius: 1rem;
+    }
+    /* Users */
+    .profile-pic {
+        height: 10rem;
+        width: auto;
+        border-radius: 50%;
+    }
+    .card {
+        cursor: pointer;
+        width: 10rem;
+        height: 12rem;
+        border-radius: 0.5rem;
+        overflow: hidden;  
+        padding: 0.5rem;
+        transition: all 0.5s;
+    }
+    .card:hover {
+        background-color: #cccccc;
+    }
+    
+    .card img {
+        height: auto;
+        width: 100%;
+    }
+
+    .card .name {
+        font-family: Bree;
+        text-align: center;
+        padding: 0.2rem 0;
     }
 </style>

@@ -5,13 +5,21 @@ from .forms import PostForm, ExerciseForm, CommentForm, WordsForm
 #WordsDB Model
 from .models import Word, Revise
 from .models import Post, Exercise, Comment, Like, Dislike
+import json
 
 from django.contrib.auth.models import User
 import random, datetime
 
 # Create your views here.
-def index(request):
-    return render(request, "english/index.html")
+def index(request, id):
+    with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
+        db = fdb.read()
+        db = json.loads(db)
+    vars = {
+        "id":id,
+        "data":json.dumps(db)
+    }
+    return render(request, "english/learn.html", vars)
 
 def exercise_entry(request):
     datag = request.GET
