@@ -67,7 +67,11 @@ def post_entry(request):
     if request.method == "POST":
         datap = request.POST
         datap = datap.copy()
-        datap.update({'author':request.user})
+        datap.update({
+            'author':request.user,
+            'published':post.published,
+            'topic':post.topic
+        })
         form = PostForm(datap, instance=post)
 
         if form.is_valid():
@@ -380,6 +384,20 @@ def words(request):
         "refresh":refresh
     }
     return render(request, "english/words.html", vars)
+
+def words2(request):
+    # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
+    words_all = Word.objects.all()
+
+    vars = {
+        # "visible":visible,
+        "words":words_all,
+        # "pronounce":pronounce.splitlines(),
+        # "forms":forms.splitlines(),
+        # "example":set(example),
+        # "refresh":refresh
+    }
+    return render(request, "english/words2.html", vars)
 
 @login_required
 def revise(request):

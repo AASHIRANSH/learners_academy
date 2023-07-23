@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.post_list, name="posts"),
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
+    path('wordss/', views.words2, name="words2"),
     path('revise/', views.revise, name="frevise"),
     path('wordedit/', views.edit, name="edit_card"),
     path('data', views.data),

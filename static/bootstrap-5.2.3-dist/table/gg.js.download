@@ -1,0 +1,53 @@
+$(function () {
+  var $gg = $('#gg')
+  if (!$gg.length || /Googlebot/.test(navigator.userAgent)) {
+    return
+  }
+
+  var type = Math.random() <= 0.9 ? 'ethicalads' : 'carbon'
+  var loadScript = function (src, callback) {
+    script = document.createElement('script')
+    script.setAttribute('async', '')
+    script.src = src
+    $gg[0].appendChild(script)
+    script.onload = callback
+    return script
+  }
+  var load = function (type) {
+    $gg.html('')
+    if (type === 'ethicalads') {
+      $gg.append([
+        '<div class="horizontal" data-ea-publisher="bootstrap-table" data-ea-type="image"></div>'
+      ].join(''))
+      loadScript('https://media.ethicalads.io/media/client/ethicalads.min.js', function () {
+        ethicalads.wait.then(function (placements) {
+          if (placements.length) {
+            $('.ea-content')
+              .css({
+                'box-shadow': 'none',
+                'margin-bottom': '0'
+              })
+              .find('.ea-text').css({
+                'font-size': '12px'
+              }).append($('.ea-callout'))
+
+            $('.ea-callout').css({
+              'text-align': 'left',
+              margin: '0',
+              padding: 0
+            })
+          } else {
+            load('carbon')
+          }
+        })
+      })
+    } else {
+      var script = loadScript('https://cdn.carbonads.com/carbon.js?serve=CK7DL2J7&placement=bootstrap-tablecom')
+      script.id = '_carbonads_js'
+    }
+  }
+  if (!$gg.data('load')) {
+    load(type)
+    $gg.data('load', true)
+  }
+})

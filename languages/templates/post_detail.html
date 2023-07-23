@@ -35,19 +35,22 @@
         <hr>
     {% endif %}
     
-    <div id="post-title">
-        <div class="d-flex justify-content-between">
-            <div>
-                <h2 class="text-primary">{{ post.title }}</h2>
-                <div id="post-stamp">Posted on {{post.created_at}} by {{post.author}}</div>
+    <div id="post-title-cont">
+        <div id="post-title">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h2 class="text-primary"><i class="fa-solid fa-pen-nib"></i> {{ post.title }}</h2>
+                    <div id="post-stamp">Posted on {{post.created_at|date:"j-m-y"}} by {{post.author}}</div>
+                </div>
+                <div>{% include 'static/components/like_dislike.html' %}</div>
             </div>
-            <div>{% include 'static/components/like_dislike.html' %}</div>
         </div>
+        <div class="rule"></div>
     </div>
 
-    <div class="rule"></div>
-
-    <div id="post-content" class="mb-5">
+    {% if post.image %}<div class="post-img"><img src="{{post.image.url}}"/></div>{% endif %}
+    
+    <div id="post-content" class="my-5">
         {{ post.content|safe }}
     </div>
     
@@ -131,7 +134,9 @@
                             <div class="dropdown">
                                 <button class="btn" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-                                    {% if request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'edit_comment' comment.pk %}">Edit</a></li>{% endif %}
+                                    {% if request.user == comment.author %}
+                                    <li><a class="dropdown-item" href="{% url 'edit_comment' comment.pk %}">Edit</a></li>
+                                    {% endif %}
 
                                     {% if request.user.is_superuser or request.user == comment.author %}<li><a class="dropdown-item" href="{% url 'delete_comment' comment.pk %}">Delete</a></li>{% endif %}
                                     
@@ -272,6 +277,5 @@
 
     }
 </script>
-<script src="/static/js/web/jquery-3.6.3.min.js"></script>
-<script src="/static/js/web/bootstrap.bundle.min.js"></script>
+
 {% endblock body %}

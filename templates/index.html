@@ -31,28 +31,28 @@
     </div>
   </div>
   <div id="title">
-    <div class="position-relative ps-4">
+    <div class="position-relative ps-4 pb-3">
       <span class="position-absolute top-0 start-0 text-success">❝ </span>
       {{quotes.quote}}
-      <button class="btn position-absolute bottom-0 start-0 text-light fw-light fs-6 btn-success rounded-4 py-1 px-2">{{quotes.author}}</button>
+      <button id="q-auth" class="btn position-absolute bottom-0 start-0 text-light fw-light fs-6 btn-success rounded-4 py-1 px-2">{{quotes.author}}</button>
       <span class="position-absolute bottom-0 end-0 text-success"> ❞</span>
     </div>
   </div>
 </section>
-
-<div id="word-of-the-day" class="my-5">
+<div class="b-example-divider"></div>
+<div id="word-of-the-day" class="">
   <div class="bg-primary position-absolute top-0 start-0 m-3 rounded-2">
-    <span class="text-white py-1 px-2">word of the day</span>
+    <span class="text-white p-3">Word of the Day</span>
   </div>
 
-  <div class="bg-blue-ii p-3 text-center">
-    <div class="">{{word.created_at|date:"D, d M, Y"}}</div>
+  <div class="bg-blue-ii p-3 text-end">
+    <span class="bg-secondary text-light py-1 px-3 rounded-2">{{word.created_at|date:"D, d M, Y"}}</span>
   </div>
   
-  <div id="wod-word" class="text-secondary" onclick="window.location.assign('{% url 'word' word.word.id %}')">
-      <div class="text-primary">{{word.word.word}}</div>
-      <div class="fs-5">({{word.word.pos}})<hr></div>
-      <div class="fs-4">{{word.word.definition}}</div>
+  <div id="wod-word" class="text-secondary px-2" onclick="window.location.assign('{% url 'word' word.word.id %}')">
+    <div class="text-primary">{{word.word.word}}</div>
+    <div class="fs-5">({{word.word.pos}})<hr></div>
+    <div class="fs-4">{{word.word.definition}}</div>
   </div>
 
   <div class="position-absolute bottom-0 start-0 bg-blue-ii p-2 text-center w-100">

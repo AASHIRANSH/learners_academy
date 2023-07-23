@@ -1,4 +1,11 @@
 <style>
+    .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
     .superuser {
         display: {% if request.user.is_superuser %}initial{% else %}none{% endif %};
     }
@@ -25,15 +32,19 @@
         color: #ffffff;
         text-shadow: 2px 2px 5px #000000;
     }
-    
+    #post-title-cont {
+        background-color: #f1f1f2;
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
     #post-title {
-        background-color: #f1f1f1;
         padding: 2rem 1rem 1rem 1rem;
-        border-radius: 1rem 1rem 0 0;
     }
     #post-stamp {
         font-style: italic;
         color: #888;
+        padding: 0 0 0 1.5rem;
     }
     #comment-head {
         border-radius: 0.6rem 0.6rem 0 0;
@@ -49,11 +60,10 @@
         color: #777;
     }
     .rule {
-        display: block;
         width: 100%;
         height: 0.5rem;
         background-image: repeating-radial-gradient(circle farthest-side at 5px 10px,#3cb371 10%, #3B71CA 30%, #3cb371);
-        margin: 0 0 4rem 0;
+        margin: 0 0 0 0;
     }
     .weight-600 {
         font-weight: 600;
