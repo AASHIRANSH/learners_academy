@@ -9,12 +9,16 @@
   <div class="container my-5">
     {% if users %}
       {% if type == "users" %}
-        {% for user in users %}
-            <div class="row mb-4" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
-              <div class="col-auto"><img src="{{user.profile.image.url}}" class="rounded-circle" height="70"/></div>
-              <div class="col-auto">{{user.username}}</div>
+        <div class="row">
+          {% for user in users %}
+            <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+              <div class="card shadow">
+                <div class="img-cont"><img class="img" src="{{user.profile.image.url}}" class=""/></div>
+                <div class="name">{{user.username}}</div>
+              </div>
             </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       {% endif %}
 
       {% if type == "friends" %}
@@ -46,5 +50,5 @@
     {% endif %}
   </div>
 
-
+{% include 'footer.html' %}
 {% endblock body %}
