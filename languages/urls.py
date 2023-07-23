@@ -11,6 +11,9 @@ urlpatterns = [
     path('wordedit/', views.edit, name="edit_card"),
     path('data', views.data),
     path('flashcards/', include("languages.english.flashcards.urls")),
+    
+    # Ex-Action
+    path('exact/', views.ex_action, name="ex_action"),
 
     # Posts
     path('post/', views.post_entry, name='post_entry'),

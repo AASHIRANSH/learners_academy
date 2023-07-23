@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* Material Customization */
+        :root {
+            --pure-material-primary-rgb: 255, 191, 0;
+            --pure-material-onsurface-rgb: 0, 0, 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: url("https://res.cloudinary.com/finnhvman/image/upload/v1541930411/pattern.png");
+        }
+
+        .registration {
+            position: relative;
+            border-radius: 8px;
+            padding: 16px 48px;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            background-color: white;
+        }
+
+        h1 {
+            margin: 32px 0;
+            font-family: "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .registration>label {
+            display: block;
+            margin: 24px 0;
+            width: 320px;
+        }
+
+        a {
+            color: rgb(var(--pure-material-primary-rgb));
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            display: block !important;
+            margin: 32px auto;
+        }
+
+        .done,
+        .progress {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            visibility: hidden;
+        }
+
+        .done {
+            transition: visibility 0s 1s;
+        }
+
+        .signed>.done {
+            visibility: visible;
+        }
+
+        .done>a {
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .progress {
+            opacity: 0;
+        }
+
+        .signed>.progress {
+            animation: loading 4s;
+        }
+
+        @keyframes loading {
+            0% {
+                visibility: visible;
+            }
+
+            12.5% {
+                opacity: 0;
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            87.5% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .left-footer,
+        .right-footer {
+            position: fixed;
+            padding: 14px;
+            bottom: 14px;
+            color: #555;
+            background-color: #eee;
+            font-family: "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system;
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        .left-footer {
+            left: 0;
+            border-radius: 0 4px 4px 0;
+            text-align: left;
+        }
+
+        .right-footer {
+            right: 0;
+            border-radius: 4px 0 0 4px;
+            text-align: right;
+        }
+
+        .left-footer>a,
+        .right-footer>a {
+            color: black;
+        }
+
+        .left-footer>a:hover,
+        .right-footer>a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="registration" method="post">
+        <h1>👋 Welcome!</h1>
+
+        <label class="pure-material-textfield-outlined">
+            <input placeholder=" " type="email" required>
+            <span>Email</span>
+        </label>
+
+        <label class="pure-material-textfield-outlined">
+            <input placeholder=" " type="password" required>
+            <span>Password</span>
+        </label>
+
+        <label class="pure-material-radio">
+            <input type="radio" name="type" required>
+            <span>Personal Account</span>
+        </label>
+
+        <label class="pure-material-radio">
+            <input type="radio" name="type" required>
+            <span>Business Account</span>
+        </label>
+
+        <label class="pure-material-checkbox">
+            <input type="checkbox" required>
+            <span>I agree to the <a href="https://codepen.io/collection/nZKBZe/" target="_blank"
+                    title="Actually not a Terms of Service">Terms of Service</a></span>
+        </label>
+
+        <button class="pure-material-button-contained" type="submit">Sign Up</button>
+
+        <div class="done">
+            <h1>👌 You're all set!</h1>
+            <a class="pure-material-button-text" href="javascript:window.location.reload(true)">Again</a>
+        </div>
+        <div class="progress">
+            <progress class="pure-material-progress-circular" />
+        </div>
+    </form>
+
+    <div class="left-footer">
+        Created by Ben Szabo (finnhvman)<br />
+        <a href="https://twitter.com/finnhvman" target="_top">Twitter</a> &nbsp; | &nbsp;
+        <a href="https://www.linkedin.com/in/finnhvman/" target="_top">LinkedIn</a> &nbsp; | &nbsp;
+        <a href="https://codepen.io/finnhvman/" target="_top">CodePen</a>
+    </div>
+    <div class="right-footer">
+        Check out<br />
+        <a href="https://github.com/finnhvman/matter" target="_top">Matter (Pure CSS Material)</a>
+    </div>
+
+    <script>
+        // JavaScript is used for toggling loading state
+        var form = document.querySelector('form');
+        form.onsubmit = function (event) {
+            event.preventDefault();
+            form.classList.add('signed');
+        };
+    </script>
+</body>
+
+</html>

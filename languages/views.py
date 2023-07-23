@@ -5,10 +5,11 @@ from .forms import PostForm, ExerciseForm, CommentForm, WordsForm
 #WordsDB Model
 from .models import Word, Revise
 from .models import Post, Exercise, Comment, Like, Dislike
-import json
+
+from django.http import JsonResponse
 
 from django.contrib.auth.models import User
-import random, datetime
+import random, datetime, json
 
 # Create your views here.
 def index(request, id):
@@ -385,6 +386,7 @@ def words(request):
     }
     return render(request, "english/words.html", vars)
 
+
 def words2(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     words_all = Word.objects.all()
@@ -570,3 +572,23 @@ def data(request):
     #             file.write(data.get('word')+"\n")
     #         messages.success(request,"the word was added")
     #         return HttpResponseRedirect('/english/words')
+
+
+def ex_action(request):
+    if request.POST:
+        datap = request.POST
+        questions = json.loads(datap.get("questions"))
+        
+        user_obj = User.objects.get(username=request.user.username)
+        user_q = user_obj.profile.ex_done
+        
+        for q in questions:
+            if q in user_q:
+                pass
+            else:
+                user_obj.profile.ex_done += q+","
+                user_obj.profile.reputation += 1
+                user_obj.save()
+            
+        
+    return JsonResponse(["successful"], safe=False)

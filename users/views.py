@@ -6,7 +6,7 @@ from django.contrib import messages
 
 # models
 from django.contrib.auth.models import User
-from users.models import Contact, Friend
+from users.models import Contact, Friend, Notification
 
 
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm, UserChangeForm
@@ -31,6 +31,7 @@ def users(request):
 
 def user_detail(request, id):
     user_obj = User.objects.get(pk=id)
+    current_user = request.user
     form = EditUserProfileForm(instance=user_obj)
 
     datap = request.GET
@@ -40,6 +41,7 @@ def user_detail(request, id):
     fr_own_obj = Friend.objects.filter(user=request.user, friend=user_obj).first()
     if datap.get("action"):
         if datap.get("action") == "accept":
+            Notification.objects.filter(sender=user_obj, type="friend request")
             fr_other_obj.is_friend = True
             fr_other_obj.save()
             messages.success(request, f'You have become a friend of "{user_obj.username}"')
@@ -62,6 +64,8 @@ def user_detail(request, id):
 
             else:
                 Friend.objects.create(user=request.user, friend=user_obj)
+                Notification.objects.create(sender=current_user, type="friend request", receiver=user_obj)
+
                 messages.success(request, f"Friend request has been sent to {user_obj.username}")
 
         elif datap.get("action") == "unfriend":

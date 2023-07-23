@@ -24,24 +24,27 @@
       {% if type == "friends" %}
         <div class="row">
           {% for friend in users %}
-            {% if friend.user == request.user %}
-              <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
-                <div class="card shadow">
-                  <img src="{{friend.friend.profile.image.url}}" class=""/>
-                  <div class="name">{{friend.friend.username}}</div>
+            {% if friend.is_friend %}
+              {% if friend.user == request.user %}
+                <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
+                  <div class="card shadow">
+                    <img src="{{friend.friend.profile.image.url}}" class=""/>
+                    <div class="name">{{friend.friend.username}}</div>
+                  </div>
                 </div>
-              </div>
-            {% endif %}
+              {% endif %}
 
-            {% if friend.friend == request.user %}
-              <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
-                <div class="card shadow">
-                  <img src="{{friend.user.profile.image.url}}" class=""/>
-                  <div class="name">{{friend.user.username}}</div>
-                </div>
-              </div>          
+              {% if friend.friend == request.user %}
+                <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
+                  <div class="card shadow">
+                    <img src="{{friend.user.profile.image.url}}" class=""/>
+                    <div class="name">{{friend.user.username}}</div>
+                  </div>
+                </div>          
+              {% endif %}
+            {% else %}
+            You do not have any friends!
             {% endif %}
-
           {% endfor %}
         </div>
       {% endif %}

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            box-sizing: border-box;
+            font-size: 62.5%;
+        }
+
+        html *,
+        html *:before,
+        html *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #251C2D;
+        }
+
+        .system {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            padding-top: 100%;
+        }
+
+        @media (min-width: 700px) {
+            .system {
+                padding-top: 700px;
+            }
+        }
+
+        .system__sun {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .system__orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 100%;
+            transform: translate(-50%, -50%);
+            animation: spin infinite linear both;
+        }
+
+        .system__orbit:nth-child(1) {
+            width: calc(10%);
+            height: calc(10%);
+        }
+
+        .system__orbit:nth-child(2) {
+            width: calc(20%);
+            height: calc(20%);
+        }
+
+        .system__orbit:nth-child(3) {
+            width: calc(30%);
+            height: calc(30%);
+        }
+
+        .system__orbit:nth-child(4) {
+            width: calc(40%);
+            height: calc(40%);
+        }
+
+        .system__orbit:nth-child(5) {
+            width: calc(50%);
+            height: calc(50%);
+        }
+
+        .system__orbit:nth-child(6) {
+            width: calc(60%);
+            height: calc(60%);
+        }
+
+        .system__orbit:nth-child(7) {
+            width: calc(70%);
+            height: calc(70%);
+        }
+
+        .system__orbit:nth-child(8) {
+            width: calc(80%);
+            height: calc(80%);
+        }
+
+        .system__orbit:nth-child(9) {
+            width: calc(90%);
+            height: calc(90%);
+        }
+
+        .system__orbit:nth-child(10) {
+            width: calc(100%);
+            height: calc(100%);
+        }
+
+        .system__orbit--sun {
+            border: none;
+        }
+
+        .system__orbit--mercury {
+            animation-duration: 1s;
+        }
+
+        .system__orbit--venus {
+            animation-duration: 2.6s;
+        }
+
+        .system__orbit--earth {
+            animation-duration: 4.1s;
+        }
+
+        .system__orbit--mars {
+            animation-duration: 7.8s;
+        }
+
+        .system__orbit--jupiter {
+            animation-duration: 49.8s;
+        }
+
+        .system__orbit--saturn {
+            animation-duration: 120.3s;
+        }
+
+        .system__orbit--uranus {
+            animation-duration: 348.4s;
+        }
+
+        .system__orbit--neptune {
+            animation-duration: 684.4s;
+        }
+
+        .system__orbit--pluto {
+            animation-duration: 1028.6s;
+        }
+
+        .system__planet {
+            position: absolute;
+            top: 50%;
+            left: -12px;
+            width: 25px;
+            height: 25px;
+            border-radius: 100%;
+            transform: translateY(-50%);
+        }
+
+        .system__icon {
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(-360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="system">
+        <div class="system__orbit system__orbit--sun">
+            <img src="https://www.dropbox.com/s/g02pto204mz1ywi/sun.png?raw=1" alt="Sun"
+                class="system__icon system__icon--sun">
+        </div>
+
+        <div class="system__orbit system__orbit--mercury">
+            <div class="system__planet system__planet--mercury">
+                <img src="https://www.dropbox.com/s/2o38602cmwhhdi1/mercury.png?raw=1" alt="Mercury">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--venus">
+            <div class="system__planet system__planet--venus">
+                <img src="https://www.dropbox.com/s/wvictuysutiirho/venus.png?raw=1" alt="Venus">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--earth">
+            <div class="system__planet system__planet--earth">
+                <img src="https://www.dropbox.com/s/ropzlyhb1v19l5t/earth.png?raw=1" alt="Earth">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--mars">
+            <div class="system__planet system__planet--mars">
+                <img src="https://www.dropbox.com/s/fa9biyj617n1q30/mars.png?raw=1" alt="Mars">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--jupiter">
+            <div class="system__planet system__planet--jupiter">
+                <img src="https://www.dropbox.com/s/d28oxi2c74zcoqk/jupiter.png?raw=1" alt="Jupiter">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--saturn">
+            <div class="system__planet system__planet--saturn">
+                <img src="https://www.dropbox.com/s/h8pj72v6mmaa0yq/saturn.png?raw=1" alt="Saturn">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--uranus">
+            <div class="system__planet system__planet--uranus">
+                <img src="https://www.dropbox.com/s/du6znsmfos2r4ry/uranus.png?raw=1" alt="Uranus">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--neptune">
+            <div class="system__planet system__planet--neptune">
+                <img src="https://www.dropbox.com/s/170sr7xl6gxpona/neptune.png?raw=1" alt="Neptune">
+            </div>
+        </div>
+        <div class="system__orbit system__orbit--pluto">
+            <div class="system__planet system__planet--pluto">
+                <img src="https://www.dropbox.com/s/z7axkafhs887t9b/pluto.png?raw=1" alt="Pluto">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

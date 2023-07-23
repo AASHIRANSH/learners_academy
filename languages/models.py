@@ -94,18 +94,11 @@ class Dislike(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class Exchoice(models.Model):
-    choice = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.choice
-
-
 class Exercise(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
     type = models.CharField(max_length=50, choices=(('fill','Blanks Filling'),('choice','Multiple Choice')))
     question = models.TextField()
-    choice = models.ForeignKey(Exchoice, on_delete=models.CASCADE, blank=True, null=True)
+    choice = models.CharField(max_length=100, default="", blank=True, null=True)
     
     def __str__(self):
         return f"{self.question} ({self.type})"

@@ -52,6 +52,7 @@
                             <div class="dropdown-menu p-2">
                                 You have a friend request from {{user.username}}.
                                 <button onclick="window.location.assign('?action=accept')" class="btn btn-sm btn-secondary">Accept</button>
+                                <button onclick="window.location.assign('?action=reject')" class="btn btn-sm btn-secondary">Reject</button>
                             </div>
                         </div>
                     {% else %}
@@ -81,14 +82,6 @@
         <div class="row">
 
             <div class="col-2 mb-3">
-                {{form.username.label_tag}}
-            </div>
-            <div class="col-10 mb-3">
-                {{form.username.value}}
-                {{form.username.errors}}
-            </div>
-
-            <div class="col-2 mb-3">
                 {{form.first_name.label_tag}}
             </div>
             <div class="col-10 mb-3">
@@ -103,6 +96,15 @@
                 {{form.last_name.value}}
                 {{form.last_name.errors}}
             </div>
+
+
+            <div class="col-2 mb-3">
+                Reputation:
+            </div>
+            <div class="col-10 mb-3">
+                {{user.profile.reputation}}
+            </div>
+
 
             <div class="col-2 mb-3">
                 {{form.email.label_tag}}

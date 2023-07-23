@@ -1,17 +1,11 @@
 from django.contrib import admin
-from .models import Topic, Post, Comment, Like, Dislike, Exercise, Exchoice
+from .models import Topic, Post, Comment, Like, Dislike, Exercise
 from .models import Word, Revise, Vocabulary, WordOfTheDay, Quote
 
 # Register your models here.
 @admin.register(Exercise)
 class ExerciseView(admin.ModelAdmin):
     list_display = ['post','question']
-
-
-
-@admin.register(Exchoice)
-class ExchoiceView(admin.ModelAdmin):
-    list_display = ['choice']
 
 
 

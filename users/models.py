@@ -17,6 +17,9 @@ def content_file_name(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     reputation = models.IntegerField(default=0)
+    phone = models.CharField(max_length=50, default="", blank=True, null=True)
+    languages = models.CharField(max_length=300, default="", blank=True, null=True)
+    ex_done = models.TextField(default="",blank=True, null=True)
     profession = models.CharField(choices=(('studend','student'),('teacher','teacher')), max_length=50)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
 
@@ -76,7 +79,9 @@ class Contact(models.Model):
     
 
 class Notification(models.Model):
-    type = models.CharField(max_length=100)
+    sender = models.ForeignKey(User, related_name="%(class)s_notification", on_delete=models.CASCADE, blank=True, null=True)
+    type = models.CharField(choices=(('','--'),('friend request','Friend Request')), max_length=100, default="", blank=True, null=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.type
+        return f"{self.type}"

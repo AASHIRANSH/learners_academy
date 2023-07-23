@@ -15,7 +15,11 @@
             {% if message.tags == "success" %}
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
             {% else %}
+            {% if message.tags == "info" %}
+                <i class="fa-solid fa-envelope me-2 fs-4"></i>
+            {% else %}
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+            {% endif %}
             {% endif %}
 
             {{message}}

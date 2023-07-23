@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        body {
+            background: #2D82CB;
+            font-family: "lato", sans-serif;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #form-wrapper {
+            margin-top: 80px;
+            height: 450px;
+            transition: all 1s ease;
+            overflow: hidden;
+        }
+
+        #form-wrapper.answering {
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .question {
+            width: 400px;
+            margin: 0 auto;
+            height: 30px;
+            overflow: hidden;
+        }
+
+        .question,
+        .question * {
+            transition: all 0.3s ease;
+        }
+
+        .question .q-back {
+            opacity: 1;
+        }
+
+        .question label {
+            font-size: 20px;
+            padding-left: 20px;
+        }
+
+        .question input,
+        .question .q-next {
+            display: none;
+        }
+
+        .question .q-text {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .question .q-answer {
+            display: inline;
+            color: rgba(0, 0, 0, .8);
+        }
+
+        .question.open {
+            height: 90px;
+            margin-bottom: 150px;
+        }
+
+        .question.open label {
+            font-size: 30px;
+        }
+
+        .question.open .q-back {
+            opacity: 0;
+        }
+
+        .question.open input {
+            display: block;
+        }
+
+        .question.open .q-next {
+            display: block;
+        }
+
+        .question.open .q-text {
+            height: 40px;
+            line-height: 40px;
+        }
+
+        .question.open .q-answer {
+            display: none;
+        }
+
+        .q-next {
+            display: block;
+            position: absolute;
+            bottom: 5px;
+            right: 0px;
+            padding: 0 10px;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .q-next:hover {
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .q-back {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            color: rgba(0, 0, 0, .8);
+            width: 100%;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 30px;
+            padding-left: 4px;
+        }
+
+        .q-back:hover {
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .q-text {
+            max-height: 40px;
+            overflow: hidden;
+            display: block;
+        }
+
+        label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: 40px;
+        }
+
+        input {
+            border: 0px;
+            outline: 0;
+            box-shadow: 0;
+            background: rgba(0, 0, 0, .15);
+            border-bottom: 5px solid rgba(0, 0, 0, .05);
+            color: black;
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            padding: 0 10px;
+            font-size: 30px;
+        }
+
+
+        .q-title {
+            text-align: center;
+            line-height: 150px;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .q-after {
+            width: 400px;
+            margin: 0 auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        .q-confirm-text {
+            font-size: 20px;
+            padding: 20px 0;
+        }
+
+        .q-confirm-button {
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0 10px;
+            padding-left: 50px;
+            height: 40px;
+            line-height: 40px;
+            width: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, .3);
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .q-confirm-button:hover {
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .q-confirm-button:before {
+            content: '>';
+            display: block;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 40px;
+            height: 100%;
+            background: rgba(255, 255, 255, .1);
+            text-align: center;
+            line-height: 40px;
+            font-size: 25px;
+            color: white;
+        }
+
+        hr {
+            box-shadow: 0px;
+            outline: 0px;
+            border: 0px;
+            height: 1px;
+            background: rgba(255, 255, 255, .2);
+        }
+    </style>
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <script defer src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js"></script>
+</head>
+
+<body>
+    <div ng-app="coolform" class="wrapper">
+
+        <div cool-form>
+            <div class="q-title">Join the club!</div>
+            <div ng-repeat="q in questions" class="question">
+                <label>
+                    <span class="q-text">
+                        {{q.question}}
+                        <span class="q-answer">
+                            {{q.answer}}
+                        </span>
+                    </span>
+                    <input type="text" id="q{{$index}}" ng-model="q.answer">
+                    <span class="q-back" ng-click="open($index)">
+                        << /span>
+                </label>
+                <span class="q-next" ng-click="open($index+1)">></span>
+            </div>
+            <div class="q-after">
+                <hr>
+                <div class="q-confirm-text">Is the above information correct?</div>
+                <div class="q-confirm-button">Absolutely</div>
+            </div>
+        </div>
+        <center ng-show="activequestion > -1 && activequestion < questions.length">{{activequestion+1}} /
+            {{questions.length}}</center>
+
+    </div>
+
+    <script>
+        var coolform = angular.module('coolform', []);
+        coolform
+            .directive('coolForm', function ($timeout) {
+                var ctrl = function ($scope, $element, $attributes) {
+                    $scope.questions = [];
+                    $scope.activequestion = -1;
+                    $scope.answering = true;
+
+                    $scope.questions.push({ 'question': 'What\'s your name?' });
+                    $scope.questions.push({ 'question': 'How old are you?' });
+                    $scope.questions.push({ 'question': 'Where do you live?' });
+
+                    function removeOpen() {
+                        for (i = 0; i < qs.length; i++) {
+                            angular.element(qs[i]).removeClass('open');
+                        }
+                    }
+
+                    var scrolle = document.getElementById('form-wrapper');
+                    var qs = document.getElementsByClassName('question');
+
+                    $scope.open = function (order) {
+                        removeOpen();
+                        if (order >= $scope.questions.length || order < 0) {
+                            $scope.answering = false;
+                            if ($element.hasClass('answering')) {
+                                $element.removeClass('answering');
+                                $scope.activequestion = $scope.questions.length + 1;
+                            }
+                        } else {
+                            $scope.answering = true;
+                            if (!$element.hasClass('answering')) {
+                                $element.addClass('answering');
+                            }
+                            //document.activeElement.blur();
+                            $scope.activequestion = order;
+                            var offset = qs[0].offsetTop;
+                            if (order !== 0) { offset = qs[order - 1].offsetTop; }
+                            scrollToAndFocus(scrolle, offset, 500, order);
+                            if (!angular.element(qs[order]).hasClass('open')) {
+                                angular.element(qs[order]).addClass('open');
+                            }
+                        }
+
+                    }
+
+                    function scrollToAndFocus(element, to, duration, focus) {
+                        if (duration <= 10) {
+                            document.getElementById('q' + (focus)).focus();
+                            return;
+                        }
+                        var difference = to - element.scrollTop;
+                        var perTick = difference / duration * 10;
+                        window.setTimeout(function () {
+                            element.scrollTop = element.scrollTop + perTick;
+                            if (element.scrollTop === to) return;
+                            scrollToAndFocus(element, to, duration - 10, focus);
+                        }, 10);
+                    }
+
+
+                    var handler = function (e) {
+                        if (e.keyCode === 37) {
+                            //left arrow
+                            e.preventDefault();
+                            $scope.$apply(function () {
+                                $scope.open($scope.activequestion - 1);
+                            });
+                        }
+                        if (e.keyCode === 39) {
+                            //right arrow
+                            e.preventDefault();
+                            $scope.$apply(function () {
+                                $scope.open($scope.activequestion + 1);
+                            });
+                        }
+                        if (e.keyCode === 13) {
+                            //enter
+                            e.preventDefault();
+                            $scope.$apply(function () {
+                                $scope.open($scope.activequestion + 1);
+                            });
+                        }
+                        if (e.keyCode == 9) {
+                            //tab
+                            e.preventDefault();
+                            $scope.$apply(function () {
+                                $scope.open($scope.activequestion + 1);
+                            });
+                        }
+                    };
+
+
+                    $element.on('keydown', handler);
+                    $scope.$on('$destroy', function () {
+                        $element.off('keydown', handler);
+                    });
+
+
+                    setTimeout(function () {
+                        $scope.activequestion++;
+                        $scope.$apply(function () {
+                            $scope.open($scope.activequestion);
+                        });
+                    }, 2000);
+                };
+                return {
+                    restrict: 'EA',
+                    replace: true,
+                    transclude: true,
+                    link: ctrl,
+                    template: '<div ng-transclude id="form-wrapper" class="answering"></div>'
+                };
+
+            });
+    </script>
+</body>
+
+</html>

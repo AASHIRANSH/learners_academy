@@ -220,9 +220,11 @@
 
 <script>
     var q_arr = [];
+    var q_id_arr = [];
     {//q_arr
         `{% for x in post.exercise_set.all %}
             ${q_arr.push('{{x.question}}')}
+            ${q_id_arr.push('q{{x.id}}')}
         {% endfor %}`;
     }
     var q_count = q_arr.length;//`{{post.exercise_set.count}}`; //length of questions
@@ -239,14 +241,15 @@
     };
 
     var val_array = [];
-    var corrects = 0;
+    var exam = 0
+    var corrects = [];
 
     function check() {
         //getting selected option values of each select element
         for (let vl=0; vl < q_count; vl++) {
             var e = document.getElementById("q-"+vl);
             val_array.push(e.value)
-            if (e.value == pre_values[vl]) { corrects += 1 };
+            if (e.value == pre_values[vl]) { exam += 1; corrects.push(q_id_arr[vl]); };
         }
 
         console.log("overall:",val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
@@ -265,7 +268,7 @@
         var exmod = document.getElementById("modal-body")
         exmod.innerHTML = `
             <div class="text-center">
-                <div class="fs-3">You got ${exam} out of ${q_count}</div>
+                <div class="fs-3">You did ${exam} out of ${q_count}</div>
             </div>
             <hr>
             <div class="mb-4">${q_arr_html.join("")}</div>
@@ -274,12 +277,22 @@
 
         exam = 0;// reset the value
         val_array = [];
-
+        expost("{{csrf_token}}");
     }
 </script>
-<script>
-    //const update_repo = new XMLHttpRequest();
 
+<script>//update repo
+    function expost(csrf) {
+        xhttp = new XMLHttpRequest();
+        //xhttp.onreadystatechange = function() {
+        //    if (this.readyState == 4 && this.status == 200) {
+        //        
+        //    }
+        //};
+        xhttp.open("POST", "{% url 'ex_action' %}?action=", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(`csrfmiddlewaretoken=${csrf}&questions=${JSON.stringify(corrects)}`); //
+    }
 </script>
 
 {% endblock body %}
