@@ -239,14 +239,14 @@
     };
 
     var val_array = [];
-    var exam = 0;
+    var corrects = 0;
 
     function check() {
         //getting selected option values of each select element
         for (let vl=0; vl < q_count; vl++) {
             var e = document.getElementById("q-"+vl);
             val_array.push(e.value)
-            if (e.value == pre_values[vl]) { exam += 1 };
+            if (e.value == pre_values[vl]) { corrects += 1 };
         }
 
         console.log("overall:",val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
@@ -276,6 +276,10 @@
         val_array = [];
 
     }
+</script>
+<script>
+    //const update_repo = new XMLHttpRequest();
+
 </script>
 
 {% endblock body %}
