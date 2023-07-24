@@ -42,7 +42,6 @@
             </div>
 
             <div>
-                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-success"><i class="fa-solid fa-message"></i> Message</button>
                 {% if is_friend %}
                     {% if fr_req == "request_received" %}
                         <div class="btn-group dropup">
@@ -52,17 +51,18 @@
                             <div class="dropdown-menu p-2">
                                 You have a friend request from {{user.username}}.
                                 <button onclick="window.location.assign('?action=accept')" class="btn btn-sm btn-secondary">Accept</button>
-                                <button onclick="window.location.assign('?action=reject')" class="btn btn-sm btn-secondary">Reject</button>
+                                <button onclick="window.location.assign('?action=cancel')" class="btn btn-sm btn-secondary">Reject</button>
                             </div>
                         </div>
                     {% else %}
                     {% if fr_req == "request_sent" %}
-                        <div class="btn-group dropup">
+                        <div class="dropup">
                             <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
                               Befriend
                             </button>
                             <div class="dropdown-menu p-2">
-                              You have already sent friend request to {{user.username}}.
+                              You have already sent friend request to <span class="text-primary">{{user.username}}</span>.
+                              <button onclick="window.location.assign('?action=cancel')" class="btn btn-outline-danger">Cancel Request</button>
                             </div>
                         </div>
                     {% else %}
@@ -70,7 +70,13 @@
                     {% endif %}
                     {% endif %}
                 {% else %}
+                <div class="btn-group dropup">
+                    <button type="button" onclick="" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-message"></i> Message</button>
+                    <div class="dropdown-menu p-2">
+                        You can send messages after they have accepted your friend request.
+                    </div>
                     <button onclick="window.location.assign('?action=befriend')" class="btn btn-primary"><i class="fa-solid fa-handshake"></i> Befriend</button>
+                </div>
                 {% endif %}
             </div>
         </div>

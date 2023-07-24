@@ -46,6 +46,16 @@ def user_detail(request, id):
             fr_other_obj.save()
             messages.success(request, f'You have become a friend of "{user_obj.username}"')
             return HttpResponseRedirect(request.path)
+    
+        if datap.get("action") == "cancel":
+            if fr_own_obj:
+                fr_own_obj.delete()
+                messages.success(request, f"You have cancelled the friend request.")
+                return HttpResponseRedirect(request.path)
+            elif fr_other_obj:
+                fr_other_obj.delete()
+                messages.success(request, f"You have cancelled the friend request.")
+                return HttpResponseRedirect(request.path)
         
         if datap.get("action") == "befriend":
             if fr_own_obj:
@@ -61,6 +71,7 @@ def user_detail(request, id):
                     fr_other_obj.is_friend = True
                     fr_other_obj.save()
                     messages.success(request, f"Friend request has been sent to {user_obj.username}")
+                    return HttpResponseRedirect(request.path)
 
             else:
                 Friend.objects.create(user=request.user, friend=user_obj)
@@ -84,7 +95,7 @@ def user_detail(request, id):
             fr_req = "request_sent"
     else:
         fr_own_obj = False
-        fr_req = None
+        fr_req = False
 
     if fr_other_obj:
         if fr_other_obj.is_friend:
@@ -95,7 +106,7 @@ def user_detail(request, id):
             fr_req = "request_received"
     else:
         fr_other_obj = False
-        fr_req = None
+        fr_req = False if fr_req == False else fr_req
 
     vars = {
         'user':user_obj,
