@@ -108,7 +108,7 @@
     </div>
     <hr>
 </div>
-
+<!-- Comment Form -->
 <div class="container-fluid my-5">
     <div class="row col-12">
 
@@ -167,49 +167,49 @@
     </div>
 </div>
 
-<form method="post">
-    {% comment %} {% csrf_token %}
-    {{ form }}
-    <button type="submit">Submit</button> {% endcomment %}
-</form>
-
-{% include 'footer.html' %}
-
-<script>//getting all exmple sentences li elements and adding class .example to each
+<script>//from post-content getting all exmple sentences li elements and adding class "".example" to each
     var post_content = document.getElementById("post-content");
     var li_arr = post_content.getElementsByTagName("li");
-    for (li in li_arr) {
+    for (var li in li_arr) {
         li_arr[li].classList.add("example")
     }
 </script>
+
 <script>//highlighting the texts by replacing within li elems
     var fill_values = "{{post.fill_values}}"
     var target_vals = fill_values.split(",");
     var element = document.getElementsByClassName("example");
-    for (line in element) {
-        for (tvx in target_vals) {
-            line_patt = new RegExp(target_vals[tvx],"gi")
-            element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
+    for (var line in element) {
+        for (var tvx in target_vals) {
+            if (element[line].innerText.includes(target_vals[tvx])) {
+                line_patt = new RegExp(target_vals[tvx],"gi")
+                element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
+            }
         }
     }
 </script>
 
 <script>//insert select element
-    var exercise = document.getElementById("exercise"); //parent element of questions
+    var exercise = document.getElementById("questions"); //parent element of questions
     var questions = exercise.getElementsByTagName("li"); //question elements array
     var exchoices = [];
-    `{% for ex in post.exercise_set.all %}${exchoices.push("{{ex.choice}}")}{% endfor %}`;
+    var choice_tar = [];
+    `{% for ex in post.exercise_set.all %}
+        ${exchoices.push("{{ex.choice|safe}}")} ${choice_tar.push("{{ex.target_values|safe}}")}
+    {% endfor %}`;
+    
     // RegExp
-    var target_vals_join = target_vals.join("|");
-    var reg_patt = new RegExp("\\b"+target_vals_join+"\\b","gi")
+    //var target_vals_join = target_vals.join("|");
+    //var reg_patt = new RegExp("\\b"+target_vals_join+"\\b","gi");
     // end RegExp
     
-    for (line in questions) {
-        questions[line].innerHTML = questions[line].innerHTML.replace(reg_patt, sel());
+    for (var ques in questions) {
+        var reg_patt = new RegExp("\\b"+choice_tar[ques].replace("&#x27","'")+"\\b","gi");
+        questions[ques].innerHTML = questions[ques].innerHTML.replace(reg_patt, sel());
         
         function sel(){
-            var select = `<select id="q-${line}"><option selected="selected"></option>`
-            for (let x of exchoices[line].split(",")) {
+            var select = `<select id="q-${ques}"><option selected="selected"></option>`
+            for (let x of exchoices[ques].split(",")) {
                 select += `<option value="${x}">${x}</option>`
             }
             select += `</select>`
@@ -231,10 +231,11 @@
     
     var pre_values = [] //answer values
     for ( let x in q_arr ) {
+        var ql = q_arr[x].replace("&#x27;","'")
         var prechoice = exchoices[x].split(",")
         for ( let y of prechoice ) {
             let preReg = new RegExp("\\b"+y+"\\b","gi")
-            if (q_arr[x].toLowerCase().search(preReg) >= 0) {
+            if (ql.toLowerCase().search(preReg) >= 0) {
                 pre_values.push(y)
             }
         }
@@ -256,6 +257,7 @@
         console.log("val_array:",val_array)
         console.log("pre_values:",pre_values)
         console.log("exchoices:",exchoices)
+        console.log("q_arr:",q_arr)
 
         //for BSModal
         q_arr_html = []
@@ -295,4 +297,5 @@
     }
 </script>
 
+{% include 'footer.html' %}
 {% endblock body %}
