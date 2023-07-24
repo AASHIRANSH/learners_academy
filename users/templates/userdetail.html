@@ -56,7 +56,13 @@
                         </div>
                     {% else %}
                     {% if fr_req == "request_sent" %}
-                        <div class="dropup">
+                        <div class="btn-group dropup">
+                            <button type="button" onclick="" class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-message"></i> Message</button>
+                            <div class="dropdown-menu p-2">
+                                You can send messages after they have accepted your friend request.
+                            </div>
+
                             <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
                               Befriend
                             </button>
