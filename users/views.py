@@ -33,6 +33,8 @@ def user_detail(request, id):
     user_obj = User.objects.get(pk=id)
     current_user = request.user
     form = EditUserProfileForm(instance=user_obj)
+    p_form = ProfileUpdateForm(instance=user_obj.profile)
+
 
     datap = request.GET
     ''' current user-friend object '''
@@ -111,6 +113,7 @@ def user_detail(request, id):
     vars = {
         'user':user_obj,
         'form':form,
+        'p_form':p_form,
         "is_friend":fr_own_obj or fr_other_obj,
         "fr_req":fr_req
     }

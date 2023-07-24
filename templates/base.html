@@ -13,10 +13,10 @@
     <link rel="stylesheet" href="/static/css/responsive.css"/>
     {% block css %}{% endblock css %}
 
-    <script src="/static/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <script defer src="/static/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
     <!--Font Awesome-->
     <link rel="stylesheet" href="/static/fontawesome-free-6.4.0-web/fontawesome-free-6.4.0-web/css/all.min.css">
-    <script src="/static/js/web/jquery-3.6.3.min.js"></script>
+    <script src="/static/js/web/jquery-3.6.3.min.js" defer></script>
     <script src="https://cdn.tiny.cloud/1/xrzr1fiseqxgu74n7p5fime2sdkmnlbewzhtz1ubnainccc9/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     
     {% block head %}{% endblock head %}
@@ -93,5 +93,10 @@
     </script>
     
     <script src="/static/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+        window.onload = function() {
+            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el))
+        }
+    </script>
 </body>
 </html>

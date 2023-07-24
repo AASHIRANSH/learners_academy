@@ -16,6 +16,7 @@ def content_file_name(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    highest_degree = models.CharField(max_length=50, default="", blank=True, null=True)
     reputation = models.IntegerField(default=0)
     phone = models.CharField(max_length=50, default="", blank=True, null=True)
     languages = models.CharField(max_length=300, default="", blank=True, null=True)

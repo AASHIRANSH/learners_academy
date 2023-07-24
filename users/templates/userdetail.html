@@ -92,40 +92,81 @@
     
     <div class="container mt-5">
         <div class="row">
+            <div class="row col-sm-12 col-md-6">
+                <div class="mb-1">
+                    <h3>Personal Information:</h3>
+                </div>
+                <hr class="mb-3">
+                
+                <div class="col-3 mb-3">
+                    {{form.username.label_tag}}
+                </div>
+                <div class="col-9 mb-3">
+                    {{form.username.value}}
+                    {{form.username.errors}}
+                </div>
 
-            <div class="col-2 mb-3">
-                {{form.first_name.label_tag}}
-            </div>
-            <div class="col-10 mb-3">
-                {{form.first_name.value}}
-                {{form.first_name.errors}}
-            </div>
+                <div class="col-3 mb-3">
+                    {{form.first_name.label_tag}}
+                </div>
+                <div class="col-9 mb-3">
+                    {{form.first_name.value}}
+                    {{form.first_name.errors}}
+                </div>
 
-            <div class="col-2 mb-3">
-                {{form.last_name.label_tag}}
-            </div>
-            <div class="col-10 mb-3">
-                {{form.last_name.value}}
-                {{form.last_name.errors}}
-            </div>
-
-
-            <div class="col-2 mb-3">
-                Reputation:
-            </div>
-            <div class="col-10 mb-3">
-                {{user.profile.reputation}}
-            </div>
+                <div class="col-3 mb-3">
+                    {{form.last_name.label_tag}}
+                </div>
+                <div class="col-9 mb-3">
+                    {{form.last_name.value}}
+                    {{form.last_name.errors}}
+                </div>
 
 
-            <div class="col-2 mb-3">
-                {{form.email.label_tag}}
+                <div class="col-3 mb-3">
+                    {{form.email.label_tag}}
+                </div>
+                <div class="col-9 mb-3">
+                    {{form.email.value}}
+                    {{form.email.errors}}
+                </div>
             </div>
-            <div class="col-10 mb-3">
-                {{form.email.value}}
-                {{form.email.errors}}
+            <div class="row col-sm-12 col-md-6">
+                <div class="mb-1">
+                    <h3>Academic Information:</h3>
+                </div>
+                <hr class="mb-3">
+
+                <div class="col-3 mb-3">
+                    {{p_form.highest_degree.label_tag}}
+                </div>
+                <div class="col-8 mb-3">
+                    {{p_form.highest_degree.value}}
+                    {{p_form.highest_degree.errors}}
+                </div>
+                <div class="col-3 mb-3">
+                    {{p_form.reputation.label_tag}}
+                </div>
+                <div class="col-8 mb-3">
+                    {{p_form.reputation.value}} <button type="button" class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="popover" data-bs-title="Reputation?" data-bs-content="Reputation increases each time you answer an exercise question anywhere on the Website.">Click to know more!</button>
+                    {{p_form.reputation.errors}}
+                </div>
+
+                <div class="col-3 mb-3">
+                    {{p_form.languages.label_tag}}
+                </div>
+                <div class="col-8 mb-3">
+                    {{p_form.languages.value}}
+                    {{p_form.languages.errors}}
+                </div>
+                
+                
+                <div class="col-3 mb-3">
+                </div>
+                <div class="col-8 mb-3">
+                </div>
             </div>
-        
+            <hr>
         </div>
     </div>
 
