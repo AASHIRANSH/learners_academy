@@ -19,7 +19,7 @@ def users(request):
         users = Friend.objects.all()
         type = "friends"
     else:
-        users = User.objects.all()
+        users = User.objects.exclude(username=request.user.username)
         type = "users"
 
     vars = {

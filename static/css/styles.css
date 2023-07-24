@@ -1466,6 +1466,9 @@ footer {
 
 
 @media screen and (max-width: 576px) {
+  theader #title_bar #title {
+    font-size: 1.5rem;
+  }
   #headersl {
     background-size: auto 100%;
   }
