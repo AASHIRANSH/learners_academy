@@ -97,20 +97,35 @@
             </div>
         </div>
 
-        <!--PERMS BUTTONS-->
+        <!--Profile BUTTONS-->
         <div class="d-flex justify-content-between mt-2">
             <div class="">
             
             </div>
 
-            <div class="d-none d-lg-block">
-                <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary"></span></button>
-                <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary"><i class="fa-solid fa-people-group"></i> Find People</button>
-                {% if perms.languages.add_post %}
-                    <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary"><i class="fa-solid fa-pen"></i> My Posts</button>
-                {% endif %}
-                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
-                <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-book"></i> Flashcards</button>
+            <div class="">
+                <div class="d-block d-md-none">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Menu
+                        </button>
+                      
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'users' %}?users=friends"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary">{{friends.count}}</span></a></li>
+                          <li><a class="dropdown-item" href="#"><i class="fa-solid fa-message"></i> Messages <span id="fr" class="badge bg-secondary">0</span></a></li>
+                          <li><a class="dropdown-item" href="{% url 'frevise' %}"><i class="fa-solid fa-book"></i> My Words</a></li>
+                        </ul>
+                      </div>
+                </div>
+                <div class="d-none d-md-block">
+                    <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary"></span></button>
+                    <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary"><i class="fa-solid fa-people-group"></i> Find People</button>
+                    {% if perms.languages.add_post %}
+                        <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary"><i class="fa-solid fa-pen"></i> My Posts</button>
+                    {% endif %}
+                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
+                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-book"></i> Flashcards</button>
+                </div>
             </div>
         </div>
         <!--END PROFILE BUTTONS-->
@@ -138,9 +153,11 @@
 
         <div class="container mt-5">
             <div class="row">
+
+                <!-- Contact Information -->
                 <div class="row col-sm-12 col-md-6">
                     <div class="mb-3">
-                        <h3>Personal Information:</h3>
+                        <h3>Contact Information:</h3>
                     </div>
                     
                     <div class="col-3 mb-3">
@@ -176,6 +193,8 @@
                         {{form.email.errors}}
                     </div>
                 </div>
+
+                <!-- Academic Information -->
                 <div class="row col-sm-12 col-md-6">
                     <div class="mb-3">
                         <h3>Academic Information:</h3>

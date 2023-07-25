@@ -37,6 +37,7 @@ class Post(models.Model):
 
 
 class Word(models.Model):
+    category = models.CharField(choices=(('animals','animals'),), max_length=50, default="", blank=True, null=True)
     official = models.ManyToManyField(User, blank=True)
     ref_id = models.CharField(max_length=50, blank=True, null=True)
     word_root = models.CharField(max_length=100, blank=True, null=True)
@@ -62,14 +63,6 @@ class Word(models.Model):
         return f'{self.word} ({self.pos})'
 
 
-class Vocabulary(models.Model):
-    name = models.CharField(max_length=50)
-    words = models.ManyToManyField(Word)
-
-    def __str__(self):
-        return self.name
-
-
 class Revise(models.Model):
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -79,7 +72,6 @@ class Revise(models.Model):
 
     def __str__(self):
         return f"{self.word.word} ({self.word.pos})"
-
 
 
 class Like(models.Model):
@@ -96,6 +88,7 @@ class Dislike(models.Model):
 
 class Exercise(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
+    level = models.CharField(max_length=50, choices=(('a1','Beginner'),('a2','Pre Intermediate'),('b1','Intermediate'),('b2','Upper Intermediate'),('c1','Advanced'),('c2','Proficient')), default="", blank=True, null=True)
     type = models.CharField(max_length=50, choices=(('fill','Blanks Filling'),('choice','Multiple Choice')))
     question = models.TextField()
     target_values = models.CharField(max_length=50, default="", blank=True, null=True)

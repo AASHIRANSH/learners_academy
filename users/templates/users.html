@@ -9,9 +9,9 @@
   <div class="container my-5">
     {% if users %}
       {% if type == "users" %}
-        <div class="row">
+        <div class="d-flex flex-wrap gap-3">
           {% for user in users %}
-            <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+            <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
               <div class="card shadow">
                 <div class="img-cont"><img class="img" src="{{user.profile.image.url}}" class=""/></div>
                 <div class="name">{{user.username}}</div>
@@ -43,13 +43,13 @@
                 </div>          
               {% endif %}
             {% else %}
-            You do not have any friends!
+            You do not have any friends! <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
             {% endif %}
           {% endfor %}
         </div>
       {% endif %}
     {% else %}
-      You do not have any friends!
+      You do not have any friends! <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
     {% endif %}
   </div>
 

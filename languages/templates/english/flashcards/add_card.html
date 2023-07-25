@@ -42,9 +42,10 @@
           <div class="row col-8 mx-0">
             <div class="col-4">
               <div class="mb-2">
-                <label for="id_pic" class="form-label">Picture:</label>
-                <input class="form-control" type="file" accept="image/*" name="pic" value="{% if edit %}{{form.pic.value}}{% endif%}" id="id_pic">
-              </div>                  
+                <label for="id_category" class="form-label">Category:</label>
+                {{form.category}}
+                <!--input type="text" class="form-control" name="category" value="{% if edit %}{{form.category.value|default:''}}{% else %}{{category|default:''}}{% endif %}" id="id_category"></input-->
+              </div>
             </div>
 
             <div class="col-8">
@@ -151,18 +152,27 @@
             {{form.compare.errors}}
           </div>
 
-            <div class="col-3 mb-2">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="ref_id" value="true" id="id_ref_id" {% if edit %}{% if form.ref_id.value != "" %}{% else %}checked{% endif %}{% endif %}>
-                    <label class="form-check-label" for="id_ref_id">
-                      Ref ID:
-                    </label>
-                  </div>
+
+          <div class="col-3">
+            <div class="mb-2">
+              <label for="id_pic" class="form-label">Picture:</label>
+              <input class="form-control" type="file" accept="image/*" name="pic" value="{% if edit %}{{form.pic.value}}{% endif%}" id="id_pic">
+            </div>                  
+          </div>
+
+          <div class="col-auto mb-2">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="ref_id" value="true" id="id_ref_id" {% if edit %}{% if form.ref_id.value != "" %}{% else %}checked{% endif %}{% endif %}>
+              <label class="form-check-label" for="id_ref_id">
+                Ref ID:
+              </label>
             </div>
-            <div class="col-3 mb-2">
-                <input type="submit" value="Submit" class="btn btn-success"/>
-        
-            </div>
+          </div>
+
+          <div class="col-auto mb-2">
+              <input type="submit" value="Submit" class="btn btn-success"/>
+      
+          </div>
         </div>
       
     </form>

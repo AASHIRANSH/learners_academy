@@ -23,6 +23,8 @@ def index(request):
                     "sender":n.sender.username
                 })
             messages.info(request, f"You have a friend request from {n.sender.username}")
+    else:
+        notifications = []
 
     vars = {
         "quotes":quotes,

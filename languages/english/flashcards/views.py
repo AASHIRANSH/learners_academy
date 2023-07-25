@@ -324,6 +324,7 @@ def word_entry(request):
         get_grade = data.get('grade')
         
         #data for entry
+        category = data.get('category')
         word_root = data.get('word_root')
         root_pos = data.get('root_pos')
         word = data.get('word')
@@ -358,6 +359,7 @@ def word_entry(request):
 
         if form.is_valid():
             entry = Word(
+                category=category,
                 ref_id=ref_id,
                 word_root=word_root,
                 root_pos=root_pos,

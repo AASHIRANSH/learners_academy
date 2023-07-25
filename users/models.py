@@ -21,7 +21,10 @@ class Profile(models.Model):
     phone = models.CharField(max_length=50, default="", blank=True, null=True)
     languages = models.CharField(max_length=300, default="", blank=True, null=True)
     ex_done = models.TextField(default="",blank=True, null=True)
-    profession = models.CharField(choices=(('studend','student'),('teacher','teacher')), max_length=50)
+    ex_err = models.TextField(default="",blank=True, null=True)
+    profession = models.CharField(choices=(('studend','student'),('teacher','teacher'),('employed','employed')), max_length=50)
+    city = models.CharField(max_length=50, default="", blank=True, null=True)
+    country = models.CharField(max_length=50, default="", blank=True, null=True)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
 
     def __str__(self):

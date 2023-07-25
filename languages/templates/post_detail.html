@@ -56,52 +56,56 @@
     
     <h3><i class="fa-solid fa-dumbbell"></i> Exercise <i class="fa-solid fa-dumbbell"></i></h3>
     <hr>
-    <b>Choose the correct word to fill in the blanks</b>:
-    <div id="exercise" class="my-4 position-relative">
-        {% if not premium %}
-        <div class="intr">
-            <div class="col"><i class="fa-solid fa-lock"></i> You need premium membership for this</div>
-            <div card="col"><button class="btn btn-primary">Get it</button></div>
-        </div>
-        {% endif %}
-        <!-- Result Prompt <div class="hidden">
-            <div class="intr">
-                <div id="result">That was awesome!</div>
-            </div>
-        </div>-->
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Result:</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div id="modal-body" class="modal-body">
-                    ...
-                    </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+    {% if post.exercise_set.count > 0 %}
+        <b>Choose the correct word to fill in the blanks</b>:
+        
+        <div id="exercise" class="my-4 position-relative">
+            {% if not premium %}
+                <div class="intr">
+                    <div class="col"><i class="fa-solid fa-lock"></i> You need premium membership for this</div>
+                    <div card="col"><button class="btn btn-primary">Get it</button></div>
+                </div>
+            {% endif %}
+            <!-- Result Prompt <div class="hidden">
+                <div class="intr">
+                    <div id="result">That was awesome!</div>
+                </div>
+            </div>-->
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Result:</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="modal-body" class="modal-body">
+                        <!-- content by javascript -->
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div id="questions">
+                <ol>
+                    {% for q in post.exercise_set.all %}
+                        <li class="mb-2">{{q.question}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
         </div>
-        <div id="questions">
-            <ol>
-                {% for q in post.exercise_set.all %}
-                    <li class="mb-2">{{q.question}}</li>
-                {% endfor %}
-            </ol>
-        </div>
-    </div>
-    <div class="row my-5">
-        <div class="col-auto">
+
+        <div class="col-auto my-5">
             <button onclick="check()" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Check</button>
         </div>
-        <div class="col-auto">
-            <button class="btn btn-outline-secondary px-4">Show answers</button>
-        </div>
-    </div>
+    {% else %}
+    No exercises available for this post.
+    {% endif %}
+
     <hr>
     <div class="text-center">
     {% include 'static/components/like_dislike.html' %} {% include 'static/components/copy_to_clipboard.html' %}
@@ -181,11 +185,10 @@
     var element = document.getElementsByClassName("example");
     for (var line in element) {
         for (var tvx in target_vals) {
-            if (element[line].innerText.includes(target_vals[tvx])) {
-                line_patt = new RegExp(target_vals[tvx],"gi")
-                element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
-            }
+            line_patt = new RegExp("\\b"+target_vals[tvx]+"\\b","gi")
+            element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
         }
+        
     }
 </script>
 
@@ -204,7 +207,7 @@
     // end RegExp
     
     for (var ques in questions) {
-        var reg_patt = new RegExp("\\b"+choice_tar[ques].replace("&#x27","'")+"\\b","gi");
+        var reg_patt = new RegExp("\\b"+choice_tar[ques]+"\\b","gi"); //NOTE: try -- choice_tar[ques].replace("&#x27","'") if you ever face errors
         questions[ques].innerHTML = questions[ques].innerHTML.replace(reg_patt, sel());
         
         function sel(){
