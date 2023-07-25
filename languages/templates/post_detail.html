@@ -233,9 +233,9 @@
     for ( let x in q_arr ) {
         var ql = q_arr[x].replace("&#x27;","'")
         var prechoice = exchoices[x].split(",")
-        for ( let y of prechoice ) {
-            let preReg = new RegExp("\\b"+y+"\\b","gi")
-            if (ql.toLowerCase().search(preReg) >= 0) {
+        for ( var y of prechoice ) {
+            let preReg = new RegExp("\\b"+y.trim()+"\\b","gi")
+            if (ql.search(preReg) >= 0) {
                 pre_values.push(y)
             }
         }
@@ -256,8 +256,9 @@
         console.log("overall:",val_array.join("") == pre_values.join("")) // returns true or false based on 100% correct result
         console.log("val_array:",val_array)
         console.log("pre_values:",pre_values)
+        console.log("prechoice:",prechoice, y)
         console.log("exchoices:",exchoices)
-        console.log("q_arr:",q_arr)
+        console.log("q_arr:",ql)
 
         //for BSModal
         q_arr_html = []

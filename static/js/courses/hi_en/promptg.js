@@ -537,43 +537,53 @@ len = [];//used for current page if there are more than one card
         }
 
         body.innerHTML = `
-            <div class="inf">
-                <div>lesson - ${unit}</div>
-                <div class="main">${card_title}</div>
-                <div>page - ${num + 1}</div>
+            <div class="">
+            <div class="row inf">
+                <div class="col-3 fs-5">lesson - ${unit}</div>
+                <div class="col-6 text-center fs-4">${card_title}</div>
+                <div class="col-3 text-end fs-5">page - ${num + 1}</div>
             </div>
-            <div class="content">
-                <div class="flex_center">${len.length}/${card_count}</div>
-                <div id="cardm" class="card_4">
-                    <div class="nav_1">
-                        <div class="flex_center">
-                            <div style="cursor:pointer;"><img src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
-                            <div class="word">${meaning}
+            <div class="container-fluid p-5">
+                <div class="d-flex justify-content-center col-12 m-2">${len.length}/${card_count}</div>
+                
+                <div id="cardm" class="row col-12">
+                    <div class="row col-sm-12 col-md-6 mb-5">
+                        <div class="d-flex justify-content-center">
+                            <div style="cursor:pointer;"><img class="duo-speaker" src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
+                            <div class="word mb-sm-5">${meaning}
                                 <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${word}</div>
                             </div>
                             <span class="caption">${headings[0]}</span>
                         </div>
                         <img src="/static/img/svg/man_norm_eyes_up.svg" class="emot_img"/>
                     </div>
-                    <div class="nav_2">
-                        <div onmousedown="clkk()" class="card" accesskey="1" value="${cards_arr[0]}">
-                            <div class="short">1</div>
-                            <img src="/static/img/svg/${cards_arr[0]}.svg" alt="..."/>${cards_arr[0]}
+
+                    <div class="d-sm-block d-md-none mb-5"></div>
+
+                    <div class="row col-sm-12 col-md-6">
+                        <div class="d-flex justify-content-center">
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="1" value="${cards_arr[0]}">
+                                <div class="short">1</div>
+                                <img src="/static/img/svg/${cards_arr[0]}.svg" alt="..."/>${cards_arr[0]}
+                            </div>
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="2" value="${cards_arr[1]}">
+                                <div class="short">2</div>
+                                <img src="/static/img/svg/${cards_arr[1]}.svg" alt="..."/>${cards_arr[1]}
+                            </div>
                         </div>
-                        <div onmousedown="clkk()" class="card" accesskey="2" value="${cards_arr[1]}">
-                            <div class="short">2</div>
-                            <img src="/static/img/svg/${cards_arr[1]}.svg" alt="..."/>${cards_arr[1]}
-                        </div>
-                        <div onmousedown="clkk()" class="card" accesskey="3" value="${cards_arr[2]}">
-                            <div class="short">3</div>
-                            <img src="/static/img/svg/${cards_arr[2]}.svg" alt="..."/>${cards_arr[2]}
-                        </div>
-                        <div onmousedown="clkk()" class="card" accesskey="4" value="${cards_arr[3]}">
-                            <div class="short">4</div>
-                            <img src="/static/img/svg/${cards_arr[3]}.svg" alt="..."/>${cards_arr[3]}
+                        <div class="d-flex justify-content-center">
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="3" value="${cards_arr[2]}">
+                                <div class="short">3</div>
+                                <img src="/static/img/svg/${cards_arr[2]}.svg" alt="..."/>${cards_arr[2]}
+                            </div>
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="4" value="${cards_arr[3]}">
+                                <div class="short">4</div>
+                                <img src="/static/img/svg/${cards_arr[3]}.svg" alt="..."/>${cards_arr[3]}
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         `;
 
