@@ -16,13 +16,14 @@ def content_file_name(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_verified = models.BooleanField(default=False, blank=True)
     highest_degree = models.CharField(max_length=50, default="", blank=True, null=True)
     reputation = models.IntegerField(default=0)
     phone = models.CharField(max_length=50, default="", blank=True, null=True)
     languages = models.CharField(max_length=300, default="", blank=True, null=True)
     ex_done = models.TextField(default="",blank=True, null=True)
     ex_err = models.TextField(default="",blank=True, null=True)
-    profession = models.CharField(choices=(('studend','student'),('teacher','teacher'),('employed','employed')), max_length=50)
+    profession = models.CharField(choices=(('student','student'),('teacher','teacher'),('employed','employed')), max_length=50)
     city = models.CharField(max_length=50, default="", blank=True, null=True)
     country = models.CharField(max_length=50, default="", blank=True, null=True)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #010001;
+            font-family: "Raleway", sans-serif;
+        }
+
+        .box {
+            position: relative;
+            margin-top: 80px;
+        }
+
+        .box img {
+            width: 200px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .box .count {
+            font-size: 60px;
+            color: #fff;
+            position: absolute;
+            top: -33px;
+            right: -7px;
+            z-index: 1;
+            display: inline-block;
+        }
+
+        .box .count::before {
+            content: "";
+            position: absolute;
+            top: 63%;
+            left: 39%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            box-shadow: -6px 7px 55px #ff2900;
+            opacity: 1;
+        }
+
+        .box svg {
+            overflow: visible !important;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .bubbles {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+            height: 150px;
+        }
+
+        .mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #organic-blob {
+            position: absolute;
+            right: -65px;
+            top: -169px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="https://alikinvv.github.io/notification-badge/build/icon.svg" alt="">
+        <span class="count">5</span>
+
+        <svg id="organic-blob" width="150" height="250" xmlns="http://www.w3.org/2000/svg" fill="#ff2900">
+
+            <g filter="url(#goo)">
+                <circle r="50" cy="172.5" cx="75">
+                    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 72.5 175"
+                        to="360 72.5 175" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <circle r="50" cy="177.5" cx="75">
+                    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="360 77.5 175"
+                        to="0 77.5 175" dur="3s" repeatCount="indefinite" />
+                </circle>
+                <circle r="50" cy="175" cx="72.5">
+                    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 75 172.5"
+                        to="360 75 172.5" dur="4s" repeatCount="indefinite" />
+                </circle>
+                <circle r="50" cy="175" cx="77.5">
+                    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="360 75 177.5"
+                        to="0 75 177.5" dur="3.5s" repeatCount="indefinite" />
+                </circle>
+
+            </g>
+
+            <g filter="url(#goo)" class="bubbles" cy="20"></g>
+        </svg>
+
+        <svg class="mask" xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <defs>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
+                        result="goo" />
+                    <feBlend in="SourceGraphic" in2="goo" />
+                </filter>
+            </defs>
+        </svg>
+    </div>
+
+
+
+
+
+    <!-- github  -->
+    <a href="https://github.com/alikinvv/notification-badge" target="_blank" class="github-corner"
+        aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250"
+            style="fill:#fff; color:#010001; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path
+                d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+                fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+            <path
+                d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+                fill="currentColor" class="octo-body"></path>
+        </svg></a>
+    <style>
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave 560ms ease-in-out
+        }
+
+        @keyframes octocat-wave {
+
+            0%,
+            100% {
+                transform: rotate(0)
+            }
+
+            20%,
+            60% {
+                transform: rotate(-25deg)
+            }
+
+            40%,
+            80% {
+                transform: rotate(10deg)
+            }
+        }
+
+        @media (max-width:500px) {
+            .github-corner:hover .octo-arm {
+                animation: none
+            }
+
+            .github-corner .octo-arm {
+                animation: octocat-wave 560ms ease-in-out
+            }
+        }
+    </style>
+
+    <script>
+        let bubblesCount = 70;
+        let bubbles = document.querySelector('.bubbles');
+
+        let getRandomInt = (min, max) => {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        for (let i = 0; i < bubblesCount; i++) {
+            let circle = document.createElement('circle');
+
+            circle.setAttribute('r', getRandomInt(5, 15));
+            circle.setAttribute('cy', 300);
+            circle.setAttribute('cx', getRandomInt(40, 110));
+            circle.setAttribute('fill', '#ff2900');
+            bubbles.append(circle);
+        }
+
+        let html = $('.bubbles').html();
+        $('.bubbles').html(html);
+
+        let circles = document.querySelectorAll('.bubbles circle');
+
+        for (let i = 0; i < circles.length; i++) {
+            let del = getRandomInt(0, 1000 * 3);
+            let xv = getRandomInt(-35, 35);
+
+            anime({
+                targets: circles[i],
+                r: {
+                    value: 0,
+                    duration: 500,
+                    delay: del + 1000
+                },
+                translateX: {
+                    value: xv,
+                    duration: 800,
+                    delay: del,
+                },
+                translateY: {
+                    value: [0, -150],
+                    duration: 2000,
+                    delay: del,
+                },
+                loop: true,
+                easing: 'linear'
+            })
+        }
+
+    </script>
+</body>
+
+</html>

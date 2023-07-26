@@ -100,6 +100,7 @@
         width: auto;
         border-radius: 50%;
     }
+
     .card {
         cursor: pointer;
         width: 10rem;
@@ -119,8 +120,10 @@
         overflow: hidden;
     }
     .card .img {
-        height: auto;
         width: 100%;
+        height: auto;
+        border: 2px solid #ddd;
+        border-radius: 0.3rem;
     }
 
     .card .name {
@@ -129,6 +132,50 @@
         height: 2rem;
         font-family: Bree;
         text-align: center;
+        padding: 0.2rem 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-full {
+        display: flex;
+        gap: 1rem;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 0.5rem;
+        overflow: hidden;  
+        padding: 0.5rem;
+        transition: all 0.5s;
+    }
+    .card-full:hover {
+        background-color: #eee;
+    }
+    
+    .card-full .img-cont {
+        height: 10rem;
+        width: 10rem;
+        overflow: hidden;
+    }
+    .card-full .inf-cont {
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: space-between;
+        height: 10rem;
+        max-width: 20rem;
+        overflow: hidden;
+    }
+    .card-full .img {
+        width: 100%;
+        height: auto;
+        border: 2px solid #ddd;
+        border-radius: 0.3rem;
+    }
+
+    .card-full .name {
+        white-space: nowrap;
+        width: 100%;
+        height: 2rem;
+        font-family: Bree;
         padding: 0.2rem 0;
         overflow: hidden;
         text-overflow: ellipsis;
