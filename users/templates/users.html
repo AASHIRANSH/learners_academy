@@ -6,7 +6,7 @@
   {% include "static/css/styles.html" %}
   {% include 'header.html' %}
 
-  <div class="container my-5">
+  <div class="m-5">
     {% if users %}
       {% if type == "users" %}
         <div class="d-flex justify-content-center flex-wrap gap-3">
@@ -43,13 +43,17 @@
                 </div>          
               {% endif %}
             {% else %}
-            You do not have any friends! <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
+              <div class="fs-4 text-center p-5">
+                You do not have any friends! <br><button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
+              </div>
             {% endif %}
           {% endfor %}
         </div>
       {% endif %}
     {% else %}
-      You do not have any friends! <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
+      <div class="fs-4 text-center p-5">
+        You do not have any friends! <br><button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
+      </div>
     {% endif %}
   </div>
 
