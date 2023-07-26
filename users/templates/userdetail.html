@@ -38,7 +38,53 @@
         <!--PERMS BUTTONS-->
         <div class="d-flex justify-content-between">
             <div class="">
-                <!-- Start Buttons -->
+                <button class="btn btn-dark" id="last-seen"></button>
+                <script>
+                    var last_seen = new Date("{{user.profile.last_seen|date:'F j, Y H:i:s'}}");
+                    var upd = last_seen.setMinutes(last_seen.getMinutes()+2);
+                    var date_uls = new Date();
+                    var last_seen_ele = document.getElementById("last-seen");
+                    
+                    if (date_uls > upd) {
+                        last_seen_ele.innerText = `Last seen: {{user.profile.last_seen|date:'H:i - F j'}}`; //${last_seen.getHours()}:${last_seen.getMinutes()} on (${last_seen.getDate()}-${last_seen.getMonth()})
+                    } else {
+                        last_seen_ele.classList.toggle("bg-success");
+                        last_seen_ele.innerText = "Online";
+                    }
+                </script>
+                <script>
+                    setInterval(updls, 5000);
+                    function updls() {
+                        const userlog = new XMLHttpRequest();
+                        userlog.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var data = this.responseText;
+                                last_seen = new Date(data);
+                                upd = last_seen.setSeconds(last_seen.getSeconds()+30);
+                                date_uls = new Date();
+                                last_seen_ele = document.getElementById("last-seen");
+
+                                if (date_uls > upd) {
+                                    last_seen_ele.innerText = `Last seen: {{user.profile.last_seen|date:'H:i - F j'}}`; //${last_seen.getHours()}:${last_seen.getMinutes()} on (${last_seen.getDate()}-${last_seen.getMonth()})
+                                } else {
+                                    last_seen_ele.classList.toggle("bg-success");
+                                    last_seen_ele.innerText = "Online";
+                                }
+                                console.log(data)
+                            }
+                          };
+                        userlog.open("GET","{% url 'userlog' %}?user={{user.id}}", true);
+                        userlog.send();
+
+                        if (date_uls > upd) {
+                            last_seen_ele.innerText = `Last seen: {{user.profile.last_seen|date:'H:i - F j'}}`; //${last_seen.getHours()}:${last_seen.getMinutes()} on (${last_seen.getDate()}-${last_seen.getMonth()})
+                        } else {
+                            last_seen_ele.classList.toggle("bg-success");
+                            last_seen_ele.innerText = "Online";
+                        }
+                    };
+                    console.log(last_seen)
+                </script>
             </div>
 
             <div>
@@ -93,10 +139,9 @@
     <div class="container mt-5">
         <div class="row">
             <div class="row col-sm-12 col-md-6">
-                <div class="mb-1">
+                <div class="mb-4">
                     <h3>Contact Information:</h3>
                 </div>
-                <hr class="mb-3">
                 
                 <div class="col-3 mb-3">
                     {{form.username.label_tag}}
@@ -132,10 +177,18 @@
                 </div>
             </div>
             <div class="row col-sm-12 col-md-6">
-                <div class="mb-1">
+                <div class="mb-4">
                     <h3>Academic Information:</h3>
                 </div>
-                <hr class="mb-3">
+
+                <div class="col-3 mb-3">
+                    {{p_form.profession.label_tag}}
+                </div>
+                <div class="col-8 mb-3">
+                    {{p_form.profession.value|capfirst}}
+                    {{p_form.profession.errors}}
+                </div>
+
 
                 <div class="col-3 mb-3">
                     {{p_form.highest_degree.label_tag}}
@@ -160,11 +213,6 @@
                     {{p_form.languages.errors}}
                 </div>
                 
-                
-                <div class="col-3 mb-3">
-                </div>
-                <div class="col-8 mb-3">
-                </div>
             </div>
             <hr>
         </div>

@@ -100,7 +100,7 @@
         <!--Profile BUTTONS-->
         <div class="d-flex justify-content-between mt-2">
             <div class="">
-            
+                
             </div>
 
             <div class="">
@@ -138,7 +138,7 @@
     {% include 'messages.html' %}
     <!-- Friend Requests -->
     {% for f in friends %}
-        {% if f.friend == user %}
+        {% if f.friend == user and f.is_friend == False %}
             <div class="alert alert-success alert-dismissible fade show d-flex align-items-center m-1" role="alert">
                 You have a friend request from <a href="{% url 'user_detail' f.user.id %}">{{f.user.username}}<a>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -217,7 +217,7 @@
                         {{p_form.profession.label_tag}}
                     </div>
                     <div class="col-8 mb-3">
-                        {{p_form.profession.value}}
+                        {{p_form.profession.value|capfirst}}
                         {{p_form.profession.errors}}
                     </div>
 

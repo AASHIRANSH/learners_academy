@@ -7,9 +7,10 @@ from . import converters
 register_converter(converters.FourDigitYearConverter, 'yyyy')
 
 urlpatterns = [
+    path('', views.sign_in),
+    path("userlog/", views.userlog, name="userlog"),
     path("users/", views.users, name="users"),
     path("userdetail/<int:id>/", views.user_detail, name="user_detail"),
-    path('', views.sign_in),
     path('login/', views.sign_in, name='sign_in'),
     # path('sessions/<yyyy:year>/', views.custom_url, name='custom_url'),
     path('profile/', views.user_profile, name='profile'),

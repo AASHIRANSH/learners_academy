@@ -8,10 +8,19 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from users.models import Contact, Friend, Notification
 
+from django.http import JsonResponse
+
 
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 
+import datetime
+def userlog(request):
+    datag = request.GET
+    user = User.objects.get(id=datag.get("user"))
+    usr_pr = user.profile.last_seen
+    print("yes it is working")
+    return render(request, "userlog.html", {"usr_pr":usr_pr})
 
 def users(request):
     datag = request.GET

@@ -3,9 +3,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 ''' User Online / Offline System '''
-from django.core.cache import cache 
-import datetime
-from learners_academy import settings
+# from django.core.cache import cache
+# import datetime
+# from learners_academy import settings
 '''------------------------------'''
 
 ''' this is to rename the image file uploaded by the user Profile Model below as dp '''
@@ -27,6 +27,7 @@ class Profile(models.Model):
     city = models.CharField(max_length=50, default="", blank=True, null=True)
     country = models.CharField(max_length=50, default="", blank=True, null=True)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
+    last_seen = models.DateTimeField(max_length=50, default="", blank=True, null=True)
 
     def __str__(self):
         return f'{self.user.username} Profile' #show how we want it to be displayed
@@ -43,19 +44,19 @@ class Profile(models.Model):
             img.save(self.image.path)
 
 
-    def last_seen(self):
-        return cache.get('seen_%s' % self.user.username)
+    # def last_seen(self):
+    #     return cache.get('seen_%s' % self.user.username)
 
-    def online(self):
-        if self.last_seen():
-            now = datetime.datetime.now()
-            if now > self.last_seen() + datetime.timedelta(
-                        seconds=settings.USER_ONLINE_TIMEOUT):
-                return False
-            else:
-                return True
-        else:
-            return False
+    # def online(self):
+    #     if self.last_seen():
+    #         now = datetime.datetime.now()
+    #         if now > self.last_seen() + datetime.timedelta(
+    #                     seconds=settings.USER_ONLINE_TIMEOUT):
+    #             return False
+    #         else:
+    #             return True
+    #     else:
+    #         return False
 
 
 class Friend(models.Model):
