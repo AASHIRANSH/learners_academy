@@ -350,9 +350,9 @@
       {% if type == "users" %}
         <div class="d-flex flex-column gap-3">
           {% for user in users %}
-            <div class="col" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+            <div class="col">
               <!--div class="ribbon ribbon-top-right"><span>ribbon</span></div-->
-              <div class="card-full shadow">
+              <div class="card-full shadow" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
                 <div class="img-cont"><img class="img" src="{{user.profile.image.url}}" class=""/></div>
                 <div class="inf-cont">
 
@@ -382,7 +382,7 @@
 
                   <div>
                     <div class="">Profession: {{user.profile.profession}}</div>
-                    <div class="">Reputation: {{user.profile.reputation}}</div>
+                    <div class="">Reputation: {{user.profile.reputation}} <button type="button" class="btn btn-sm btn-outline-info ms-2" data-bs-toggle="popover" data-bs-title="Reputation?" data-bs-content="Reputation increases each time you answer an exercise question anywhere on the Website.">?</button></div>
                     <div class="">Country: {{user.profile.country}} <span class="fib fi fi-in"></span></div>
                   </div>
                 </div>
