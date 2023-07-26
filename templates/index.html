@@ -59,11 +59,11 @@
   </div>
 </div>
 
-<div class="container my-5">
+<div class="px-5 my-5">
   <div class="r-title m-0 text-outline-secondary py-2 px-3 fs-5 border-top border-secondary">What's New</div>
   <hr class="mt-0">
   {% for post in posts %}
-    <div class="row col-9 py-3">
+    <div class="row py-3">
       <div id="lesson_cont" class="position-relative col-sm-12 col-md-5 p-0 mb-2" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
         <div class="position-absolute top-0 start-0 bg-secondary p-2 rounded-4 text-light">
           {{post.created_at|date:"j-m-y"}}

@@ -9,7 +9,7 @@
   <div class="container my-5">
     {% if users %}
       {% if type == "users" %}
-        <div class="d-flex flex-wrap gap-3">
+        <div class="d-flex justify-content-center flex-wrap gap-3">
           {% for user in users %}
             <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
               <div class="card shadow">
@@ -22,11 +22,11 @@
       {% endif %}
 
       {% if type == "friends" %}
-        <div class="row">
+        <div class="d-flex justify-content-center flex-wrap gap-3">
           {% for friend in users %}
             {% if friend.is_friend %}
               {% if friend.user == request.user %}
-                <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
+                <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
                   <div class="card shadow">
                     <img src="{{friend.friend.profile.image.url}}" class=""/>
                     <div class="name">{{friend.friend.username}}</div>
@@ -35,7 +35,7 @@
               {% endif %}
 
               {% if friend.friend == request.user %}
-                <div class="col-auto mb-3" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
+                <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
                   <div class="card shadow">
                     <img src="{{friend.user.profile.image.url}}" class=""/>
                     <div class="name">{{friend.user.username}}</div>
