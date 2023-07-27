@@ -38,7 +38,7 @@
         <!--PERMS BUTTONS-->
         <div class="d-flex justify-content-between">
             <div class="">
-                <button class="btn btn-dark" id="last-seen">Last seen: {{user.profile.last_seen|date:'H:i - F j'}}</button>
+                <button class="btn btn-dark" id="last-seen">Last seen: {% if user.profile.last_seen %}{{user.profile.last_seen|date:'H:i - F j'}}{% else %}{{user.last_login|date:'H:i - F j'}}{% endif %}</button>
                 <!--script>
                     var last_seen = new Date("");
                     var upd = last_seen.setMinutes(last_seen.getMinutes()+2);

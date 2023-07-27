@@ -826,7 +826,7 @@ theader #title_bar #user {
   color: #3b3a3a;
   text-align: center;
   word-wrap: break-word;
-  text-shadow: 1px 1px 0 var(--color-primary);
+  text-shadow: 1px 1px 0 #666666;
   padding: 1rem 1rem;
   border-radius: 2rem;
 }

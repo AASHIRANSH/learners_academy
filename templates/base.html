@@ -31,6 +31,7 @@
 </head>
 <body>
     {% include 'static/css/styles.html' %}
+    <div id="top"></div>
 
     {% block body %}{% endblock body %}
 
@@ -102,11 +103,6 @@
     
     <script src="/static/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js" defer></script>
     <script>
-        window.onload = function() {
-            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el))
-        }
-    </script>
-    <script>
         window.onload = function(){
             setInterval(updls, 10000);
             function updls() {
@@ -114,6 +110,11 @@
                 userlog.open("GET","{% url 'userlog' %}", true);
                 userlog.send();
             };
+        }
+    </script>
+    <script>
+        window.onload = function() {
+            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el))
         }
     </script>
 </body>
