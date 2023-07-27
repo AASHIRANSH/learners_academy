@@ -16,8 +16,8 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 
 import datetime
 def userlog(request):
-    datag = request.GET
-    user = User.objects.get(id=datag.get("user"))
+    pk = request.GET.get("user") or 1
+    user = User.objects.get(id=pk)
     usr_pr = user.profile.last_seen
     print("yes it is working")
     return render(request, "userlog.html", {"usr_pr":usr_pr})

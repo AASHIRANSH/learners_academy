@@ -37,7 +37,7 @@ class Post(models.Model):
 
 
 class Word(models.Model):
-    category = models.CharField(choices=(('animals','animals'),), max_length=50, default="", blank=True, null=True)
+    category = models.CharField(choices=(('animals','animals'),('household','household')), max_length=50, default="", blank=True, null=True)
     official = models.ManyToManyField(User, blank=True)
     ref_id = models.CharField(max_length=50, blank=True, null=True)
     word_root = models.CharField(max_length=100, blank=True, null=True)
@@ -89,6 +89,7 @@ class Dislike(models.Model):
 class Exercise(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
     level = models.CharField(max_length=50, choices=(('a1','Beginner'),('a2','Pre Intermediate'),('b1','Intermediate'),('b2','Upper Intermediate'),('c1','Advanced'),('c2','Proficient')), default="", blank=True, null=True)
+    pos = models.CharField(choices=(('preposition','preposition'),('helping verb','helping verb')), max_length=50, default="", blank=True, null=True)
     type = models.CharField(max_length=50, choices=(('fill','Blanks Filling'),('choice','Multiple Choice')))
     question = models.TextField()
     target_values = models.CharField(max_length=50, default="", blank=True, null=True)

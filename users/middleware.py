@@ -13,8 +13,9 @@ class ActiveUserMiddleware:
     def __call__(self, request):
         user = request.user
         if user.is_authenticated:
+            now = datetime.datetime.now()+datetime.timedelta(hours=5,minutes=30)
             usrobj = User.objects.get(username=user.username)
-            usrobj.profile.last_seen = datetime.datetime.now()
+            usrobj.profile.last_seen = now
             usrobj.save()
 
         # print("View Call Middleware Run", user.username)

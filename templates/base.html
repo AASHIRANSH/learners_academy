@@ -106,5 +106,15 @@
             document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => new bootstrap.Popover(el))
         }
     </script>
+    <script>
+        window.onload = function(){
+            setInterval(updls, 10000);
+            function updls() {
+                const userlog = new XMLHttpRequest();
+                userlog.open("GET","{% url 'userlog' %}", true);
+                userlog.send();
+            };
+        }
+    </script>
 </body>
 </html>

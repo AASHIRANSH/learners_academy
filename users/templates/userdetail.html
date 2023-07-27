@@ -38,9 +38,9 @@
         <!--PERMS BUTTONS-->
         <div class="d-flex justify-content-between">
             <div class="">
-                <button class="btn btn-dark" id="last-seen"></button>
-                <script>
-                    var last_seen = new Date("{{user.profile.last_seen|date:'F j, Y H:i:s'}}");
+                <button class="btn btn-dark" id="last-seen">Last seen: {{user.profile.last_seen|date:'H:i - F j'}}</button>
+                <!--script>
+                    var last_seen = new Date("");
                     var upd = last_seen.setMinutes(last_seen.getMinutes()+2);
                     var date_uls = new Date();
                     var last_seen_ele = document.getElementById("last-seen");
@@ -51,7 +51,7 @@
                         last_seen_ele.classList.toggle("bg-success");
                         last_seen_ele.innerText = "Online";
                     }
-                </script>
+                </script-->
                 <script>
                     setInterval(updls, 5000);
                     function updls() {
@@ -65,7 +65,7 @@
                                 last_seen_ele = document.getElementById("last-seen");
 
                                 if (date_uls > upd) {
-                                    last_seen_ele.innerText = `Last seen: {{user.profile.last_seen|date:'H:i - F j'}}`; //${last_seen.getHours()}:${last_seen.getMinutes()} on (${last_seen.getDate()}-${last_seen.getMonth()})
+                                    last_seen_ele.innerText = `Last seen: ${data}`; //`Last seen: ${last_seen.getHours()}:${last_seen.getMinutes()} ${last_seen.getDate()}-${last_seen.getMonth()}`;
                                 } else {
                                     last_seen_ele.classList.toggle("bg-success");
                                     last_seen_ele.innerText = "Online";
@@ -75,13 +75,6 @@
                           };
                         userlog.open("GET","{% url 'userlog' %}?user={{user.id}}", true);
                         userlog.send();
-
-                        if (date_uls > upd) {
-                            last_seen_ele.innerText = `Last seen: {{user.profile.last_seen|date:'H:i - F j'}}`; //${last_seen.getHours()}:${last_seen.getMinutes()} on (${last_seen.getDate()}-${last_seen.getMonth()})
-                        } else {
-                            last_seen_ele.classList.toggle("bg-success");
-                            last_seen_ele.innerText = "Online";
-                        }
                     };
                     console.log(last_seen)
                 </script>
@@ -165,6 +158,15 @@
                 <div class="col-9 mb-3">
                     {{form.last_name.value}}
                     {{form.last_name.errors}}
+                </div>
+
+
+                <div class="col-3 mb-3 is-friend">
+                    {{p_form.phone.label_tag}}
+                </div>
+                <div class="col-9 mb-3 is-friend">
+                    {{p_form.phone.value}}
+                    {{p_form.phone.errors}}
                 </div>
 
 

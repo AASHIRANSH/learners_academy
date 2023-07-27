@@ -12,7 +12,9 @@
     .superuser {
         display: {% if request.user.is_superuser %}initial{% else %}none{% endif %};
     }
-
+    .is-friend {
+        display: {% if is_friend and fr_req %}initial{% else %}none{% endif %};
+    }
     .r-title {
         display: inline-block;
         border-radius: 0.8rem 0.8rem 0 0;
