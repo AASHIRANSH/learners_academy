@@ -76,8 +76,8 @@
 
     <div class="container_fluid p-4 bg-secondary text-white shadow">
         <div class="d-flex justify-content-center">
-            <div class="me-3">
-                <img height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
+            <div class="profile-pic me-3">
+                <img width="150" height="150" src="{{user.profile.image.url}}" class="p-1 rounded-circle account-img shadow-lg bg-white"/>
             </div>
 
             <div class="d-flex flex-column">
@@ -112,17 +112,17 @@
                       
                         <ul class="dropdown-menu">
                           <li><a class="dropdown-item" href="{% url 'users' %}?users=friends"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary">{{friends.count}}</span></a></li>
-                          <li><a class="dropdown-item" href="#"><i class="fa-solid fa-message"></i> Messages <span id="fr" class="badge bg-secondary">0</span></a></li>
+                          <li><a class="dropdown-item" href="#"><i class="fa-solid fa-message"></i> Messages <span id="msgs" class="badge bg-secondary">0</span></a></li>
                           <li><div class="dropdown-divider"></div></li>
                           {% if perms.languages.add_post %}<li><a class="dropdown-item" href="{% url 'frevise' %}"><i class="fa-solid fa-pen"></i> My Posts</a></li>{% endif %}
                           <li><a class="dropdown-item" href="{% url 'frevise' %}"><i class="fa-solid fa-book"></i> My Words</a></li>
                           <li><div class="dropdown-divider"></div></li>
                           <li><a class="dropdown-item" href="{% url 'users' %}?users=users"><i class="fa-solid fa-user-group"></i> Find People </a></li>
                         </ul>
-                      </div>
+                    </div>
                 </div>
                 <div class="d-none d-md-block">
-                    <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr" class="badge bg-secondary"></span></button>
+                    <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr-md" class="badge bg-secondary"></span></button>
                     <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary"><i class="fa-solid fa-people-group"></i> Find People</button>
                     {% if perms.languages.add_post %}
                         <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary"><i class="fa-solid fa-pen"></i> My Posts</button>
@@ -255,16 +255,17 @@
 
     <script>
         var friends_model = [];
-        `{% for c in friends %}
-            {% if c.is_friend %}
-            ${friends_model.push("{{c.user.username}}")}
+        `{% for f in friends %}
+            {% if f.is_friend %}
+            ${friends_model.push("{{f.user.username}}")}
             {% endif %}
         {% endfor %}`
         console.log(friends_model)
-        document.addEventListener("DOMContentLoaded", function () {
-            var fr = document.getElementById("fr")
-            fr.innerHTML = friends_model.length
-        })
+        
+        var fr = document.getElementById("fr")
+        var frmd = document.getElementById("fr-md")
+        fr.innerText = friends_model.length
+        frmd.innerText = friends_model.length
     </script>
     {% include 'footer.html' %}
 {% endblock body %}

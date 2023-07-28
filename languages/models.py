@@ -92,6 +92,7 @@ class Exercise(models.Model):
     pos = models.CharField(choices=(('preposition','preposition'),('helping verb','helping verb')), max_length=50, default="", blank=True, null=True)
     type = models.CharField(max_length=50, choices=(('fill','Blanks Filling'),('choice','Multiple Choice')))
     question = models.TextField()
+    answer = models.TextField()
     target_values = models.CharField(max_length=50, default="", blank=True, null=True)
     choice = models.CharField(max_length=100, default="", blank=True, null=True)
     
