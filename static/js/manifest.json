@@ -1,0 +1,16 @@
+{
+    "name": "Learners Academy",
+    "short_name": "LA",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/img/graduate.png",
+            "type": "image/png",
+            "sizes": "300x300"
+        }
+    ]
+}
