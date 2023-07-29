@@ -19,7 +19,7 @@ def userlog(request):
     pk = request.GET.get("user") or 1
     user = User.objects.get(id=pk)
     usr_pr = user.profile.last_seen or user.last_login
-    print("yes it is working")
+    
     return render(request, "userlog.html", {"usr_pr":usr_pr})
 
 

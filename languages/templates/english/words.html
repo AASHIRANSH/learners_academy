@@ -88,18 +88,21 @@
 
 
         <div id="def-container" class="position-relative col-12 rounded-3 mt-3">
-            <div id="def" class="col-12 fs-4 p-2">
-                <span class="fs-6">{% if word.def_inf %}{{word.def_inf}} | {% endif %}</span> {{word.definition}}
+            <div id="carouselExampleControls" class="carousel slide">
+                <div id="def" class="col-12 fs-4 p-2">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <span class="fs-6">{% if word.def_inf %}{{word.def_inf}} | {% endif %}</span> {{word.definition}}
+                        </div>
+                        <div class="carousel-item">
+                            {% if word.def_inf %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="position-absolute top-0 end-0 m-2">
+                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
+                </div>
             </div>
-            <div class="position-absolute top-0 end-0 m-2">
-                <i onclick="def_lang()" class="fa-solid fa-language fs-3 text-primary cursor-pointer"></i>
-            </div>
-            <script>
-                def_ele = document.getElementById("def")
-                function def_lang() {
-                    def_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
-                }
-            </script>
         </div>
 
         <div id="example" class="col-12 fst-italic py-3 overflow-auto">
@@ -107,16 +110,19 @@
                 <div>
                     &#x2022; {{line}}
                 </div>
+                <hr class="my-1">
             {% endfor %}
         </div>
     </div>
 </div>
+
+
 {% if request.user.is_superuser %}
-<div class="position-fixed bottom-0 right-0 m-3">
-    <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
-        <i class="fa-solid fa-plus"></i>
-    </a>
-</div>
+    <div class="position-fixed bottom-0 right-0 m-3">
+        <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
 {% endif %}
 
 

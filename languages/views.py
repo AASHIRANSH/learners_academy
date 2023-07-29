@@ -91,7 +91,7 @@ def post_entry(request):
     }
     return render(request, "post_entry.html", vars)
 
-
+from django.core.paginator import Paginator
 def post_list(request):
     datag = request.GET
     if datag.get("action") == "myposts":
@@ -99,7 +99,15 @@ def post_list(request):
     else:
         posts = Post.objects.filter(published=True)
         
-    vars = {'posts': posts}
+    paginator = Paginator(posts, 5)  # Show 6 contacts per page.
+    page_number = datag.get("page")
+    page_obj = paginator.get_page(page_number)
+
+
+    vars = {
+        "posts": posts,
+        "page_obj": page_obj
+    }
     return render(request, 'english/post_list.html', vars)
 
 
@@ -287,6 +295,7 @@ def word(request,id):
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
         "example":set(example),
+        "refresh":False
     }
     return render(request, "english/words.html", vars)
 

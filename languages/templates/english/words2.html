@@ -72,17 +72,17 @@
 <div class="container my-5">
 <table id="example" class="table table-hover" style="width:100%">
   <thead>
-      <tr>
-          <th style="width:5%;">Freq.</th>
-          <th style="width:25%;">Word</th>
-          <th style="width:20%;">PoS</th>
-          <th style="width:50%;">Definition</th>
-      </tr>
+    <tr class="bg-secondary text-light">
+        <th style="width:5%;">#</th>
+        <th style="width:25%;">Word</th>
+        <th style="width:20%;">PoS</th>
+        <th style="width:50%;">Definition</th>
+    </tr>
   </thead>
   <tbody>
     {% for word in words %}
       <tr onclick="window.location.assign(`{% url 'word' word.id %}`)">
-        <td>{% if word.grade|length > 0 %}{{word.grade}}{% else %}No Freq.{% endif %}</td>
+        <td>{{forloop.counter}}</td>
         <td>{{word.word}}</td>
         <td>{{word.pos}}</td>
         <td>{{word.definition}}</td>
