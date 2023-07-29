@@ -88,17 +88,22 @@
 
 
         <div id="def-container" class="position-relative col-12 rounded-3 mt-3">
-            <div id="carouselExampleControls" class="carousel slide">
-                <div id="def" class="col-12 fs-4 p-2">
+            <div id="def" class="col-12 fs-4 p-2">
+                <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
+
+                <div id="carouselExampleControls" class="carousel slide">
                     <div class="carousel-inner">
+
                         <div class="carousel-item active">
-                            <span class="fs-6">{% if word.def_inf %}{{word.def_inf}} | {% endif %}</span> {{word.definition}}
+                            <div class="">{{word.definition}}</div>
                         </div>
                         <div class="carousel-item">
-                            {% if word.def_inf %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                            {% if word.definition_hindi %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
                         </div>
+                        
                     </div>
                 </div>
+
                 <div class="position-absolute top-0 end-0 m-2">
                     <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
                 </div>
