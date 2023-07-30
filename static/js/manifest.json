@@ -1,10 +1,10 @@
 {
     "name": "Learners Academy",
-    "short_name": "LA",
+    "short_name": "Learners Academy",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#ffffff",
+    "theme_color": "#3cb371",
     "orientation": "portrait-primary",
     "icons": [
         {
