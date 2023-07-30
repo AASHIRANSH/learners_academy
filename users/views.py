@@ -22,7 +22,7 @@ def userlog(request):
     
     return render(request, "userlog.html", {"usr_pr":usr_pr})
 
-
+from django.core.paginator import Paginator
 def users(request):
     datag = request.GET
     if datag.get("users") == "friends":
@@ -32,8 +32,13 @@ def users(request):
         users = User.objects.exclude(username=request.user.username)
         type = "users"
 
+    paginator = Paginator(users, 5)  # Show 5 contacts per page.
+    page_number = datag.get("page")
+    page_obj = paginator.get_page(page_number)
+
     vars = {
         "users":users,
+        "page_obj": page_obj,
         "type":type
     }
     return render(request, "users.html", vars)

@@ -349,10 +349,10 @@
     {% if users %}
       {% if type == "users" %}
         <div class="d-flex flex-column gap-3">
-          {% for user in users %}
+          {% for user in page_obj %}
             <div class="col">
               <!--div class="ribbon ribbon-top-right"><span>ribbon</span></div-->
-              <div class="card-full shadow" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
+              <div class="card-full" onclick="window.location.assign('{% url 'user_detail' user.id %}')">
                 <div class="img-cont"><img class="img" src="{{user.profile.image.url}}" class=""/></div>
                 <div class="inf-cont">
 
@@ -388,17 +388,18 @@
                 </div>
               </div>
             </div>
+            <hr>
           {% endfor %}
         </div>
       {% endif %}
 
       {% if type == "friends" %}
         <div class="d-flex flex-column gap-3">
-          {% for friend in users %}
+          {% for friend in page_obj %}
             {% if friend.is_friend %}
               {% if friend.user == request.user %}
                 <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' friend.friend.id %}')">
-                  <div class="card-full shadow">
+                  <div class="card-full">
                     <div class="img-cont"><img class="img" src="{{friend.friend.profile.image.url}}" class=""/></div>
                     <div class="inf-cont">
 
@@ -438,7 +439,7 @@
 
               {% if friend.friend == request.user %}
                 <div class="col-auto" onclick="window.location.assign('{% url 'user_detail' friend.user.id %}')">
-                  <div class="card-full shadow">
+                  <div class="card-full">
                     <div class="img-cont"><img class="img" src="{{friend.user.profile.image.url}}" class=""/></div>
                     <div class="inf-cont">
 
@@ -488,6 +489,27 @@
         You do not have any friends! <br><button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
       </div>
     {% endif %}
+    <nav aria-label="..." class="d-flex justify-content-end">
+      <ul class="pagination">
+          {% if page_obj.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+          {% else %}
+              <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+  
+          <li class="page-item disabled">
+              <span class="page-link">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+              </span>
+          </li>
+  
+          {% if page_obj.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+          {% endif %}
+      </ul>
+    </nav>
   </div>
 
   <!--div class="d-flex flex-column gap-3">

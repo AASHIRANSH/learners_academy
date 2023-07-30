@@ -106,7 +106,7 @@
             <div class="">
                 <div class="d-block d-md-none">
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-outline-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                           Menu
                         </button>
                       
@@ -122,13 +122,13 @@
                     </div>
                 </div>
                 <div class="d-none d-md-block">
-                    <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-primary"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr-md" class="badge bg-secondary"></span></button>
-                    <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-primary"><i class="fa-solid fa-people-group"></i> Find People</button>
+                    <button onclick="window.location.assign('{% url 'users' %}?users=friends')" class="btn btn-outline-light"><i class="fa-solid fa-user-group"></i> My Friends <span id="fr-md" class="badge bg-secondary"></span></button>
+                    <button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-light"><i class="fa-solid fa-people-group"></i> Find People</button>
                     {% if perms.languages.add_post %}
-                        <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-primary"><i class="fa-solid fa-pen"></i> My Posts</button>
+                        <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-outline-light"><i class="fa-solid fa-pen"></i> My Posts</button>
                     {% endif %}
-                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
-                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-primary"><i class="fa-solid fa-book"></i> Flashcards</button>
+                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-outline-light"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
+                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-outline-light"><i class="fa-solid fa-book"></i> Flashcards</button>
                 </div>
             </div>
         </div>
