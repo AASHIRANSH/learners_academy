@@ -102,7 +102,7 @@
         </div>
     </div>
 </div>
-{% if request.user.is_superuser %}
+{% if perms.languages.add_word %}
 <div class="position-fixed bottom-0 right-0 m-3">
     <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
         <i class="fa-solid fa-plus"></i>

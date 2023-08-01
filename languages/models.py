@@ -37,8 +37,8 @@ class Post(models.Model):
 
 
 class Word(models.Model):
-    category = models.CharField(choices=(('animals','animals'),('household','household')), max_length=50, default="", blank=True, null=True)
-    official = models.ManyToManyField(User, blank=True)
+    category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
+    # official = models.ManyToManyField(User, blank=True)
     ref_id = models.CharField(max_length=50, blank=True, null=True)
     word_root = models.CharField(max_length=100, blank=True, null=True)
     root_pos = models.CharField(max_length=50, blank=True, null=True)

@@ -539,9 +539,9 @@ len = [];//used for current page if there are more than one card
         body.innerHTML = `
             <div class="">
             <div class="row inf">
-                <div class="col-3 fs-5">lesson - ${unit}</div>
-                <div class="col-6 text-center fs-4">${card_title}</div>
-                <div class="col-3 text-end fs-5">page - ${num + 1}</div>
+                <div class="col-3 fs-4">lesson - ${unit}</div>
+                <div class="col-6 text-center fs-3">${card_title}</div>
+                <div class="col-3 text-end fs-4">page - ${num + 1}</div>
             </div>
             <div class="container-fluid p-5">
                 <div class="d-flex justify-content-center col-12 m-2">${len.length}/${card_count}</div>
@@ -1890,31 +1890,31 @@ len = [];//used for current page if there are more than one card
                 var mean = xx[1];
                 cas.push('#btn_' + x);
                 meaning += `
-                    <button style="" onmousedown="clkk()" id="btn_${x}" value="${mean}" class="nfocus">${mean}</button>
+                    <button style="" onmousedown="clkk()" id="btn_${x}" value="${mean}" class="btn-outline-light">${mean}</button>
                 `;
             }
         }
         
         body.innerHTML = `
             <div class="inf">
-                <div>lesson - ${unit}</div>
-                <div class="main">${card_title}</div>
-                <div>page - ${num + 1}</div>
+                <div class="col-3 fs-5">lesson - ${unit}</div>
+                <div class="col-6 text-center fs-4">${card_title}</div>
+                <div class="col-3 text-end fs-5">page - ${num + 1}</div>
             </div>
             <div class="content">
                 <div class="flex_center">${len.length}/${len_card_content}</div>
                 <div id="cardm" class="cardm_learn">
                 <div class="trans">
-                    <div class="flex_center">
+                    <div class="d-flex justify-content-center">
                         <div class="img_card">
                             <img src="/static/img/svg/${card_h}.svg" alt="..."/>
                         </div>
                     </div>
                     <div class="flex_center">
-                        <h1>${card_h}</h1>
+                        <div class="word-main">${card_h}</div>
                     </div>
                     <div class="flex_center">
-                        <span class="ml_20 text_20">(${headings[1]})</span>    
+                        <span class="ml_20 fs-4">(${headings[1]})</span>    
                     </div>
                     </div>
                     <div class="tr_content">

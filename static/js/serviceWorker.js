@@ -24,9 +24,12 @@ const limitCacheSize = (name, size) => {
 }
 self.addEventListener('install', evt => {
     console.log('service worker has been installed');
-    caches.open(staticCacheName).then(cache => {
-        cache.addAll(assets)
-    })
+    evt.waitUntil(
+        caches.open(staticCacheName)
+        .then(cache => {
+            return cache.addAll(assets);
+        })
+    );
 });
 
 //activate event
@@ -47,18 +50,42 @@ self.addEventListener('activate', evt => {
 self.addEventListener('fetch', evt => {
     console.log('fetch event', evt);
     evt.respondWith(
-        caches.match(evt.request).then(cacheRes => {
-            return cacheRes || fetch(evt.request).then(fetchRes => {
-                return caches.open(dynamicCacheName).then(cache => {
-                    cache.put(evt.request.url, fetchRes.clone());
-                    limitCacheSize(dynamicCacheName, 15)
-                    return fetchRes;
-                })
-            });
-        }).catch(() => {
-            if (evt.request.url.indexOf('.html') > -1){
-                caches.match('/static/fallback/fallback.html');
-            }
+        caches.match(evt.request) ||
+            fetch(evt.request)
+    )
+});
+
+btnAdd.addEventListener('click', (e) => {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the A2Hs Prompt');
+        }
+        deferredPrompt = null;
+    });
+});
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    btnAdd.style.display = "block";
+});
+
+window.addEventListener('appinstalled', (evt) => {
+    app.logEvent('a2hs', 'installed');
+});
+
+
+self.addEventListener('push', event => {
+    const title = "Yay a message.";
+    const body = "We have received a push message.";
+    //const icon = "";
+    const tag = "simple-push-tag";
+    event.waitUntil(
+        self.registration.showNotification(title, {
+            body: body,
+            tag: tag
         })
     );
 });
