@@ -314,72 +314,76 @@ def fledit(request):
 
 def word_entry(request):
     if request.method == "POST":
-        datap = request.POST.copy()
-        form = WordsForm(request.POST)
-        data = request.POST
-        # if data.get('definition') in Word.objects.filter(word=word,definition__contains=definition)
+        datap = request.POST
+        data = request.POST.copy()
+
         get_word_root = data.get('word_root')
-        get_word = data.get('word')
+        get_word = datap.get('word')
         get_pos = data.get('pos')
         get_grade = data.get('grade')
-        
-        #data for entry
-        category = data.get('category')
-        word_root = data.get('word_root')
-        root_pos = data.get('root_pos')
-        word = data.get('word')
-        pos = data.get('pos')
-        grade = data.get('grade')
-        pronounce = data.get('pronounce')
-        def_inf = data.get('def_inf')
-        definition = data.get('definition')
-        definition_hindi = data.get('definition_hindi')
-        forms = data.get('forms')
-        example = data.get('example')
-        tip = data.get('tip')
-        synonyms = data.get('synonyms')
-        pic = data.get('pic')
-        pic_url = data.get('pic_url')
-        
+
         '''ref id'''
-        ref_id = data.get('ref_id')
-        if ref_id is None:
+        ref_id = datap.get('ref_id')
+        print("ref_id is", get_word)
+
+        if ref_id:
             ref_id = ""
         else:
-            if pos == "verb":
-                ref_id = word+"_1"
-            elif pos == "noun":
-                ref_id = word+"_2"
-            elif pos == "adjective":
-                ref_id = word+"_3"
-            elif pos == "adverb":
-                ref_id = word+"_4"
-            elif pos == "conjunction":
-                ref_id = word+"_5"
+            if get_pos == "verb":
+                ref_id = get_word+"_1"
+            elif get_pos == "noun":
+                ref_id = get_word+"_2"
+            elif get_pos == "adjective":
+                ref_id = get_word+"_3"
+            elif get_pos == "adverb":
+                ref_id = get_word+"_4"
+            elif get_pos == "conjunction":
+                ref_id = get_word+"_5"
+        print(ref_id)
+        
+
+        # word_root = data.get('word_root')
+        # root_pos = data.get('root_pos')
+        # word = data.get('word')
+        # pos = data.get('pos')
+        # grade = data.get('grade')
+        # pronounce = data.get('pronounce')
+        # def_inf = data.get('def_inf')
+        # definition = data.get('definition')
+        # definition_hindi = data.get('definition_hindi')
+        # forms = data.get('forms')
+        # example = data.get('example')
+        # tip = data.get('tip')
+        # synonyms = data.get('synonyms')
+        # pic = data.get('pic')
+        # pic_url = data.get('pic_url')
+
+        data.update({"ref_id":ref_id})
+        form = WordsForm(data)
 
         if form.is_valid():
-            entry = Word(
-                category=category,
-                ref_id=ref_id,
-                word_root=word_root,
-                root_pos=root_pos,
-                word=word,
-                pronounce=pronounce,
-                pos=pos,
-                grade=grade,
-                def_inf=def_inf,
-                definition=definition,
-                definition_hindi=definition_hindi,
-                forms=forms,
-                example=example,
-                tip=tip,
-                synonyms=synonyms,
-                pic=pic,
-                pic_url=pic_url,
-            )
-            entry.save()
-            # form.save()
-            messages.success(request, f'the word "{word}" was added')
+            # entry = Word(
+            #     category=category,
+            #     ref_id=ref_id,
+            #     word_root=word_root,
+            #     root_pos=root_pos,
+            #     word=word,
+            #     pronounce=pronounce,
+            #     pos=pos,
+            #     grade=grade,
+            #     def_inf=def_inf,
+            #     definition=definition,
+            #     definition_hindi=definition_hindi,
+            #     forms=forms,
+            #     example=example,
+            #     tip=tip,
+            #     synonyms=synonyms,
+            #     pic=pic,
+            #     pic_url=pic_url,
+            # )
+            # entry.save()
+            form.save()
+            messages.success(request, f'the word "{get_word}" was added')
 
             # try:
             #     data = data

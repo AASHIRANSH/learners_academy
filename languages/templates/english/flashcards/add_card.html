@@ -70,6 +70,7 @@
             <div class="col-6">
               <label for="pos">POS:</label>
               <select class="form-select" name="pos">
+                <option value="">--</option>
                 <option value="noun" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun</option>
                 <option value="verb" {% if pos == 'verb' or pos == none %}selected{% endif %}>verb</option>
                 <option value="phrasal verb" {% if pos == 'phrasal verb' or form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
@@ -164,7 +165,7 @@
 
           <div class="col-auto mb-2">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="ref_id" value="true" id="id_ref_id" {% if edit %}{% if form.ref_id.value != "" %}{% else %}checked{% endif %}{% endif %}>
+              <input class="form-check-input" type="checkbox" name="ref_id" value="yes" id="id_ref_id" {% if edit %}{% if form.ref_id.value != "" %}{% else %}checked{% endif %}{% endif %}>
               <label class="form-check-label" for="id_ref_id">
                 Ref ID:
               </label>

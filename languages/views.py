@@ -10,7 +10,7 @@ from django.http import JsonResponse
 
 from django.contrib.auth.models import User
 import random, datetime, json
-
+''' /home/muhammadsog/learners_academy/ '''
 # Create your views here.
 def index(request, id):
     with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
@@ -505,8 +505,8 @@ def edit(request):
     form = WordsForm(instance=word_obj)
 
     if request.method == "POST":
-        data_form = WordsForm(request.POST or None, instance=word_obj)
         datap = request.POST
+        data_form = WordsForm(datap or None, instance=word_obj)
         if data_form.is_valid():
             data_form.save()
             messages.success(request, "Great! the word was edited!")
