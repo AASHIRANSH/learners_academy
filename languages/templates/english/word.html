@@ -13,7 +13,7 @@
             <div class="d-flex align-items-baseline row col-11">
                 <!-- Word Pos-->
                 <div class="col-12 mb-1">
-                    <div id="word" class="col-auto text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
+                    <div id="word" class="col-auto text-primary d-inline" {% if perms.languages.change_word %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
                         {{word.word|to_and}}
                     </div>
                     <div id="pos" class="col-auto fs-4 d-inline-block text-secondary">

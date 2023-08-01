@@ -476,10 +476,6 @@
                   </div>
                 </div>          
               {% endif %}
-            {% else %}
-              <div class="fs-4 text-center p-5">
-                You do not have any friends! <br><button onclick="window.location.assign('{% url 'users' %}')" class="btn btn-outline-secondary"><i class="fa-solid fa-people-group"></i> Find People</button>
-              </div>
             {% endif %}
           {% endfor %}
         </div>
