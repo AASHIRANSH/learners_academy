@@ -173,11 +173,22 @@
           </div>
 
           <div class="col-auto mb-2">
-              <input type="submit" value="Submit" class="btn btn-success"/>
-      
+            <input type="submit" value="Submit" class="btn btn-success"/>
           </div>
         </div>
-      
+        <div class="row">
+          <div class="col-6 mb-2">
+            {{form.hindi_usage.label_tag}}
+            <textarea class="form-control" name="hindi_usage" id="id_hindi_usage" rows="2">{% if edit %}{{form.hindi_usage.value}}{% endif %}</textarea>
+            {{form.hindi_usage.errors}}
+          </div>
+          
+          <div class="col-6 mb-2">
+            {{form.pic_url.label_tag}}
+            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% endif %}</textarea>
+            {{form.pic_url.errors}}
+          </div>
+        </div>
     </form>
     </div>
   </div>

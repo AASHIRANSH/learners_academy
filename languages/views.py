@@ -423,7 +423,6 @@ def revise(request):
         messages.warning(request, "You have not added any words yet!")
         return redirect("words")
 
-
     today = datetime.date.today()
     today = today.strftime("%Y-%m-%d")
 
@@ -529,22 +528,25 @@ def data(request):
     word_obj = get_object_or_404(Word,id=word)
 
     today = datetime.date.today()
-    
 
     if data.get('data') == "easy":
         entry = Revise.objects.get(word_id=word)
         rvcount = entry.rvcount
-        entry.date = today+datetime.timedelta(days=6+rvcount)
+        td = datetime.timedelta(days=5+rvcount)
+        entry.date = today+td
         entry.rvcount += 1
         entry.save()
-        messages.success(request, "Great! the word will show up after 6 days")
+        messages.success(request, f"Great! the word will show up after {rvcount+5} days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
         entry = Revise.objects.get(word_id=word)
-        entry.date = today+datetime.timedelta(days=3)
+        rvcount = entry.rvcount
+        td = datetime.timedelta(days=3)
+        entry.date = today+td
+        entry.rvcount -= 1 if rvcount >= 1 else 0
         entry.save()
-        messages.success(request, "Great! the word will show up after 3 days")
+        messages.success(request, f"Great! the word will show up after 3 days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "remove":
@@ -587,6 +589,7 @@ def ex_action(request):
     if request.POST:
         datap = request.POST
         questions = json.loads(datap.get("questions"))
+        errors = json.loads(datap.get("errors"))
         
         user_obj = User.objects.get(username=request.user.username)
         user_q = user_obj.profile.ex_done

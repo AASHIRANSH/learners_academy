@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <!-- DATATABLES -->
+    <link rel="stylesheet" href="/static/dt/dataTables.bootstrap5.min.css"/>
+    <link rel="stylesheet" href="/static/dt/cmb_datatables.min.css"/>
+    <link rel="stylesheet" href="/static/bootstrap-5.2.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/fonts/fontawesome/css/all.min.css"/>
+    <style>
+        .page-item.active .page-link {
+            columns: #fff;
+            background-color: #6c757d;
+            border: 1px solid #6c757d;
+        }
+
+        /*.pagination > li > a {
+            background-color: #fff;
+            color: #6c757d;
+        }
+        .pagination > li > a:focus,
+        .pagination > li > a:hover,
+        .pagination > span > a:focus,
+        .pagination > span > a:hover {
+            color: #111;
+            background-color: #d3d3d3;
+            border: 1px solid #6c757d;
+            box-shadow: none;
+        }*/
+
+        .dataTables_paginate {
+            margin-top: 20px !important;
+        }
+        /* .dataTables_info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        } */
+        /* ENTRY BAR */
+        .dataTables_length {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            left: 10px !important;
+            width: 300px;
+        }
+        .dt-buttons {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            left: 5px !important;
+            margin-bottom: 0;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        /* input search */
+        /*.dataTables_filter {
+            position: -webkit-fixed !important;
+            position: fixed !important;
+            bottom: 20px;
+            left: 50% !important;
+            transform: translate(-50%,0);
+        }*/
+
+        thead input {
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+{% include 'header.html' %}
+<div class="container my-5">
+<table id="example" class="table table-hover" style="width:100%">
+  <thead>
+    <tr class="bg-secondary text-light">
+        <th style="width:5%;">#</th>
+        <th style="width:25%;">Word</th>
+        <th style="width:20%;">PoS</th>
+        <th style="width:50%;">Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for word in words %}
+      <tr onclick="window.location.assign(`{% url 'word' word.id %}`)">
+        <td>{{forloop.counter}}</td>
+        <td>{{word.word}}</td>
+        <td>{{word.pos}}</td>
+        <td>{{word.definition}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+      <tr>
+        <th>Freq.</th>
+        <th>Word</th>
+        <th>PoS</th>
+        <th>Definition</th>
+      </tr>
+  </tfoot>
+</table>
+</div>
+
+<script defer src="/static/js/web/jquery-3.6.3.min.js"></script>
+<script src="/static/js/web/popper_2_11_6_min.js"></script>
+<script src="/static/js/web/popper.bootstrap.min.js"></script>
+
+<!-- DATATABLES -->
+<script defer src="/static/dt/pdfmake.min.js"></script>
+<script defer src="/static/dt/vfs_fonts.js"></script>
+<script defer src="/static/dt/datatables.min.js"></script>
+
+<script>//DataTables
+    $(document).ready(function() {
+        $('#example #columnFilters tr')//initially     $('#example thead tr')
+            //.clone(true)
+            .addClass('filters bg-secondary')
+            .appendTo('#example #columnFilters'); //initially   $('#example thead')
+
+        var table = $('#example').DataTable({
+            // orderCellsTop: true,
+            // fixedHeader: true,
+            paging: true, //pagination
+            pageLength: 10, //entries per page
+            lengthChange: true, //show entries per page option
+            autoWidth: false, //auto width for columns
+            searching: true, //search bar
+            bInfo: true, //bottom table info
+            bSort: true, //sorting a-z 0-9
+
+            //particular columns settings
+            // "columnDefs": [
+            //     {
+            //         "width": "20%",
+            //         "targets": [4,5], //4th and 5th column is not sortable
+            //         "orderable": false
+            //     },
+            //     {
+            //         "width": "10%",
+            //         "targets": 0,
+            //     },
+
+            // ],
+
+            initComplete: function() {
+                var api = this.api();
+                //columns to filter
+                api
+                    .columns()//.columns([0,1,2,3]) specify column no. if you want the filter for a particular column
+                    .eq(0)
+                    .each(function(colIdx) {
+                        var cell = $('.filters th').eq(
+                            $(api.column(colIdx).header()).index()
+                        );
+                        var title = $(cell).text();
+                        $(cell).html('<input type="texg" placeholder="' + title + '"/>');
+                        $(
+                            'input',
+                            $('.filters th').eq($(api.column(colIdx).header()).index())
+                        )
+                        .off('keyup change')
+                        .on('keyup change', function(e) {
+                            e.stopPropagation();
+                            
+                            $(this).attr('title',$(this).val());
+                            var regexr = '({search})';
+
+                            var cursorPosition = this.selectionStart;
+
+                            api
+                                .column(colIdx)
+                                .search(
+                                    this.value != ''
+                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                        : '',
+                                    this.value != '',
+                                    this.value == ''
+                                )
+                            .draw();
+                        $(this)
+                            .focus()[0]
+                            .setSelectionRange(cursorPosition, cursorPosition)
+                        });
+                    });
+            },
+        //BUTTONS
+        //dom: 'lBfrtip',
+        // buttons: [
+        //     {//COPY BUTTON
+        //         extend: 'copy',
+        //         text: '<i class="fa-solid fa-clone"></i>',
+        //         className: 'btn btn-secondary',
+        //         titleAttr: 'Copy',
+        //         //SPECIFIED COLUMNS TO COPY
+        //         exportOptions: {
+        //             columns: [0,1,2,3,4,5]
+        //         },
+        //     },
+        //     {//EXCEL BUTTON
+        //         extend: 'excel',
+        //         text: '<i class="fa-solid fa-file-excel"></i>',
+        //         className: 'btn btn-success',
+        //         titleAttr: 'Export to Excel',
+        //         //SPECIFIED COLUMNS TO EXPORT
+        //         exportOptions: {
+        //             columns: [0,1,2,3,4,5]
+        //         },
+        //     },
+        //     {//PRINT BUTTON
+        //         extend: 'print',
+        //         text: '<i class="fa-solid fa-print"></i>',
+        //         className: 'btn btn-primary',
+        //         titleAttr: 'Print',
+        //         //SPECIFIED COLUMNS TO Print 
+        //         exportOptions: {
+        //             columns: [0,1,2,3,4,5]
+        //         },
+        //         customize: function(win) {
+        //             $(win.document.body).css('font-size','10pt')
+        //             $(win.document.body).find('table')
+        //                 .addClass('compact')
+        //                 .css('font-size','inherit');
+        //         },
+        //     },
+        //     {//PDF BUTTON
+        //         extend: 'pdf',
+        //         text: '<i class="fa-solid fa-file-pdf"></i>',
+        //         className: 'btn btn-danger',
+        //         titleAttr: 'PDF',
+        //         //SPECIFIED COLUMNS TO Print 
+        //         exportOptions: {
+        //             columns: [0,1,2,3,4,5]
+        //         },
+        //         //TABLE HEADER
+        //         tableHeader: {
+        //             alignment: 'center'
+        //         },
+        //         //FONT SIZE
+        //         customize: function(doc) {
+
+        //             doc.styles.title = {
+        //                 color: 'red',
+        //                 fontSize: '40',
+        //                 background: 'blue',
+        //                 alignment: 'center'
+        //             }
+
+        //             doc.defaultStyle.fontSize = 6;
+        //             doc.styles.tableHeader.alignment = 'center';
+        //             doc.styles.tableHeader.fontSize = 8;
+        //             doc.styles.tableBodyOdd.alignment = 'center';
+        //             doc.styles.tableBodyEven.alignment = 'center';
+        //             //100% width of the table
+        //             doc.content[1].table.widths = Array(doc.content[1].table.body[1].length + 1).join('*').split('');
+        //         }
+        //     },
+        // ]
+        });
+    });
+    
+    // NOTE: set column width based on the columns number, multiplied by 20% of the screen
+    //var tableExample = document.getElementById('example');
+    //var tbr = tableExample.rows[0].cells.length*15;
+    //tableExample.style.width = tbr+"rem";
+</script>
+
+{% endblock body %}

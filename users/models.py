@@ -23,7 +23,12 @@ class Profile(models.Model):
     languages = models.CharField(max_length=300, default="", blank=True, null=True)
     ex_done = models.TextField(default="",blank=True, null=True)
     ex_err = models.TextField(default="",blank=True, null=True)
-    profession = models.CharField(choices=(('student','student'),('teacher','teacher'),('employed','employed')), max_length=50)
+    profession = models.CharField(choices=(
+        ('student','student'),
+        ('teacher','teacher'),
+        ('employed','employed'),
+        ('self employed','self employed'),
+    ), max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, default="", blank=True, null=True)
     country = models.CharField(max_length=50, default="", blank=True, null=True)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
