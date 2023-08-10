@@ -46,7 +46,7 @@
   </div>
 
   <div class="bg-blue-ii p-3 text-end">
-    <span class="bg-secondary text-light py-1 px-3 rounded-2">{{word.created_at|date:"D, d M, Y"}}</span>
+    <span class="bg-secondary text-light py-1 px-3 rounded-2">{% now "D, d M, Y" %}</span>
   </div>
   
   <div id="wod-word" class="text-secondary px-2" onclick="window.location.assign('{% url 'word' word.word.id %}')">
