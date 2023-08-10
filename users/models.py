@@ -2,11 +2,6 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
-''' User Online / Offline System '''
-# from django.core.cache import cache
-# import datetime
-# from learners_academy import settings
-'''------------------------------'''
 
 ''' this is to rename the image file uploaded by the user Profile Model below as dp '''
 def content_file_name(instance, filename):
@@ -32,7 +27,7 @@ class Profile(models.Model):
     city = models.CharField(max_length=50, default="", blank=True, null=True)
     country = models.CharField(max_length=50, default="", blank=True, null=True)
     image = models.ImageField(verbose_name="Profile Picture:", default='users/default.jpg', upload_to=content_file_name)
-    last_seen = models.DateTimeField(max_length=50, default="", blank=True, null=True)
+    last_seen = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.user.username} Profile' #show how we want it to be displayed

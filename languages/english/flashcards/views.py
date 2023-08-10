@@ -318,7 +318,7 @@ def word_entry(request):
         data = request.POST.copy()
 
         get_word_root = data.get('word_root')
-        get_word = datap.get('word')
+        get_word = data.get('word')
         get_pos = data.get('pos')
         get_grade = data.get('grade')
 

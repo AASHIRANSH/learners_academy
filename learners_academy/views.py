@@ -7,7 +7,7 @@ import time
 def index(request):
     user = request.user
     quotes = Quote.objects.all()[0]
-    posts = Post.objects.filter(published=True).order_by("-created_at")
+    posts = Post.objects.filter(published=True).order_by("-created_at")[0:2]
     
     now = time.strftime("%a, %d %b %Y %H:%M")
     word = WordOfTheDay.objects.all().order_by("-created_at")[0]
