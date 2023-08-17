@@ -51,6 +51,7 @@ class Word(models.Model):
     def_inf = models.CharField(max_length=200, blank=True, null=True)
     definition = models.TextField()
     definition_hindi = models.TextField(blank=True, null=True)
+    definition_urdu = models.TextField(blank=True, null=True)
     hindi_usage = models.TextField(blank=True, null=True)
     example = models.TextField(blank=True, null=True)
     tip = models.TextField(blank=True, null=True)

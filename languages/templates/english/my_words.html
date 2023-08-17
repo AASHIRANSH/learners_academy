@@ -74,18 +74,16 @@
   <thead>
     <tr class="bg-secondary text-light">
         <th style="width:5%;">#</th>
-        <th style="width:25%;">Word</th>
-        <th style="width:20%;">PoS</th>
-        <th style="width:50%;">Definition</th>
+        <th style="width:35%;">Word</th>
+        <th style="width:60%;">Definition</th>
     </tr>
   </thead>
   <tbody>
     {% for word in words %}
-      <tr onclick="window.location.assign(`{% url 'word' word.id %}`)">
+      <tr onclick="window.location.assign(`{% url 'word' word.word.id %}`)">
         <td>{{forloop.counter}}</td>
         <td>{{word.word}}</td>
-        <td>{{word.pos}}</td>
-        <td>{{word.definition}}</td>
+        <td>{{word.word.definition}}</td>
       </tr>
     {% endfor %}
   </tbody>
@@ -93,7 +91,6 @@
       <tr>
         <th>Freq.</th>
         <th>Word</th>
-        <th>PoS</th>
         <th>Definition</th>
       </tr>
   </tfoot>

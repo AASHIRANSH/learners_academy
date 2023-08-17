@@ -326,9 +326,7 @@ def word_entry(request):
         ref_id = datap.get('ref_id')
         print("ref_id is", get_word)
 
-        if ref_id:
-            ref_id = ""
-        else:
+        if ref_id == "yes":
             if get_pos == "verb":
                 ref_id = get_word+"_1"
             elif get_pos == "noun":
@@ -339,6 +337,8 @@ def word_entry(request):
                 ref_id = get_word+"_4"
             elif get_pos == "conjunction":
                 ref_id = get_word+"_5"
+        else:
+            ref_id = ""
         print(ref_id)
         
 

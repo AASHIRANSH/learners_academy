@@ -410,6 +410,17 @@ def words2(request):
     }
     return render(request, "english/words2.html", vars)
 
+def my_words(request):
+    words = Revise.objects.filter(user=request.user)
+
+    vars = {
+        # "visible":visible,
+        "words":words,
+        # "pronounce":pronounce.splitlines(),
+        # "forms":forms.splitlines(),
+    }
+    return render(request, "english/my_words.html", vars)
+
 @login_required
 def revise(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"

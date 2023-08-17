@@ -4,10 +4,14 @@ from . import views
 urlpatterns = [
     path('learn/<int:id>', views.index, name="learn_english"),
     path('', views.post_list, name="posts"),
+    
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
     path('wordss/', views.words2, name="words2"),
+    path('mywords/', views.my_words, name="my_words"),
+
     path('revise/', views.revise, name="frevise"),
+
     path('wordedit/', views.edit, name="edit_card"),
     path('data', views.data),
     path('flashcards/', include("languages.english.flashcards.urls")),

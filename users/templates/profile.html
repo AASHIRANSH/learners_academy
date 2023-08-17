@@ -115,7 +115,7 @@
                           <li><a class="dropdown-item" href="#"><i class="fa-solid fa-message"></i> Messages <span id="msgs" class="badge bg-secondary">0</span></a></li>
                           <li><div class="dropdown-divider"></div></li>
                           {% if perms.languages.add_post %}<li><a class="dropdown-item" href="{% url 'frevise' %}"><i class="fa-solid fa-pen"></i> My Posts</a></li>{% endif %}
-                          <li><a class="dropdown-item" href="{% url 'frevise' %}"><i class="fa-solid fa-book"></i> My Words</a></li>
+                          <li><a class="dropdown-item" href="{% url 'my_words' %}"><i class="fa-solid fa-book"></i> My Words</a></li>
                           <li><div class="dropdown-divider"></div></li>
                           <li><a class="dropdown-item" href="{% url 'users' %}?users=users"><i class="fa-solid fa-user-group"></i> Find People </a></li>
                         </ul>
@@ -128,7 +128,7 @@
                         <button onclick="window.location.assign('{% url 'my_posts' %}')" class="btn btn-outline-light"><i class="fa-solid fa-pen"></i> My Posts</button>
                     {% endif %}
                     <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-outline-light"><i class="fa-solid fa-message"></i> Messages <span id="msg" class="badge bg-secondary">0</span></button>
-                    <button onclick="window.location.assign('{% url 'frevise' %}')" class="btn btn-outline-light"><i class="fa-solid fa-book"></i> Flashcards</button>
+                    <button onclick="window.location.assign('{% url 'my_words' %}')" class="btn btn-outline-light"><i class="fa-solid fa-book"></i> My Words</button>
                 </div>
             </div>
         </div>
