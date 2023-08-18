@@ -422,6 +422,93 @@ def my_words(request):
     return render(request, "english/my_words.html", vars)
 
 @login_required
+def exercise(request):
+    # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
+    # with open(file_path, "r", encoding="UTF-8") as file:
+    #     added_words = file.readlines()
+
+    # NOTE: len(x[0].official.all())
+    user = request.user
+    rv_obj = Revise.objects.filter(user=user)
+    if not rv_obj:
+        messages.warning(request, "You have not added any words yet!")
+        return redirect("words")
+
+    today = datetime.date.today()
+    today = today.strftime("%Y-%m-%d")
+
+    rvp_obj = rv_obj.filter(date__lte=today)
+    items = list(rvp_obj.order_by('-id')[0:10])
+    randitem = random.choice(items)
+    randitem = randitem.word
+    pronounce = randitem.pronounce
+    example = set(randitem.example.splitlines())
+
+    if "/" not in randitem.pronounce:
+        if randitem.pos == "verb":
+            obj = Word.objects.filter(ref_id=randitem.word+"_1").first()
+            if obj:
+                pronounce = obj.pronounce
+            else:
+                pronounce = randitem.pronounce
+        elif randitem.pos == "noun":
+            obj = Word.objects.filter(ref_id=randitem.word+"_2").first()
+            if obj:
+                pronounce = obj.pronounce
+            else:
+                pronounce = randitem.pronounce
+        elif randitem.pos == "adjective":
+            obj = Word.objects.filter(ref_id=randitem.word+"_3").first()
+            if obj:
+                pronounce = obj.pronounce
+            else:
+                pronounce = randitem.pronounce
+        elif randitem.pos == "adverb":
+            obj = Word.objects.filter(ref_id=randitem.word+"_4").first()
+            if obj:
+                pronounce = obj.pronounce
+            else:
+                pronounce = randitem.pronounce
+        elif randitem.pos == "conjunction":
+            obj = Word.objects.filter(ref_id=randitem.word+"_5").first()
+            if obj:
+                pronounce = obj.pronounce
+            else:
+                pronounce = randitem.pronounce
+    else:
+        pronounce = randitem.pronounce
+
+
+    if "/" not in randitem.forms:
+        if randitem.pos == "verb":
+            obj = Word.objects.filter(ref_id=randitem.word+"_1").first()
+            if obj:
+                forms = obj.forms
+            else:
+                forms = randitem.forms
+        elif randitem.pos == "noun":
+            obj = Word.objects.filter(ref_id=randitem.word+"_2").first()
+            if obj:
+                forms = obj.forms
+            else:
+                forms = randitem.forms
+        else:
+            forms = randitem.forms
+    else:
+        forms = randitem.forms
+    
+    # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
+    vars = {
+        "word":randitem,
+        "pronounce":pronounce.splitlines(),
+        "forms":forms.splitlines(),
+        "example":example,
+        "rv_total_count":rv_obj.count(),
+        "rv_count":rvp_obj.count(),
+    }
+    return render(request, "english/exercise.html", vars)
+
+@login_required
 def revise(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     # with open(file_path, "r", encoding="UTF-8") as file:

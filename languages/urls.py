@@ -10,6 +10,7 @@ urlpatterns = [
     path('wordss/', views.words2, name="words2"),
     path('mywords/', views.my_words, name="my_words"),
 
+    path('exercise/', views.exercise, name="fexercise"),
     path('revise/', views.revise, name="frevise"),
 
     path('wordedit/', views.edit, name="edit_card"),
