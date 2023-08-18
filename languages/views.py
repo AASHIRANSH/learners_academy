@@ -638,7 +638,7 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
-        entry = Revise.objects.get(word_id=word)
+        entry = Revise.objects.filter(word_id=word)[0]
         rvcount = entry.rvcount
         td = datetime.timedelta(days=3)
         entry.date = today+td
