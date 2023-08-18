@@ -628,7 +628,7 @@ def data(request):
     today = datetime.date.today()
 
     if data.get('data') == "easy":
-        entry = Revise.objects.get(word_id=word)
+        entry = Revise.objects.get(word=word_obj)
         rvcount = entry.rvcount
         td = datetime.timedelta(days=5+rvcount)
         entry.date = today+td
@@ -638,7 +638,7 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
-        entry = Revise.objects.filter(word_id=word)[0]
+        entry = Revise.objects.get(word=word_obj)
         rvcount = entry.rvcount
         td = datetime.timedelta(days=3)
         entry.date = today+td
@@ -648,7 +648,7 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "remove":
-        entry = Revise.objects.get(word_id=word)
+        entry = Revise.objects.get(word=word_obj)
         entry.delete()
         messages.success(request, f'The word "{word_obj}" was removed')
         return HttpResponseRedirect('/english/revise')
