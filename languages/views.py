@@ -428,6 +428,7 @@ def exercise(request):
     #     added_words = file.readlines()
 
     # NOTE: len(x[0].official.all())
+
     user = request.user
     rv_obj = Revise.objects.filter(user=user)
     if not rv_obj:
@@ -438,9 +439,15 @@ def exercise(request):
     today = today.strftime("%Y-%m-%d")
 
     rvp_obj = rv_obj.filter(date__lte=today)
-    items = list(rvp_obj.order_by('-id')[0:10])
-    randitem = random.choice(items)
-    randitem = randitem.word
+    items = list(rvp_obj.order_by('-date'))
+    randitem = random.choices(items, k=4)
+    print(randitem)
+
+    words = []
+    for i in randitem:
+        words.append({"word":i.word.word,"definition":i.word.definition})
+
+    randitem = randitem[0].word
     pronounce = randitem.pronounce
     example = set(randitem.example.splitlines())
 
@@ -499,6 +506,7 @@ def exercise(request):
     
     # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
     vars = {
+        "words":words,#json.dumps(words)
         "word":randitem,
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
@@ -525,6 +533,10 @@ def revise(request):
     today = today.strftime("%Y-%m-%d")
 
     rvp_obj = rv_obj.filter(date__lte=today)
+    if not rvp_obj:
+        messages.warning(request, "You do not have any words due for revision!")
+        return redirect("my_words")
+    
     items = list(rvp_obj.order_by('-id')[0:10])
     randitem = random.choice(items)
     randitem = randitem.word
@@ -595,6 +607,7 @@ def revise(request):
     }
     return render(request, "english/revise.html", vars)
 
+
 def edit(request):
     data = request.GET
     word_id = data.get('word_id')
@@ -619,6 +632,7 @@ def edit(request):
     }
     return render(request, "english/flashcards/add_card.html", vars)
 
+
 def data(request):
     user = request.user
     data = request.GET
@@ -628,7 +642,7 @@ def data(request):
     today = datetime.date.today()
 
     if data.get('data') == "easy":
-        entry = Revise.objects.get(word=word_obj)
+        entry = Revise.objects.get(word=word_obj, user=user)
         rvcount = entry.rvcount
         td = datetime.timedelta(days=5+rvcount)
         entry.date = today+td
@@ -638,7 +652,7 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
-        entry = Revise.objects.get(word=word_obj)
+        entry = Revise.objects.get(word=word_obj, user=user)
         rvcount = entry.rvcount
         td = datetime.timedelta(days=3)
         entry.date = today+td
@@ -648,7 +662,7 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "remove":
-        entry = Revise.objects.get(word=word_obj)
+        entry = Revise.objects.get(word=word_obj, user=user)
         entry.delete()
         messages.success(request, f'The word "{word_obj}" was removed')
         return HttpResponseRedirect('/english/revise')

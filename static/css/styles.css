@@ -649,7 +649,7 @@ theader>nav>ul>li>a {
 .sub_items_main>.column {
     width: 300px;
     height: 400px;
-    background-color: rgba(0, 0, 0, 0.1);
+    /* background-color: rgba(0, 0, 0, 0.1); */
     color: #111;
     text-transform: capitalize;
     border-radius: 1rem;
