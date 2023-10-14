@@ -506,7 +506,7 @@ def exercise(request):
     
     # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
     vars = {
-        "words":words,#json.dumps(words)
+        "words":json.dumps(words), # if needed for JavaScript use "json.dumps(words)"
         "word":randitem,
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),

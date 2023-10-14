@@ -35,140 +35,109 @@
     </div>
 
     <div class="row">
-        <div class="d-flex flex-wrap gap-3 justify-content-center col-12 mb-4">
-            <div class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-                {{words.0.word}}
-            </div>
-            <div class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-                {{words.1.word}}
-            </div>
-            <div class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-                {{words.2.word}}
-            </div>
-            <div class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-                {{words.3.word}}
-            </div>
+        <div id="cardss" class="d-flex flex-wrap gap-3 justify-content-center col-12 mb-4">
         </div>
     </div>
 
+    <div id="demo"></div>
+
 </div>
 <script>
-    vars = JSON.parse("{{words|escapejs}}");
-    console.log(vars)
-    window.onload = function() {
-        {//variables
-            var vars = [{{words|escapejs}}];
-            card_title = "nouns";
-            var card_content = vars[0];
-            var card_count = vars[0].length;
+    {//initials
+        var vars = JSON.parse("{{words|escapejs}}");
+        vars.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
+
+        var prompt = document.getElementById('prompt');
+        var prm = document.getElementById('prm');
+        var num = 0;//used for page navigations
+        var nump = num+1;//used for showing page number
+        var right = 0;//used for counting correct cards
+        var wrong = 0;//used for counting incorrect cards
+        var cards_db = [];
+        var len = [];//used for current page if there are more than one card
+    }
+
+    document.getElementById("cardss").innerHTML = `
+        <div id="w1" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+            ${vars[0].word}
+        </div>
+        <div id="w2" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+            ${vars[1].word}
+        </div>
+        <div id="w3" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+            ${vars[2].word}
+        </div>
+        <div id="w4" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+            ${vars[3].word}
+        </div>
+    `;
+    
+    {//variables
+        var card_content = vars;
+        var card_count = vars.length;
+        var randline = Math.floor(Math.random() * (card_count - 0)) + 0;
+        while (len.includes(randline)) {
             var randline = Math.floor(Math.random() * (card_count - 0)) + 0;
-            while (len.includes(randline)) {
-                var randline = Math.floor(Math.random() * (card_count - 0)) + 0;
-            }
-            var card = card_content_les[randline][0];
-            var word = vars[0][0].word;
-            var definition = vars[0][0].word;
-            var word_conf = card_content_les[randline][2];
         }
+        var card = card_content[randline];
+        var word = card.word;
+        var definition = card.definition;
+    }
 
-        textToSpeech(meaning);
+    //textToSpeech(meaning);
 
-        {//generating 4 cards
-            var cards_arr = [word];
-            var suggest_cards = ydata[vars[2]].sort(function () { return 0.5 - Math.random() });
-            for (x of suggest_cards) {
-                if (x==card){
-                    continue
-                }
-                var xx = x.split(':');
-                cards_arr.push(xx[0]);
-                
-                if (cards_arr.length == 4) {
-                    break;
-                }
-            }
-            cards_arr.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
-        }
-
-        var criteria = [];
-        for (x in cards_arr) {
-            if (card_listed.includes(cards_arr[x])) {
-                criteria.push(1);
-            } else {
-                criteria.push(0);
+    {//generating 4 cards
+        var cards_arr = [word];
+        var suggest_cards = vars;
+        for (x of suggest_cards) {
+            cards_arr.push(x.word);
+            
+            if (cards_arr.length == 4) {
+                break;
             }
         }
-
-        body.innerHTML = `
-            <div class="container-fluid p-5">
-                <div id="cardm" class="row col-12">
-                    <div class="row col-sm-12 col-md-6">
-                        <div class="d-flex justify-content-center">
-                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="1" value="${cards_arr[0]}">
-                                <div class="short">1</div>
-                                ${cards_arr[0]}
-                            </div>
-                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="2" value="${cards_arr[1]}">
-                                <div class="short">2</div>
-                                ${cards_arr[1]}
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="3" value="${cards_arr[2]}">
-                                <div class="short">3</div>
-                                ${cards_arr[2]}
-                            </div>
-                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="4" value="${cards_arr[3]}">
-                                <div class="short">4</div>
-                                ${cards_arr[3]}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        `;
+        cards_arr.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
+    }
 
 
-        $('.card').on('click', function () {
-            var thiss = $(this);
-            var thiss_text = this.getAttribute('value');
+    $('.btn').on('click', function () {
+        var thiss = $(this);
+        var thiss_text = this.getAttribute('value');
 
-            if (thiss_text == word) {//{(card_listed.includes(thiss.text().slice(2, 20))) {
-                textToSpeech(word);
-                len.push(randline);
-                cards_db.push(card);
-                prompt.style.display = "block";
-                $('#prm').css({
-                    "background-color": "rgb(60, 179, 114, 0.95)",
-                    "animation": "prm 1.5s ease 0ms 1 normal forwards"
-                });
-                var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
-                prm.innerHTML = prompt_msg;
-            } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
-                }
-                prompt.style.display = "block";
-                $('#prm').css({
-                    "background-color": "rgb(85, 85, 85, 0.95)",
-                    "animation": "prm 1s ease 0ms 1 normal forwards"
-                });
-                var prompt_msg = sorry[Math.floor(Math.random() * (sorry.length - 0)) + 0];
-                prm.innerHTML = prompt_msg;
+        if (thiss_text == word) {//{(card_listed.includes(thiss.text().slice(2, 20))) {
+            textToSpeech(word);
+            len.push(randline);
+            cards_db.push(card);
+            prompt.style.display = "block";
+            $('#prm').css({
+                "background-color": "rgb(60, 179, 114, 0.95)",
+                "animation": "prm 1.5s ease 0ms 1 normal forwards"
+            });
+            var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
+            prm.innerHTML = prompt_msg;
+        } else {
+            if (errors_array.includes(vars[3])==false) {
+                errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
             }
-            if (len.length == card_count) {
-                len = [];
-                if (vars[4] == 1) {
-                    location.assign(`/learn/${lesson + 1}`);
-                } else {
-                    navigate('next');
-                }
+            prompt.style.display = "block";
+            $('#prm').css({
+                "background-color": "rgb(85, 85, 85, 0.95)",
+                "animation": "prm 1s ease 0ms 1 normal forwards"
+            });
+            var prompt_msg = sorry[Math.floor(Math.random() * (sorry.length - 0)) + 0];
+            prm.innerHTML = prompt_msg;
+        }
+        if (len.length == card_count) {
+            len = [];
+            if (vars[4] == 1) {
+                location.assign(`/learn/${lesson + 1}`);
             } else {
-                navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
+                navigate('next');
             }
-        });
-    }//shows a question with four cards to given answer from
+        } else {
+            navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
+        }
+    });
 </script>
 {% include 'english/flashcards/scripts/script.html' %}
 {% endblock body %}

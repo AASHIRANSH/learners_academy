@@ -12,7 +12,7 @@ sorryy = ["Yeh Nahi Tha!", "Nahi!", "Wrong!", "Incorrect!", "Sorry!"];
     headings = ["की English Translation चुनें","की Hindi Translation चुनें","शब्दों के सही जोड़े बनाएं"];
 }
 
-
+g
 num = 0;//used for page navigations
 nump = num+1;//used for showing page number
 right = 0;//used for counting correct cards
