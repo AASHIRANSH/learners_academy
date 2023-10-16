@@ -2,6 +2,7 @@
 {% load to_and %}
 
 {% block body %}
+{% include 'english/static/learn.html' %}
 {% include 'english/flashcards/styles/flashcards.html' %}
 
 {% include "header.html" %}
@@ -19,10 +20,10 @@
                 <div class="carousel-inner">
 
                     <div class="carousel-item active">
-                        <div class="">{{word.definition}}</div>
+                        <div class=""><span id="deff"></span></div>
                     </div>
                     <div class="carousel-item">
-                        {% if word.definition_hindi %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                        <span id="deffhin"></span>
                     </div>
                     
                 </div>
@@ -42,102 +43,130 @@
     <div id="demo"></div>
 
 </div>
+
+<!--Alert-->
+    <div id="prompt">
+        <div id="prm"></div>
+        <div id="prm2"></div>
+    </div>
+<!--End Alert-->
+
 <script>
     {//initials
+        var len = [];
         var vars = JSON.parse("{{words|escapejs}}");
-        vars.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
-
         var prompt = document.getElementById('prompt');
         var prm = document.getElementById('prm');
-        var num = 0;//used for page navigations
-        var nump = num+1;//used for showing page number
-        var right = 0;//used for counting correct cards
-        var wrong = 0;//used for counting incorrect cards
-        var cards_db = [];
-        var len = [];//used for current page if there are more than one card
     }
 
-    document.getElementById("cardss").innerHTML = `
-        <div id="w1" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-            ${vars[0].word}
-        </div>
-        <div id="w2" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-            ${vars[1].word}
-        </div>
-        <div id="w3" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-            ${vars[2].word}
-        </div>
-        <div id="w4" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
-            ${vars[3].word}
-        </div>
-    `;
-    
-    {//variables
-        var card_content = vars;
-        var card_count = vars.length;
+    function revise() {
+        vars.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
+
+        var card_count = vars.length; //var card_count = vars[1][1] == 0 ? card_content_les.length : vars[1][1]; //from arguments
+        
         var randline = Math.floor(Math.random() * (card_count - 0)) + 0;
         while (len.includes(randline)) {
             var randline = Math.floor(Math.random() * (card_count - 0)) + 0;
         }
-        var card = card_content[randline];
+
+        var card = vars[randline];
+        wid = card.id;
         var word = card.word;
         var definition = card.definition;
-    }
+    
 
-    //textToSpeech(meaning);
-
-    {//generating 4 cards
-        var cards_arr = [word];
-        var suggest_cards = vars;
-        for (x of suggest_cards) {
-            cards_arr.push(x.word);
-            
-            if (cards_arr.length == 4) {
-                break;
-            }
+        {//generating 4 cards
+            var cards_arr = [word,vars[0].word,vars[1].word,vars[2].word];
         }
         cards_arr.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
-    }
+
+        document.getElementById("deff").innerText = `${definition}`;
+        document.getElementById("cardss").innerHTML = `
+            <div onmousedown="clkk()" id="w1" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+                ${cards_arr[0]}
+            </div>
+            <div onmousedown="clkk()" id="w2" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+                ${cards_arr[1]}
+            </div>
+            <div onmousedown="clkk()" id="w3" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+                ${cards_arr[2]}
+            </div>
+            <div onmousedown="clkk()" id="w4" class="btn btn-outline-secondary col-11 col-md-5 fs-3">
+                ${cards_arr[3]}
+            </div>
+        `;
 
 
-    $('.btn').on('click', function () {
-        var thiss = $(this);
-        var thiss_text = this.getAttribute('value');
-
-        if (thiss_text == word) {//{(card_listed.includes(thiss.text().slice(2, 20))) {
-            textToSpeech(word);
-            len.push(randline);
-            cards_db.push(card);
-            prompt.style.display = "block";
-            $('#prm').css({
-                "background-color": "rgb(60, 179, 114, 0.95)",
-                "animation": "prm 1.5s ease 0ms 1 normal forwards"
-            });
-            var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
-            prm.innerHTML = prompt_msg;
-        } else {
-            if (errors_array.includes(vars[3])==false) {
-                errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
-            }
-            prompt.style.display = "block";
-            $('#prm').css({
-                "background-color": "rgb(85, 85, 85, 0.95)",
-                "animation": "prm 1s ease 0ms 1 normal forwards"
-            });
-            var prompt_msg = sorry[Math.floor(Math.random() * (sorry.length - 0)) + 0];
-            prm.innerHTML = prompt_msg;
+        {//WISH
+            wish = ["Good Job!", "Badhiya!", "Correct!", "Right!", "Nicely done!", "Great!", "Yeah!", "Cool!"];
+            wishh = ["LAGATAR 4<br>Kya Baaat Hai!", "LAGATAR 4<br>Aap Achcha Kar Rahe Hain"];
+            sorry = ["Yeh Nahi Tha!", "Nahi!", "Wrong!", "Incorrect!", "Sorry!"];
+            sorryy = ["Yeh Nahi Tha!", "Nahi!", "Wrong!", "Incorrect!", "Sorry!"];
         }
-        if (len.length == card_count) {
-            len = [];
-            if (vars[4] == 1) {
-                location.assign(`/learn/${lesson + 1}`);
+
+        $('.btn').on('click', function () {
+            var thiss = $(this);
+            var thiss_text = this.innerText;
+
+            if (thiss_text == word) {//{(card_listed.includes(thiss.text().slice(2, 20))) {
+                //textToSpeech(word);
+                len.push(randline);
+                //cards_db.push(card);
+                prompt.style.display = "block";
+                $('#prm').css({
+                    "background-color": "rgb(60, 179, 114, 0.95)",
+                    "animation": "prm 1.5s ease 0ms 1 normal forwards"
+                });
+                var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
+                prm.innerHTML = prompt_msg;
             } else {
-                navigate('next');
+                prompt.style.display = "block";
+                $('#prm').css({
+                    "background-color": "rgb(85, 85, 85, 0.95)",
+                    "animation": "prm 1s ease 0ms 1 normal forwards"
+                });
+                var prompt_msg = sorry[Math.floor(Math.random() * (sorry.length - 0)) + 0];
+                prm.innerHTML = prompt_msg;
             }
-        } else {
-            navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
-        }
-    });
+            if (len.length == card_count) {
+                len = [];
+                if (vars[4] == 1) {
+                    location.assign(`/learn/${lesson + 1}`);
+                } else {
+                    navigate('next');
+                }
+            } else {
+                easy();
+                revise();
+                //navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
+            }
+        });
+
+        console.log(wid,word,definition);
+    }
+    function clkk() {
+        prompt.style.display = "none";
+    } // important as it makes the prompt display again if not executed prompt wouldn't work
+
+    revise();
+
+    function easy() {
+        const xhttp = new XMLHttpRequest();
+        // xhttp.onload = function() {
+        //   document.getElementById("demo").innerHTML =
+        //   xhttp.responseText;
+        // }
+        xhttp.open("GET", "/english/data?data=easy&word="+wid);
+        xhttp.send();
+    }
+    function hard() {
+        const xhttp = new XMLHttpRequest();
+        // xhttp.onload = function() {
+        //   document.getElementById("demo").innerHTML =
+        //   xhttp.responseText;
+        // }
+        xhttp.open("GET", "/english/data?data=hard&word="+wid);
+        xhttp.send();
+    }
 </script>
-{% include 'english/flashcards/scripts/script.html' %}
 {% endblock body %}

@@ -444,73 +444,15 @@ def exercise(request):
     print(randitem)
 
     words = []
-    for i in randitem:
-        words.append({"word":i.word.word,"definition":i.word.definition})
+    for i in items:
+        words.append({"id":i.id,"word":i.word.word,"definition":i.word.definition})
 
-    randitem = randitem[0].word
-    pronounce = randitem.pronounce
-    example = set(randitem.example.splitlines())
-
-    if "/" not in randitem.pronounce:
-        if randitem.pos == "verb":
-            obj = Word.objects.filter(ref_id=randitem.word+"_1").first()
-            if obj:
-                pronounce = obj.pronounce
-            else:
-                pronounce = randitem.pronounce
-        elif randitem.pos == "noun":
-            obj = Word.objects.filter(ref_id=randitem.word+"_2").first()
-            if obj:
-                pronounce = obj.pronounce
-            else:
-                pronounce = randitem.pronounce
-        elif randitem.pos == "adjective":
-            obj = Word.objects.filter(ref_id=randitem.word+"_3").first()
-            if obj:
-                pronounce = obj.pronounce
-            else:
-                pronounce = randitem.pronounce
-        elif randitem.pos == "adverb":
-            obj = Word.objects.filter(ref_id=randitem.word+"_4").first()
-            if obj:
-                pronounce = obj.pronounce
-            else:
-                pronounce = randitem.pronounce
-        elif randitem.pos == "conjunction":
-            obj = Word.objects.filter(ref_id=randitem.word+"_5").first()
-            if obj:
-                pronounce = obj.pronounce
-            else:
-                pronounce = randitem.pronounce
-    else:
-        pronounce = randitem.pronounce
-
-
-    if "/" not in randitem.forms:
-        if randitem.pos == "verb":
-            obj = Word.objects.filter(ref_id=randitem.word+"_1").first()
-            if obj:
-                forms = obj.forms
-            else:
-                forms = randitem.forms
-        elif randitem.pos == "noun":
-            obj = Word.objects.filter(ref_id=randitem.word+"_2").first()
-            if obj:
-                forms = obj.forms
-            else:
-                forms = randitem.forms
-        else:
-            forms = randitem.forms
-    else:
-        forms = randitem.forms
     
-    # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
     vars = {
         "words":json.dumps(words), # if needed for JavaScript use "json.dumps(words)"
         "word":randitem,
-        "pronounce":pronounce.splitlines(),
-        "forms":forms.splitlines(),
-        "example":example,
+        # "pronounce":pronounce.splitlines(),
+        # "example":example,
         "rv_total_count":rv_obj.count(),
         "rv_count":rvp_obj.count(),
     }
@@ -644,7 +586,7 @@ def data(request):
     if data.get('data') == "easy":
         entry = Revise.objects.get(word=word_obj, user=user)
         rvcount = entry.rvcount
-        td = datetime.timedelta(days=5+rvcount)
+        td = datetime.timedelta(days=3+rvcount)
         entry.date = today+td
         entry.rvcount += 1
         entry.save()
@@ -654,7 +596,7 @@ def data(request):
     elif data.get('data') == "hard":
         entry = Revise.objects.get(word=word_obj, user=user)
         rvcount = entry.rvcount
-        td = datetime.timedelta(days=3)
+        td = datetime.timedelta(days=1)
         entry.date = today+td
         entry.rvcount -= 1 if rvcount >= 1 else 0
         entry.save()
