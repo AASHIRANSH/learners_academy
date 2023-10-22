@@ -22,6 +22,14 @@ def index(request, id):
     }
     return render(request, "english/learn.html", vars)
 
+
+'''Tenses'''
+def pres_ind(request):
+
+    return render(request,"english/tenses/present_indefinite.html")
+
+
+
 def exercise_entry(request):
     datag = request.GET
     if datag.get("action") == "editexercise":
@@ -169,6 +177,7 @@ def post_detail_test(request):
     return render(request, 'post_detail_test.html')
 
 
+'''Like and Dislike'''
 @login_required
 def like(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -590,7 +599,7 @@ def data(request):
         entry.date = today+td
         entry.rvcount += 1
         entry.save()
-        messages.success(request, f"Great! the word will show up after {rvcount+5} days")
+        messages.success(request, f"Great! the word will show up after {rvcount+3} days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
@@ -600,7 +609,7 @@ def data(request):
         entry.date = today+td
         entry.rvcount -= 1 if rvcount >= 1 else 0
         entry.save()
-        messages.success(request, f"Great! the word will show up after 3 days")
+        messages.success(request, f"Great! the word will show up after {rvcount+1} days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "remove":

@@ -4,7 +4,9 @@ from . import views
 urlpatterns = [
     path('learn/<int:id>', views.index, name="learn_english"),
     path('', views.post_list, name="posts"),
-    
+    #Tenses
+    path('presentindefinite/', views.pres_ind, name="present_indefinite"),
+
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
     path('wordss/', views.words2, name="words2"),
