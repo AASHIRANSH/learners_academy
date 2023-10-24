@@ -538,7 +538,7 @@ len = [];//used for current page if there are more than one card
 
         body.innerHTML = `
             <div class="">
-            <div class="row inf">
+            <div class="inf">
                 <div class="col-3 fs-4">lesson - ${unit}</div>
                 <div class="col-6 text-center fs-3">${card_title}</div>
                 <div class="col-3 text-end fs-4">page - ${num + 1}</div>

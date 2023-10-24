@@ -486,9 +486,12 @@ def revise(request):
     rvp_obj = rv_obj.filter(date__lte=today)
     if not rvp_obj:
         messages.warning(request, "You do not have any words due for revision!")
-        return redirect("my_words")
+        return redirect("words")
     
-    items = list(rvp_obj.order_by('-id')[0:10])
+    list_1 = list(rvp_obj[0:5])
+    items = list(rvp_obj.order_by('date')[0:5])
+    items.extend(list_1)
+    print(items)
     randitem = random.choice(items)
     randitem = randitem.word
     pronounce = randitem.pronounce
