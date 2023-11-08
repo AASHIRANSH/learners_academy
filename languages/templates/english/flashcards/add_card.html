@@ -185,7 +185,7 @@
           
           <div class="col-6 mb-2">
             {{form.pic_url.label_tag}}
-            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% endif %}</textarea>
+            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% else %}{% endif %}</textarea>
             {{form.pic_url.errors}}
           </div>
         </div>

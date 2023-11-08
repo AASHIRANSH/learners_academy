@@ -69,38 +69,49 @@ len = [];//used for current page if there are more than one card
 
         body.innerHTML = `
             <div class="inf">
-                <div>lesson - ${unit}</div>
-                <div class="main">${card_title}</div>
-                <div>page - ${num + 1}</div>
+                <div class="col-3 fs-4">lesson - ${unit}</div>
+                <div class="col-6 text-center fs-3">${card_title}</div>
+                <div class="col-3 text-end fs-4">page - ${num + 1}</div>
             </div>
-            <div class="content">
-                <div class="flex_center">${len.length}/${card_count}</div>
-                <div id="cardm" class="card_4">
-                    <div class="nav_1">
-                        <div class="flex_center">
-                            <div style="cursor:pointer;"><img src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
-                            <div class="word">${meaning}
-                                <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${word}</div>
+            <div class="container-fluid p-5">
+                <div class="d-flex justify-content-center col-12 m-2">${len.length}/${card_count}</div>
+                
+                <div id="cardm" class="row col-12">
+                    <div class="row col-sm-12 col-md-6 mb-5">
+                        <div class="d-flex justify-content-center">
+                            <div style="cursor:pointer;"><img class="duo-speaker" src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
+                            <div>
+                                <div class="word mb-sm-5">${meaning}
+                                    <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${word}</div>
+                                </div>
                             </div>
-                            <span class="caption">${headings[vars[2]]}</span>
+                            <span class="caption">${headings[0]}</span>
                         </div>
+                        <img src="/static/img/svg/man_norm_eyes_up.svg" class="emot_img"/>
                     </div>
-                    <div class="nav_2">
-                        <div onmousedown="clkk()" class="card" accesskey="1" value="${cards_arr[0]}">
-                            <div class="short">1</div>
-                            <img src="/static/img/svg/${cards_arr[0]}.svg" alt="..."/>${cards_arr[0]}
+
+                    <div class="d-sm-block d-md-none mb-5"></div>
+
+                    <div class="col-sm-12 col-md-6">
+                        <div class="d-flex justify-content-center">
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="1" value="${cards_arr[0]}">
+                                <div class="short">1</div>
+                                <img src="/static/img/svg/${cards_arr[0]}.svg" alt="..."/>${cards_arr[0]}
+                            </div>
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="2" value="${cards_arr[1]}">
+                                <div class="short">2</div>
+                                <img src="/static/img/svg/${cards_arr[1]}.svg" alt="..."/>${cards_arr[1]}
+                            </div>
                         </div>
-                        <div onmousedown="clkk()" class="card" accesskey="2" value="${cards_arr[1]}">
-                            <div class="short">2</div>
-                            <img src="/static/img/svg/${cards_arr[1]}.svg" alt="..."/>${cards_arr[1]}
-                        </div>
-                        <div onmousedown="clkk()" class="card" accesskey="3" value="${cards_arr[2]}">
-                            <div class="short">3</div>
-                            <img src="/static/img/svg/${cards_arr[2]}.svg" alt="..."/>${cards_arr[2]}
-                        </div>
-                        <div onmousedown="clkk()" class="card" accesskey="4" value="${cards_arr[3]}">
-                            <div class="short">4</div>
-                            <img src="/static/img/svg/${cards_arr[3]}.svg" alt="..."/>${cards_arr[3]}
+                        <div class="d-flex justify-content-center">
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="3" value="${cards_arr[2]}">
+                                <div class="short">3</div>
+                                <img src="/static/img/svg/${cards_arr[2]}.svg" alt="..."/>${cards_arr[2]}
+                            </div>
+                            <div onmousedown="clkk()" class="card col-sm-6" accesskey="4" value="${cards_arr[3]}">
+                                <div class="short">4</div>
+                                <img src="/static/img/svg/${cards_arr[3]}.svg" alt="..."/>${cards_arr[3]}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,8 +135,8 @@ len = [];//used for current page if there are more than one card
                 prm.innerHTML = prompt_msg;
                 textToSpeech(word);
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -237,8 +248,8 @@ len = [];//used for current page if there are more than one card
                 var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
                 prm.innerHTML = prompt_msg;
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -347,8 +358,8 @@ len = [];//used for current page if there are more than one card
                 var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
                 prm.innerHTML = prompt_msg;
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -462,8 +473,8 @@ len = [];//used for current page if there are more than one card
                 var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
                 prm.innerHTML = prompt_msg;
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -484,7 +495,7 @@ len = [];//used for current page if there are more than one card
                 navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
             }
         });
-    }//shows a question with four cards to given answer from
+    }//shows a question with four cards to give answer from
     function wcard_prompt_beg() {
         {//variables
             var vars = arguments;
@@ -537,7 +548,6 @@ len = [];//used for current page if there are more than one card
         }
 
         body.innerHTML = `
-            <div class="">
             <div class="inf">
                 <div class="col-3 fs-4">lesson - ${unit}</div>
                 <div class="col-6 text-center fs-3">${card_title}</div>
@@ -550,8 +560,10 @@ len = [];//used for current page if there are more than one card
                     <div class="row col-sm-12 col-md-6 mb-5">
                         <div class="d-flex justify-content-center">
                             <div style="cursor:pointer;"><img class="duo-speaker" src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
-                            <div class="word mb-sm-5">${meaning}
-                                <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${word}</div>
+                            <div>
+                                <div class="word mb-sm-5">${meaning}
+                                    <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${word}</div>
+                                </div>
                             </div>
                             <span class="caption">${headings[0]}</span>
                         </div>
@@ -560,7 +572,7 @@ len = [];//used for current page if there are more than one card
 
                     <div class="d-sm-block d-md-none mb-5"></div>
 
-                    <div class="row col-sm-12 col-md-6">
+                    <div class="col-sm-12 col-md-6">
                         <div class="d-flex justify-content-center">
                             <div onmousedown="clkk()" class="card col-sm-6" accesskey="1" value="${cards_arr[0]}">
                                 <div class="short">1</div>
@@ -584,7 +596,6 @@ len = [];//used for current page if there are more than one card
                     </div>
                 </div>
             </div>
-            </div>
         `;
 
 
@@ -595,7 +606,7 @@ len = [];//used for current page if there are more than one card
             if (thiss_text == word) {//{(card_listed.includes(thiss.text().slice(2, 20))) {
                 textToSpeech(word);
                 len.push(randline);
-                cards_db.push(card);
+                update_array.push(card);
                 prompt.style.display = "block";
                 $('#prm').css({
                     "background-color": "rgb(60, 179, 114, 0.95)",
@@ -604,8 +615,8 @@ len = [];//used for current page if there are more than one card
                 var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
                 prm.innerHTML = prompt_msg;
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -625,8 +636,10 @@ len = [];//used for current page if there are more than one card
             } else {
                 navigate('reload');//window["masters"](num);//window[`master_${vars[3]}`]();
             }
+
+            console.log(update_array);
         });
-    }//shows a question with four cards to given answer from
+    }//shows a question with four cards to give answer from
 
     function wpcard_prompt() {
         {//variables
@@ -728,8 +741,8 @@ len = [];//used for current page if there are more than one card
                 var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
                 prm.innerHTML = prompt_msg;
             } else {
-                if (errors_array.includes(vars[3])==false) {
-                    errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+                if (error_array.includes(vars[3])==false) {
+                    error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
                 }
                 prompt.style.display = "block";
                 $('#prm').css({
@@ -795,9 +808,9 @@ len = [];//used for current page if there are more than one card
     
         body.innerHTML = `
             <div class="inf">
-                <div>lesson - ${unit}</div>
-                <div class="main">${card_title}</div>
-                <div>page - ${num + 1}</div>
+                <div class="col-3 fs-4">lesson - ${unit}</div>
+                <div class="col-6 text-center fs-3">${card_title}</div>
+                <div class="col-3 text-end fs-4">page - ${num + 1}</div>
             </div>
             <div class="content">
                 <div class="flex_center">${len.length}/${len_card_content}</div>
@@ -805,7 +818,7 @@ len = [];//used for current page if there are more than one card
                 <div class="trans">
                     <div class="flex_center">
                         <h1>${card_h}</h1>
-                        <span class="ml_20 text_20">(${headings[1]})</span>
+                        <span class="ml_20 fs-4">(${headings[1]})</span>
                     </div>
                     <div class="tr_content">
                         <div class="line"></div>
@@ -850,7 +863,7 @@ len = [];//used for current page if there are more than one card
                 //updating buttons
                 buttons_array.push(thiss_text);
                 id_array.push(thiss_id);
-                buttons += `<button onclick="btn_remove('${thiss_id}')" class="nfocus fade">${thiss_text}</button>`;
+                buttons += `<button onclick="btn_remove('${thiss_id}')" class="nfocus">${thiss_text}</button>`;
                 
                 {//loop below lets the .line container add more than one button remove above buttons updating line to use the loop
                     // for (x in buttons_array) {
@@ -867,7 +880,7 @@ len = [];//used for current page if there are more than one card
                     'background-color': 'rgb(60, 179, 114, 0.95)',
                     'color': '#f1f1f1'
                 });
-                $('.line').html(buttons); //=document.querySelector('.line').innerHTML = buttons;
+                $('.line').html(buttons); //document.querySelector('.line').innerHTML = buttons;
                 textToSpeech(thiss_text);
             }
             if (buttons_array.length > 0) {
@@ -1901,27 +1914,28 @@ len = [];//used for current page if there are more than one card
                 <div class="col-6 text-center fs-4">${card_title}</div>
                 <div class="col-3 text-end fs-5">page - ${num + 1}</div>
             </div>
+
             <div class="content">
                 <div class="flex_center">${len.length}/${len_card_content}</div>
                 <div id="cardm" class="cardm_learn">
-                <div class="trans">
-                    <div class="d-flex justify-content-center">
-                        <div class="img_card">
-                            <img src="/static/img/svg/${card_h}.svg" alt="..."/>
+                    <div class="trans">
+                        <div class="d-flex justify-content-center gap-3">
+                            <div class="img_card">
+                                <img src="/static/img/svg/${card_h}.svg" alt="..."/>
+                            </div>
+                            <div>
+                                <div class="word-main">${card_h}</div>
+                                <span class="fs-4">(${headings[1]})</span>
+                            </div>
                         </div>
+                        
+
+                        <div class="tr_content">
+                            <div class="line">${meaning}</div>
+                            <div class="text-end" id='check' onmousedown='clkk()'>OK</div>
+                        </div>
+                        <div class="flex_center"></div>
                     </div>
-                    <div class="flex_center">
-                        <div class="word-main">${card_h}</div>
-                    </div>
-                    <div class="flex_center">
-                        <span class="ml_20 fs-4">(${headings[1]})</span>    
-                    </div>
-                    </div>
-                    <div class="tr_content">
-                        <div class="line">${meaning}</div>
-                        <div id='check' onmousedown='clkk()'>OK</div>
-                    </div>
-                    <div class="flex_center"></div>
                 </div>
             </div>
         `;
@@ -2118,8 +2132,8 @@ function listen_prompt() {//listen and choose answer
             var prompt_msg = wish[Math.floor(Math.random() * (wish.length - 0)) + 0];
             prm.innerHTML = prompt_msg;
         } else {
-            if (errors_array.includes(vars[3])==false) {
-                errors_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
+            if (error_array.includes(vars[3])==false) {
+                error_array.push(vars[3]);//adding the function/lesson into the error array so as to revise it later
             }
             prompt.style.display = "block";
             $('#prm').css({
@@ -2179,36 +2193,61 @@ function hv_prompt() {
     }
     body.innerHTML = `
         <div class="inf">
-            <div>lesson - ${unit}</div>
-            <div class="main">${card_title}</div>
-            <div>page - ${num + 1}</div>
-        </div>     
-        <div class="content">
-            <div class="flex_center">${len.length}/${card_count}</div>
-            <div id="cardm" class="card_4">
-                <div class="nav_1">
-                    <div class="flex_center">
-                        <div class="word">${word}
-                            <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${meaning}</div>
+            <div class="col-3 fs-4">lesson - ${unit}</div>
+            <div class="col-6 text-center fs-3">${card_title}</div>
+            <div class="col-3 text-end fs-4">page - ${num + 1}</div>
+        </div>
+        <div class="container-fluid p-5">
+            <div class="d-flex justify-content-center col-12 m-2">${len.length}/${card_count}</div>
+            
+            <div id="cardm" class="row col-12">
+                <div class="row col-sm-12 col-md-6 mb-5">
+                    <div class="d-flex justify-content-center">
+                        <div style="cursor:pointer;"><img class="duo-speaker" src="/static/img/svg/loudspeaker_duo.svg" style="scale:0.8"/></div>
+                        <div>
+                            <div class="word mb-sm-5">${word}
+                                <div class="tooltiptext" onclick="textToSpeech(this.innerText)">${meaning}</div>
+                            </div>
                         </div>
                         <span class="caption">की <span class="tooltip_c">Helping Verb<span class="tooltip_t">is, am, are</span></span> चुनें</span>
                     </div>
+                    <img src="/static/img/svg/man_norm_eyes_up.svg" class="emot_img"/>
                 </div>
-                <div class="nav_2">
-                    <div onmousedown="clkk()" class="card" accesskey="1"><div class="short">1</div>${cards_arr[0]}</div>
-                    <div onmousedown="clkk()" class="card" accesskey="2"><div class="short">2</div>${cards_arr[1]}</div>
-                    <div onmousedown="clkk()" class="card" accesskey="3"><div class="short">3</div>${cards_arr[2]}</div>
-                    <div onmousedown="clkk()" class="card" accesskey="4"><div class="short">4</div>${cards_arr[3]}</div>
+
+                <div class="d-sm-block d-md-none mb-5"></div>
+
+                <div class="col-sm-12 col-md-6">
+                    <div class="d-flex justify-content-center">
+                        <div onmousedown="clkk()" class="card col-sm-6" accesskey="1" value="${cards_arr[0]}">
+                            <div class="short">1</div>
+                            ${cards_arr[0]}
+                        </div>
+                        <div onmousedown="clkk()" class="card col-sm-6" accesskey="2" value="${cards_arr[1]}">
+                            <div class="short">2</div>
+                            ${cards_arr[1]}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div onmousedown="clkk()" class="card col-sm-6" accesskey="3" value="${cards_arr[2]}">
+                            <div class="short">3</div>
+                            ${cards_arr[2]}
+                        </div>
+                        <div onmousedown="clkk()" class="card col-sm-6" accesskey="4" value="${cards_arr[3]}">
+                            <div class="short">4</div>
+                            ${cards_arr[3]}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        `;
+    `;
 
 
     $('.card').on('click', function () {
         var thiss = $(this);
+        var thiss_text = this.getAttribute('value');
 
-        if (card_listed.includes(thiss.text().slice(1, 20))) {
+        if (meaning == thiss_text) {
             textToSpeech(meaning);
             len.push(randline);
             prompt.style.display = "block";
@@ -2254,7 +2293,7 @@ function match_prompt() {//matching cards
         }
         var len_card_content = card_content_les.length;
     }
-    
+
     var word = [];
     var meaning = [];
     for (x in card_content_les) {
@@ -2270,9 +2309,9 @@ function match_prompt() {//matching cards
     
     body.innerHTML = `
         <div class="inf">
-            <div>lesson - ${unit}</div>
-            <div class="main">${card_title}</div>
-            <div>page - ${num + 1}</div>
+            <div class="col-3 fs-4">lesson - ${unit}</div>
+            <div class="col-6 text-center fs-3">${card_title}</div>
+            <div class="col-3 text-end fs-4">page - ${num + 1}</div>
         </div>
         <div class="content">
             <div class="flex_center">${len.length}/${len_card_content}</div>
@@ -2817,9 +2856,9 @@ function translate_beg() {
 
     body.innerHTML = `
         <div class="inf">
-            <div>lesson - ${unit}</div>
-            <div class="main">${card_title}</div>
-            <div>page - ${num + 1} <svg onclick="toggleModal(${vars[2]})" style="filter:drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));fill:#f1f1f1;color:green;float:right;" xmlns="http://www.w3.org/2000/svg" height="34" viewBox="0 96 960 960" width="34"><path d="M160 856v-60h386v60H160Zm0-166v-60h640v60H160Zm0-167v-60h640v60H160Zm0-167v-60h640v60H160Z"/></svg></div>
+            <div class="col-3 fs-4">lesson - ${unit}</div>
+            <div class="col-6 text-center fs-3">${card_title} <svg onclick="toggleModal(${vars[2]})" style="filter:drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.3));fill:#f1f1f1;color:green;float:right;" xmlns="http://www.w3.org/2000/svg" height="34" viewBox="0 96 960 960" width="34"><path d="M160 856v-60h386v60H160Zm0-166v-60h640v60H160Zm0-167v-60h640v60H160Zm0-167v-60h640v60H160Z"/></svg></div>
+            <div class="col-3 text-end fs-4">page - ${num + 1}</div>
         </div>
         <div class="content">
             <div class="flex_center">${len.length}/${len_card_content}</div>
@@ -2838,6 +2877,8 @@ function translate_beg() {
             </div>
         </div>
     `;
+
+
     $('#speaker').on('click', function () {
         textToSpeech(card_h);
     });
@@ -2869,7 +2910,7 @@ function translate_beg() {
                 buttons_array.push(thiss_text);
                 for (x in id_array) {
                     if (x==id_array.length-1){//last button
-                        buttons += `<button onclick="btn_remove('${id_array[x]}')" class="nfocus fade">${document.querySelector('#'+id_array[x]).innerText}</button>`;
+                        buttons += `<button onclick="btn_remove('${id_array[x]}')" class="nfocus">${document.querySelector('#'+id_array[x]).innerText}</button>`;
                     }else{
                         buttons += `<button onclick="btn_remove('${id_array[x]}')" class="nfocus">${document.querySelector('#'+id_array[x]).innerText}</button>`;
                     }

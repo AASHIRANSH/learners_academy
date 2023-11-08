@@ -42,14 +42,11 @@
         "uncle:मौसा/खालू",
         "aunt:मौसी/खाला"
     ],
-    "man": [
+    "people": [
         "man:आदमी",
         "boy:लड़का",
         "girl:लड़की",
-        "child:बच्चा"
-    ],
-    "woman": [
-        "woman:औरत",
-        "girl:लड़की"
+        "child:बच्चा",
+        "woman:औरत"
     ]
 }

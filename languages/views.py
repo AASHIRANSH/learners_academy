@@ -489,7 +489,7 @@ def revise(request):
         return redirect("words")
     
     list_1 = list(rvp_obj[0:5])
-    items = list(rvp_obj.order_by('date')[0:5])
+    items = list(rvp_obj.order_by('-date')[0:5])
     items.extend(list_1)
     print(items)
     randitem = random.choice(items)

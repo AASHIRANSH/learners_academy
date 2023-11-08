@@ -27,24 +27,7 @@ src: url("/static/fonts/Bree_Serif/BreeSerif-Regular.ttf");
 background-color: var(--blue-ii);
 }
 
-/*___________GLOBAL________________*/
-html {
-font-size: 18px;
-font-family: Arial, sans-serif;
-}
-
-html,
-* {
-box-sizing: border-box;
-scroll-behavior: smooth;
-}
-
-body {
-background-color: #fdfdfd !important;
-margin: 0;
-padding: 0;
-overflow-x: hidden;
-}
+/*________________GLOBAL________________*/
 
 /* HEADINGS */
 h1 {
@@ -655,7 +638,7 @@ display: none;
 cursor: pointer;
 background-color: #3B71CA;
 color: #f1f1f1;
-font-size: 30px;
+font-size: 1.5rem;
 border-radius: 10px;
 padding: 5px 20px;
 animation: rubberBand 1s;
@@ -675,7 +658,6 @@ height: 20rem;
 .word {
 position: relative;
 display: inline-block;
-height: 12rem;
 border-bottom: 0.3rem dashed #333333;
 /* If you want dots under the hoverable text */
 font-size: 2.7rem;
@@ -810,7 +792,7 @@ align-items: center;
 justify-content: flex-start;
 flex-flow: row wrap;
 width: 90%;
-min-height: 35px;
+min-height: 30px;
 transition: all 1s;
 }
 
@@ -826,7 +808,7 @@ border-color: #aaa;
 border-style: solid;
 border-bottom: 3px solid rgb(57, 128, 89);
 padding: 12px 20px;
-transition: all 0.5s;
+transition: all 0.5s ease;
 }
 
 .tr_content>input:focus {
@@ -857,7 +839,14 @@ margin: 20px;
 margin-bottom: 0;
 }
 
-
+.sq-1 ul.square {
+    list-style-type: square;
+    line-height: 1.8;
+    /* list-style-position: inside; */
+}
+.sq-1 ul.square li:not(:last-child) {
+    margin-bottom: 20px;
+}
 
 .cardm_learn ul.square {
 list-style-type: square;
@@ -884,9 +873,9 @@ font-size: 25px;
 word-spacing: 5px;
 }
 
-.cardm_learn word-main {
+.cardm_learn .word-main {
 font-weight: bold;
-font-size: 10rem;
+font-size: 4rem;
 margin: 0;
 }
 

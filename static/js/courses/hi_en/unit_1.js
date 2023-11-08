@@ -12,24 +12,24 @@ en = {
 function masters() {
     var vars = arguments;
     var masters_list = [
-        function () {//1. WRD1 TEACHER
+        function () {//1. WRD1 STUDENT
             var x = english.words.w_1.word;
             var y = [0, 0];
             var z = ["school"];
             wcard_prompt_beg(x, y, z, 1, 0);
         },
-        function () {//2. BTN1 TEACHER
+        function () {//2. BTN1 STUDENT
             var x = english.words.w_1.word;
             var y = [0, 0];
-            var z = ["family"];
+            var z = ["school"];
             wbutton_prompt_reverse(x, y, 0, 2, 0);
         },
-        function (){//4.  I Card_prompt
+        function (){//3.  I Card_prompt
             var x = english.pronouns.i.word;
             var y = [0,0];
             card_prompt_beg_img(x,y,0,4,0);
         },
-        function (){//5. 
+        function (){//4. 
             var x = english.pronouns.i.word;
             var y = [0,0];
             button_prompt_reverse(x,y,0,5,0);
@@ -101,14 +101,14 @@ function masters() {
         //         </div>
         //     `;
         // },
-        function (){//7. 
+        function (){//5. 
             let xx = english.pronouns.i.sentences.affirmative.slice(0,1);
             let x = xx.concat(english.words.w_1.sentences.affirmative.slice(0,1));
             let y = [0,0];
             let z = 'english.subject_def';
             translate_beg(x,y,z,7,0);
         },
-        function (){//8. 
+        function (){//6. 
             var x = english.present_simple.hv;
             var y = [0,1];
             hv_prompt(x,y,0,8,0);

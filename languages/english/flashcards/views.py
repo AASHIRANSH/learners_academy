@@ -1,6 +1,7 @@
 '''----------- Path Resolve Stable -----------'''
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 '''-------------------------------------------'''
 from django.shortcuts import render,redirect, HttpResponse, HttpResponseRedirect
 #adding word
