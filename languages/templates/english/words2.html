@@ -72,20 +72,22 @@
 <div class="container my-5">
 <table id="example" class="table table-hover" style="width:100%">
   <thead>
-    <tr class="bg-secondary text-light">
+    <tr class="bg-gray text-primary">
         <th style="width:5%;">#</th>
-        <th style="width:25%;">Word</th>
-        <th style="width:20%;">PoS</th>
+        <th style="width:20%;">Word</th>
+        <th style="width:10%;">PoS</th>
         <th style="width:50%;">Definition</th>
+        <th style="width:10%;">Fav</th>
     </tr>
   </thead>
   <tbody>
     {% for word in words %}
-      <tr onclick="window.location.assign(`{% url 'word' word.id %}`)">
+      <tr>
         <td>{{forloop.counter}}</td>
-        <td>{{word.word}}</td>
+        <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
         <td>{{word.pos}}</td>
         <td>{{word.definition}}</td>
+        <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
       </tr>
     {% endfor %}
   </tbody>

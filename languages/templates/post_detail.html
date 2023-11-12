@@ -42,11 +42,14 @@
                     <h2 class="text-primary"><i class="fa-solid fa-pen-nib"></i> {{ post.title }}</h2>
                     <div id="post-stamp">Posted on {{post.created_at|date:"j-m-y"}} by {{post.author}}</div>
                 </div>
-                <div>{% include 'static/components/like_dislike.html' %}</div>
+                <div>{% include 'static/components/like.html' %}</div>
             </div>
         </div>
+    </div>
+    <div class="rule-cont">
         <div class="rule"></div>
     </div>
+
 
     {% if post.image %}<div class="post-img"><img src="{{post.image.url}}"/></div>{% endif %}
     
@@ -108,7 +111,7 @@
 
     <hr>
     <div class="text-center">
-    {% include 'static/components/like_dislike.html' %} {% include 'static/components/copy_to_clipboard.html' %}
+    {% include 'static/components/like.html' %} {% include 'static/components/copy_to_clipboard.html' %}
     </div>
     <hr>
 </div>
@@ -116,10 +119,10 @@
 <div class="container-fluid my-5">
     <div class="row col-12">
 
-        <div class="col-2">
+        <div class="col-sm-1 col-md-2">
         </div>
 
-        <div class="col-8">
+        <div class="col-sm-10 col-md-8">
             <form class="comment-form mb-5" method="post" data-post="{{ post.id }}">
                 {% csrf_token %}
                 <textarea class="form-control mb-2" name="content" placeholder="Add/Write a comment" rows="4"></textarea>
@@ -165,7 +168,7 @@
         </div>
 
 
-        <div class="col-2">
+        <div class="col-sm-1 col-md-2">
         </div>
         
     </div>

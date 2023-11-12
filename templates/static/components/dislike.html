@@ -1,0 +1,15 @@
+<form method="post" action="{% url 'dislike' post.pk %}" class="d-inline">
+    {% csrf_token %}
+    {% if request.user.is_authenticated %}
+        <button class="btn btn-outline-secondary mb-1" type="submit"><i class="fa fa-thumbs-down fs-5"></i> <span class="badge bg-secondary">{{post.dislike_set.count}}</span></button>
+        {% else %}
+        <div class="btn-group dropup">
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-thumbs-down fs-5"></i> <span class="badge bg-secondary">{{post.dislike_set.count}}</span>
+            </button>
+            <ul class="dropdown-menu" style="padding:1rem;">
+                You can like or dislike after you have logged in
+            </ul>
+        </div>
+    {% endif %}
+</form>

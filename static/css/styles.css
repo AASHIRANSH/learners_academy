@@ -26,7 +26,7 @@
   background-color: var(--blue-ii);
 }
 
-/*___________GLOBAL________________*/
+/*___________GLOBAL___________*/
 html {
   font-size: 18px;
   font-family: Arial, sans-serif;
@@ -44,6 +44,81 @@ body {
   padding: 0;
   overflow-x: hidden;
 }
+
+/*-- Loader --*/
+.loader-wrapper {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #333333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+.loader {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  border: 4px solid #3cb371;
+  animation: loader 2s infinite ease;
+}
+  
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #3cb371;
+  animation: loader-inner 2s infinite ease-in;
+}
+  
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  25% {
+    transform: rotate(180deg);
+  }
+  
+  50% {
+    transform: rotate(180deg);
+  }
+  
+  75% {
+    transform: rotate(360deg);
+  }
+    
+  100% {
+    transform: rotate(360deg);
+  }
+}
+  
+@keyframes loader-inner {
+  0% {
+    height: 0%;
+  }
+  
+  25% {
+    height: 0%;
+  }
+  
+  50% {
+    height: 100%;
+  }
+  
+  75% {
+    height: 100%;
+  }
+  
+  100% {
+    height: 0%;
+  }
+}
+
 
 /* HEADINGS */
 h1 {
@@ -898,6 +973,10 @@ footer {
   theader #title_bar #title {
     font-size: 1.5rem;
   }
+  theader>nav>ul {
+    margin: 0 0 0 1.5rem;
+  }
+  
   #headersl {
     background-size: auto 100%;
   }

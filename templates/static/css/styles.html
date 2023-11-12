@@ -39,8 +39,7 @@
     }
     #post-title-cont {
         background-color: #f1f1f2;
-        border-radius: 1rem;
-        overflow: hidden;
+        border-radius: 1rem 1rem 0 0;
     }
 
     #post-title {
@@ -64,11 +63,17 @@
         font-size: 0.9rem;
         color: #777;
     }
+    .rule-cont {
+        border-radius: 0 0 0.5rem 0.5rem;
+        overflow: hidden;
+    }
     .rule {
         width: 100%;
-        height: 0.5rem;
-        background-image: repeating-radial-gradient(circle farthest-side at 5px 10px,#3cb371 10%, #3B71CA 30%, #3cb371);
+        border-width: 0 0 0.5rem 0;
+        border-style: solid;
+        border-image: repeating-radial-gradient(circle farthest-side at 5px 10px,#3cb371 10%, #3B71CA 30%, #3cb371) 1;
         margin: 0 0 0 0;
+        overflow: hidden;
     }
     .weight-600 {
         font-weight: 600;

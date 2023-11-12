@@ -622,10 +622,16 @@ def data(request):
         return HttpResponseRedirect('/english/revise')
     
     if data.get('data') == "new":
-        if word_obj not in Revise.objects.filter(user=user):
-            Revise.objects.create(user=user,word=word_obj)
-            messages.success(request, "the word was added successfully")
+        uwords = Revise.objects.filter(user=user, word=word)
+        if not uwords.exists():
+            Revise.objects.create(user=user, word=word_obj)
+            messages.success(request, f"the word '{word_obj.word}' was added successfully")
+            return HttpResponseRedirect('/english/word/'+word)
+        else:
+            messages.warning(request, "the word already exists")
             return HttpResponseRedirect('/english/words')
+        print(uwords)
+
 
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
 

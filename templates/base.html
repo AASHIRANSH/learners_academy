@@ -38,6 +38,17 @@
 
     {% block body %}{% endblock body %}
 
+    <!-- Loading square for squar.red network -->
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
+    <!-- LOADING ANIMATION -->
+    <script>
+        $(window).on("load", function() {
+            $(".loader-wrapper").fadeOut("slow");
+        });
+    </script>
+
     <script src="/static/js/sw.js"></script>
     <script>
         // Hide Header on on scroll down

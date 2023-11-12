@@ -107,7 +107,7 @@ english = {
         <table class="table table-hover" style="width:80%;">
             <thead>
                 <tr>
-                <th style="width:50%;" scope="col" colspan="2">I + am + ...</th>
+                <th style="width:50%;" scope="col" colspan="2">I + am + a +...</th>
                 </tr>
             </thead>
             <tbody>
@@ -132,7 +132,7 @@ english = {
                 <td>We are students</td>
                 </tr>
                 <tr>
-                <td class="fw-bold">He + is + ...</td>
+                <td class="fw-bold">He + is + a +...</td>
                 <td></td>
                 </tr>
                 <tr>
@@ -140,7 +140,7 @@ english = {
                 <td>He is a student</td>
                 </tr>
                 <tr>
-                <td class="fw-bold">She + is + ...</td>
+                <td class="fw-bold">She + is + a +...</td>
                 <td></td>
                 </tr>
                 <tr>
@@ -157,6 +157,12 @@ english = {
                 </tr>
             </tbody>
         </table>
+        </div>
+
+        <div class="sq-1">
+            <ul class="square">
+                <li>Note: नाम बताते वक़्त कभी "A" का Use नहीं करते हैं</li>
+            </ul>
         </div>
 
         <div class="flex_center"><h1 class="head">SUBJECT</h1></div>
