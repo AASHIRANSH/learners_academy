@@ -640,7 +640,7 @@ theader {
   margin: 0;
 }
 .nav-up {
-  transform: translate(0, -63%);
+  transform: translate(0, -64%);
 }
 /* .nav-down {
     animation: bounceInDown 0.5s;

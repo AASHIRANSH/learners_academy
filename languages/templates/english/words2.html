@@ -86,14 +86,14 @@
         <td>{{forloop.counter}}</td>
         <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
         <td>{{word.pos}}</td>
-        <td>{{word.definition}}</td>
+        <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
         <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
       </tr>
     {% endfor %}
   </tbody>
   <tfoot>
       <tr>
-        <th>Freq.</th>
+        <th>#</th>
         <th>Word</th>
         <th>PoS</th>
         <th>Definition</th>

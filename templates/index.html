@@ -5,6 +5,16 @@
 {% include "messages.html" %}
 
 <style>
+  #dstate {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+    color: #3cb371;
+    z-index: 100;
+  }
   #word-of-the-day {
     position: relative;
     display: block;
@@ -19,7 +29,27 @@
     cursor: pointer;
   }
 </style>
-
+{% if request.user.is_superuser %}
+{% else %}
+<div id="dstate">
+  <theader class="">
+    <div id="title_bar">
+      <div id="title">
+        <a href="/"><img src="/static/img/graduate.svg"/></a>
+        <a class="" href="/">LEARNERs ACADEMY</a>
+      </div>
+      <div id="user" class="me-5">
+        <a class="fs-6 fw-bold" href="/admin"><i class="fa-solid fa-toolbox"></i> ADMIN PANEL</a>
+      </div>
+    </div>
+  </theader>
+  <div class="h-100 d-flex justify-content-center align-items-center flex-column">
+    <div class="fs-1"><i>Oops!</i></div>
+    <div class="fs-1"><i>The app is under deveplopment state.</i></div>
+    <div class="fs-1"><i>Thank you for visiting us!</i></div>
+  </div>
+</div>
+{% endif %}
 <section id="sl">
   <div id="headersl">
   </div>
