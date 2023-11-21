@@ -407,15 +407,20 @@ def words(request):
 
 def words2(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
-    words_all = Word.objects.all()
+    data_get = request.GET
+    words = Word.objects.all()
+
+    paginator = Paginator(words, 10)  # Show 6 contacts per page.
+    page_number = data_get.get("page")
+    page_obj = paginator.get_page(page_number)
 
     vars = {
         # "visible":visible,
-        "words":words_all,
+        "words":words,
+        "wordsp":page_obj,
         # "pronounce":pronounce.splitlines(),
         # "forms":forms.splitlines(),
         # "example":set(example),
-        # "refresh":refresh
     }
     return render(request, "english/words2.html", vars)
 

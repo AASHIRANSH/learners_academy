@@ -70,36 +70,91 @@
 {% block body %}
 {% include 'header.html' %}
 <div class="container my-5">
-<table id="example" class="table table-hover" style="width:100%">
-  <thead>
-    <tr class="bg-gray text-primary">
-        <th style="width:5%;">#</th>
-        <th style="width:20%;">Word</th>
-        <th style="width:10%;">PoS</th>
-        <th style="width:50%;">Definition</th>
-        <th style="width:10%;">Fav</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for word in words %}
-      <tr>
-        <td>{{forloop.counter}}</td>
-        <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
-        <td>{{word.pos}}</td>
-        <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
-        <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
-      </tr>
-    {% endfor %}
-  </tbody>
-  <tfoot>
-      <tr>
-        <th>#</th>
-        <th>Word</th>
-        <th>PoS</th>
-        <th>Definition</th>
-      </tr>
-  </tfoot>
-</table>
+    <table id="" class="table table-hover" style="width:100%">
+        <thead>
+            <tr class="bg-gray text-primary">
+                <th style="width:5%;">#</th>
+                <th style="width:20%;">Word</th>
+                <th style="width:10%;">PoS</th>
+                <th style="width:50%;">Definition</th>
+                <th style="width:10%;">Fav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word in wordsp %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
+                <td>{{word.pos}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
+                <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Word</th>
+                <th>PoS</th>
+                <th>Definition</th>
+                <th>Fav</th>
+            </tr>
+        </tfoot>
+    </table>
+    <nav aria-label="...">
+        <ul class="pagination">
+            {% if wordsp.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.previous_page_number }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Page {{ wordsp.number }} of {{ wordsp.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if wordsp.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}">Last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
+    <table id="example" class="table table-hover" style="width:100%">
+        <thead>
+            <tr class="bg-gray text-primary">
+                <th style="width:5%;">#</th>
+                <th style="width:20%;">Word</th>
+                <th style="width:10%;">PoS</th>
+                <th style="width:50%;">Definition</th>
+                <th style="width:10%;">Fav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word in words %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
+                <td>{{word.pos}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
+                <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Word</th>
+                <th>PoS</th>
+                <th>Definition</th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
 <script defer src="/static/js/web/jquery-3.6.3.min.js"></script>

@@ -54,6 +54,9 @@
                     <button class="btn btn-secondary col-12 fs-4">{{rv_count}} / {{rv_total_count}}</button>
                 </div>
                 <div class="col-12 mb-1">
+                    <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4" onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')" accesskey="m">Mastered</button>
+                </div>
+                <div class="col-12 mb-1">
                     <button title="Easy - Postpone for 6 days" class="btn btn-outline-success col-6 fs-4" onclick="window.location.assign('/english/data?data=easy&word={{word.id}}')" accesskey="s">Easy</button>
                     <button title="Hard - Postpone for 3 days" class="btn btn-outline-secondary col-5 fs-4" onclick="window.location.assign('/english/data?data=hard&word={{word.id}}')" accesskey="h">Hard</button>
                 </div>
@@ -117,6 +120,19 @@
                 </div>
                 <hr class="my-1">
             {% endfor %}
+        </div>
+
+        <div class="bg-primary text-white my-2">
+            SYNONYMS
+        </div>
+        <div class="mx-2">
+            {{word.synonyms}}
+        </div>
+        <div class="bg-primary text-white my-2">
+            Hindi Usage
+        </div>
+        <div class="mx-2">
+            {{word.hindi_usage}}
         </div>
     </div>
 </div>

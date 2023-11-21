@@ -34,6 +34,9 @@
                 <option value="1">verb</option>
                 <option value="2">noun</option>
                 <option value="3">adjective</option>
+                <option value="4">adverb</option>
+                <option value="5">conjunction</option>
+                <option value="7">preposition</option>
               </select>
               {{form.word_root_pos.errors}}
             </div>
@@ -78,8 +81,9 @@
                 <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
                 <option value="idiom" {% if pos == 'idiom' or form.pos.value == 'idiom' %}selected{% endif %}>idiom</option>
                 <option value="adverb" {% if pos == 'adverb' or form.pos.value == 'adverb' %}selected{% endif %}>adverb</option>
-                <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
+                <option value="preposition" {% if pos == 'preposition' or form.pos.value == 'preposition' %}selected{% endif %}>preposition</option>
                 <option value="conjunction" {% if pos == 'conjunction' or form.pos.value == 'conjunction' %}selected{% endif %}>conjunction</option>
+                <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
                 <option value="slang" {% if pos == 'slang' or form.pos.value == 'slang' %}selected{% endif %}>slang</option>
               </select>
             </div>
@@ -185,8 +189,14 @@
           
           <div class="col-6 mb-2">
             {{form.pic_url.label_tag}}
-            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% else %}{% endif %}</textarea>
+            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% endif %}</textarea>
             {{form.pic_url.errors}}
+          </div>
+
+          <div class="col-6 mb-2">
+            {{form.context.label_tag}}
+            <textarea class="form-control" name="context" id="id_context" rows="2">{% if edit %}{{form.context.value}}{% endif %}</textarea>
+            {{form.context.errors}}
           </div>
         </div>
     </form>

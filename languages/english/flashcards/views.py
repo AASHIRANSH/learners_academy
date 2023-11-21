@@ -338,6 +338,8 @@ def word_entry(request):
                 ref_id = get_word+"_4"
             elif get_pos == "conjunction":
                 ref_id = get_word+"_5"
+            elif get_pos == "preposition":
+                ref_id = get_word+"_7"
         else:
             ref_id = ""
         print(ref_id)

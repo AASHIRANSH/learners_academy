@@ -53,13 +53,14 @@ class Word(models.Model):
     definition_hindi = models.TextField(blank=True, null=True)
     definition_urdu = models.TextField(blank=True, null=True)
     hindi_usage = models.TextField(blank=True, null=True)
+    context = models.CharField(max_length=200, default="")
     example = models.TextField(blank=True, null=True)
     tip = models.TextField(blank=True, null=True)
     tipp = models.ForeignKey(Post, on_delete=models.SET_NULL, blank=True, null=True)
     synonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
     pic = models.ImageField(upload_to='dictionary/', blank=True, null=True)
-    pic_url = models.CharField(max_length=200,blank=True, null=True)
+    pic_url = models.CharField(max_length=300,blank=True, null=True)
 
     def __str__(self):
         return f'{self.word} ({self.pos})'
@@ -76,6 +77,7 @@ class Revise(models.Model):
         return f"{self.word.word} ({self.word.pos})"
 
 
+'''Posts'''
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

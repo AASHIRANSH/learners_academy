@@ -987,8 +987,8 @@ footer {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 30rem;
+    width: 28rem;
     transform: translate(-50%, -50%);
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 }
