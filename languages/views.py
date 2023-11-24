@@ -600,14 +600,24 @@ def data(request):
 
     today = datetime.date.today()
 
-    if data.get('data') == "easy":
+    if data.get('data') == "mastered":
         entry = Revise.objects.get(word=word_obj, user=user)
         rvcount = entry.rvcount
-        td = datetime.timedelta(days=3+rvcount)
+        td = datetime.timedelta(days=30)
         entry.date = today+td
         entry.rvcount += 1
         entry.save()
-        messages.success(request, f"Great! the word will show up after {rvcount+3} days")
+        messages.success(request, f"Great! the word will show up after {rvcount+30} days")
+        return HttpResponseRedirect('/english/revise')
+    
+    if data.get('data') == "easy":
+        entry = Revise.objects.get(word=word_obj, user=user)
+        rvcount = entry.rvcount
+        td = datetime.timedelta(days=2+rvcount)
+        entry.date = today+td
+        entry.rvcount += 2
+        entry.save()
+        #messages.success(request, f"Great! the word will show up after {rvcount+2} days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "hard":
@@ -617,7 +627,7 @@ def data(request):
         entry.date = today+td
         entry.rvcount -= 1 if rvcount >= 1 else 0
         entry.save()
-        messages.success(request, f"Great! the word will show up after {rvcount+1} days")
+        #messages.success(request, f"Great! the word will show up after {rvcount+1} days")
         return HttpResponseRedirect('/english/revise')
     
     elif data.get('data') == "remove":
