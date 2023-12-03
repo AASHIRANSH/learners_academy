@@ -51,7 +51,7 @@
             </div>
             <div class="col-sm-3 col-lg-2">
                 <div class="col-12 mb-1">
-                    <button class="btn btn-secondary col-12 fs-4">{{rv_count}} / {{rv_total_count}}</button>
+                    <button class="btn btn-secondary col-12 fs-5">{{rv_count}} / {{rv_total_count}}</button>
                 </div>
                 <div class="col-12 mb-1">
                     <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4" onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')" accesskey="m">Mastered</button>
@@ -123,20 +123,24 @@
         </div>
 
         {% if word.synonyms %}
-        <div class="bg-primary text-white mt-5 mb-2">
-            SYNONYMS
-        </div>
-        <div class="mx-2">
-            {{word.synonyms}}
+        <div class="mb-3">
+            <div class="bg-primary text-white rounded-3 px-2 mt-4 mb-2">
+                SYNONYMS
+            </div>
+            <div class="mx-2">
+                {{word.synonyms}}
+            </div>
         </div>
         {% endif %}
 
         {% if word.hindi_usage %}
-        <div class="bg-primary text-white mt-5">
-            Hindi Usage
-        </div>
-        <div class="mx-2">
-            {{word.hindi_usage}}
+        <div class="mb-2">
+            <div class="bg-primary text-white rounded-3 px-2 mb-2">
+                Hindi Usage
+            </div>
+            <div class="mx-2">
+                {{word.hindi_usage}}
+            </div>
         </div>
         {% endif %}
     </div>

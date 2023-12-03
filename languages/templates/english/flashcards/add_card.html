@@ -154,16 +154,15 @@
           </div>
               
           <div class="col-3 mb-2">
-            {{form.compare.label_tag}}
-            <textarea class="form-control" name="compare" id="id_compare" rows="2">{% if edit %}{{form.compare.value}}{% endif %}</textarea>
-            {{form.compare.errors}}
+            {{form.antonyms.label_tag}}
+            <textarea class="form-control" name="antonyms" id="id_antonyms" rows="2">{% if edit %}{% if form.antonyms.value %}{{form.antonyms.value}}{% endif %}{% endif %}</textarea>
+            {{form.antonyms.errors}}
           </div>
-
 
           <div class="col-3">
             <div class="mb-2">
               <label for="id_pic" class="form-label">Picture:</label>
-              <input class="form-control" type="file" accept="image/*" name="pic" value="{% if edit %}{{form.pic.value}}{% endif%}" id="id_pic">
+              <input class="form-control" type="file" accept="image/*" name="pic" value="{% if edit %}{{form.pic.value}}{% endif %}" id="id_pic">
             </div>                  
           </div>
 
@@ -180,23 +179,35 @@
             <input type="submit" value="Submit" class="btn btn-success"/>
           </div>
         </div>
+
         <div class="row">
-          <div class="col-6 mb-2">
-            {{form.hindi_usage.label_tag}}
-            <textarea class="form-control" name="hindi_usage" id="id_hindi_usage" rows="2">{% if edit %}{{form.hindi_usage.value}}{% endif %}</textarea>
-            {{form.hindi_usage.errors}}
+          <div class="col-3 mb-2">
+            {{form.compare.label_tag}}
+            <textarea class="form-control" name="compare" id="id_compare" rows="2">{% if edit %}{{form.compare.value}}{% endif %}</textarea>
+            {{form.compare.errors}}
           </div>
-          
-          <div class="col-6 mb-2">
-            {{form.pic_url.label_tag}}
-            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{{form.pic_url.value}}{% endif %}</textarea>
-            {{form.pic_url.errors}}
+
+          <div class="col-3 mb-2">
+            <!--Form Element-->
           </div>
 
           <div class="col-6 mb-2">
+            {{form.pic_url.label_tag}}
+            <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{% if form.pic_url.value %}{{form.pic_url.value}}{% endif %}{% endif %}</textarea>
+            {{form.pic_url.errors}}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-6 mb-2">
             {{form.context.label_tag}}
-            <textarea class="form-control" name="context" id="id_context" rows="2">{% if edit %}{{form.context.value}}{% endif %}</textarea>
+            <textarea class="form-control" name="context" id="id_context" rows="2">{% if edit %}{% if form.context.value %}{{form.context.value}}{% endif %}{% endif %}</textarea>
             {{form.context.errors}}
+          </div>
+          <div class="col-6 mb-2">
+            {{form.hindi_usage.label_tag}}
+            <textarea class="form-control" name="hindi_usage" id="id_hindi_usage" rows="2">{% if edit %}{% if form.hindi_usage.value %}{{form.hindi_usage.value}}{% endif %}{% endif %}</textarea>
+            {{form.hindi_usage.errors}}
           </div>
         </div>
     </form>
