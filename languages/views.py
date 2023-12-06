@@ -496,11 +496,11 @@ def revise(request):
     list_1 = list(rvp_obj[0:5])
     items = list(rvp_obj.order_by('-date')[0:5])
     items.extend(list_1)
-    print(items)
     randitem = random.choice(items)
     randitem = randitem.word
     pronounce = randitem.pronounce
     example = set(randitem.example.splitlines())
+    context = randitem.context.splitlines()
 
     if "/" not in randitem.pronounce:
         if randitem.pos == "verb":
@@ -561,6 +561,7 @@ def revise(request):
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
         "example":example,
+        "context":context,
         "rv_total_count":rv_obj.count(),
         "rv_count":rvp_obj.count(),
     }
@@ -688,6 +689,4 @@ def ex_action(request):
                 user_obj.profile.ex_done += q+","
                 user_obj.profile.reputation += 1
                 user_obj.save()
-            
-        
     return JsonResponse(["successful"], safe=False)

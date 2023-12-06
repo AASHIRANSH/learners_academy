@@ -90,7 +90,7 @@
         {% endif %}
         {% endif %}
 
-        <div id="def-container" class="position-relative col-12 rounded-3 mt-3">
+        <div id="def-container" class="position-relative col-12 rounded-3 my-3">
             <div id="def" class="col-12 fs-4 p-2">
                 <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
 
@@ -122,26 +122,41 @@
             {% endfor %}
         </div>
 
+        {% if word.context %}
+            <div class="mb-3">
+                <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
+                    Context
+                </div>
+                <div class="mx-2">
+                    {% for line in context %}
+                    <div>
+                        {{line}}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
         {% if word.synonyms %}
-        <div class="mb-3">
-            <div class="bg-primary text-white rounded-3 px-2 mt-4 mb-2">
-                SYNONYMS
+            <div class="mb-3">
+                <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
+                    Synonyms
+                </div>
+                <div class="mx-2">
+                    {{word.synonyms}}
+                </div>
             </div>
-            <div class="mx-2">
-                {{word.synonyms}}
-            </div>
-        </div>
         {% endif %}
 
         {% if word.hindi_usage %}
-        <div class="mb-2">
-            <div class="bg-primary text-white rounded-3 px-2 mb-2">
-                Hindi Usage
+            <div class="mb-2">
+                <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                    Hindi Usage
+                </div>
+                <div class="mx-2">
+                    {{word.hindi_usage}}
+                </div>
             </div>
-            <div class="mx-2">
-                {{word.hindi_usage}}
-            </div>
-        </div>
         {% endif %}
     </div>
 </div>

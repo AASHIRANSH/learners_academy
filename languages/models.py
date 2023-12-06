@@ -57,7 +57,7 @@ class Word(models.Model):
     context = models.CharField(max_length=200, default="", blank=True, null=True)
     example = models.TextField(blank=True, null=True)
     tip = models.TextField(blank=True, null=True)
-    tipp = models.ForeignKey(Post, on_delete=models.SET_NULL, blank=True, null=True)
+    #related_post = models.ForeignKey(Post, on_delete=models.SET_NULL, blank=True, null=True)
     synonyms = models.TextField(blank=True, null=True)
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
