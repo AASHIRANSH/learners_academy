@@ -409,7 +409,7 @@ def words2(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     data_get = request.GET
     words = Word.objects.all()
-
+    
     paginator = Paginator(words, 10)  # Show 6 contacts per page.
     page_number = data_get.get("page")
     page_obj = paginator.get_page(page_number)

@@ -209,6 +209,12 @@
             <textarea class="form-control" name="hindi_usage" id="id_hindi_usage" rows="2">{% if edit %}{% if form.hindi_usage.value %}{{form.hindi_usage.value}}{% endif %}{% endif %}</textarea>
             {{form.hindi_usage.errors}}
           </div>
+          <div class="col-6 mb-2">
+            {{form.related_post.label_tag}}
+            {{form.related_post}}
+            <!--<textarea class="form-control" name="related_post" id="id_related_post" rows="2">{% if edit %}{% if form.related_post.value %}{{form.related_post.value}}{% endif %}{% endif %}</textarea>-->
+            {{form.related_post.errors}}
+          </div>
         </div>
     </form>
     </div>

@@ -69,8 +69,18 @@
 
 {% block body %}
 {% include 'header.html' %}
-<div class="container my-5">
-    <table id="" class="table table-hover" style="width:100%">
+<div class="container-fluid bg-gray text-primary text-center p-4">
+    <h1 class="">Learners' Dictionary</h1>
+</div>
+
+<div class="container my-3">
+    <div>
+        <input class="form-control" type="text" placeholder="Search..."/>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <table id="" class="rounded-3 table table-hover" style="width:100%">
         <thead>
             <tr class="bg-gray text-primary">
                 <th style="width:5%;">#</th>
@@ -83,7 +93,7 @@
         <tbody>
             {% for word in wordsp %}
             <tr>
-                <td>{{forloop.counter}}</td>
+                <td>{% if wordsp.number > 1 %}{{wordsp.number}}{% endif %}{% if forloop.last %}0{% else %}{{forloop.counter}}{% endif %}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
                 <td>{{word.pos}}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
@@ -124,8 +134,7 @@
     </nav>
 
 
-
-    <table id="example" class="table table-hover" style="width:100%">
+    <!--table id="example" class="table table-hover" style="width:100%">
         <thead>
             <tr class="bg-gray text-primary">
                 <th style="width:5%;">#</th>
@@ -136,7 +145,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for word in words %}
+            {% for word in wds %}
             <tr>
                 <td>{{forloop.counter}}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
@@ -154,18 +163,20 @@
                 <th>Definition</th>
             </tr>
         </tfoot>
-    </table>
+    </table-->
 </div>
 
+<!-- Dict Table Files
 <script defer src="/static/js/web/jquery-3.6.3.min.js"></script>
 <script src="/static/js/web/popper_2_11_6_min.js"></script>
 <script src="/static/js/web/popper.bootstrap.min.js"></script>
-
-<!-- DATATABLES -->
+-->
+<!-- DATATABLES
 <script defer src="/static/dt/pdfmake.min.js"></script>
 <script defer src="/static/dt/vfs_fonts.js"></script>
 <script defer src="/static/dt/datatables.min.js"></script>
-
+-->
+<!--
 <script>//DataTables
     $(document).ready(function() {
         $('#example #columnFilters tr')//initially     $('#example thead tr')
@@ -319,7 +330,7 @@
     //var tbr = tableExample.rows[0].cells.length*15;
     //tableExample.style.width = tbr+"rem";
 </script>
-
+-->
 {% if perms.languages.add_word %}
     <div class="position-fixed bottom-0 right-0 m-3">
         <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
@@ -327,5 +338,5 @@
         </a>
     </div>
 {% endif %}
-
+{% include "footer.html" %}
 {% endblock body %}
