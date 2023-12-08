@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
-    path('wordss/', views.words2, name="words2"),
+    path('dictionary/', views.dictionary, name="dictionary"),
     path('mywords/', views.my_words, name="my_words"),
 
     path('exercise/', views.exercise, name="fexercise"),

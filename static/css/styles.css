@@ -313,6 +313,14 @@ ol.circle_filled li div:last-child {
 
 /*=======END SIDEBAR======*/
 
+/* Classes */
+.learner {
+  background-image: repeating-radial-gradient(circle farthest-side at 5px 10px,#3cb371 10%, #3B71CA 30%, #3cb371);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-decoration: none;
+}
 
 /*=======MODAL WINDOW=======*/
 .modall {

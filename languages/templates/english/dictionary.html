@@ -70,19 +70,21 @@
 {% block body %}
 {% include 'header.html' %}
 <div class="container-fluid bg-gray text-primary text-center p-4">
-    <h1 class="">Learners' Dictionary</h1>
+    <h1 class="fw-bold learner">Learners' Dictionary</h1>
 </div>
 
-<div class="container my-3">
+<div class="container my-4">
     <div>
-        <input class="form-control" type="text" placeholder="Search..."/>
+        <form>
+            <input type="search" name="q" class="form-control" placeholder="Search..." value="{{request.GET.q}}"/>
+        </form>
     </div>
 </div>
 
 <div class="container mb-5">
     <table id="" class="rounded-3 table table-hover" style="width:100%">
         <thead>
-            <tr class="bg-gray text-primary">
+            <tr class="bg-gray text-primary border-primary">
                 <th style="width:5%;">#</th>
                 <th style="width:20%;">Word</th>
                 <th style="width:10%;">PoS</th>
@@ -93,11 +95,17 @@
         <tbody>
             {% for word in wordsp %}
             <tr>
-                <td>{% if wordsp.number > 1 %}{{wordsp.number}}{% endif %}{% if forloop.last %}0{% else %}{{forloop.counter}}{% endif %}</td>
+                <td>{% if forloop.last %}{{request.GET.page}}0{% else %}{{pagen}}{{forloop.counter}}{% endif %}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
                 <td>{{word.pos}}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
-                <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
+                <td class="text-center">
+                    {% if word.revise_set.count > 0 %}
+                    <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                    {% else %}
+                    <button title="Add it" class="btn btn-outline-primary fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -114,21 +122,21 @@
     <nav aria-label="...">
         <ul class="pagination">
             {% if wordsp.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
                 <li class="page-item"><a class="page-link" href="?page={{ wordsp.previous_page_number }}">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
             {% else %}
-                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                <li class="page-item disabled"><span class="page-link">Prev</span></li>
             {% endif %}
 
             <li class="page-item disabled">
                 <span class="page-link">
-                    Page {{ wordsp.number }} of {{ wordsp.paginator.num_pages }}
+                    Page {{ f }} of {{ wordsp.paginator.num_pages }}
                 </span>
             </li>
 
             {% if wordsp.has_next %}
                 <li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}">Last &raquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}">Last</a></li>
             {% endif %}
         </ul>
     </nav>

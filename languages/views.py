@@ -405,24 +405,32 @@ def words(request):
     return render(request, "english/words.html", vars)
 
 
-def words2(request):
+def dictionary(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
-    data_get = request.GET
-    words = Word.objects.all()
+    vars_get = request.GET
+    search_query = vars_get.get("q")
+
+    if search_query:
+        words = Word.objects.filter(word__contains=f"{search_query}")
+    else:
+        words = Word.objects.all()
     
+
     paginator = Paginator(words, 10)  # Show 6 contacts per page.
-    page_number = data_get.get("page")
+    page_number = vars_get.get("page")
+    page_navi = int(vars_get.get("page"))-1
     page_obj = paginator.get_page(page_number)
 
     vars = {
         # "visible":visible,
         "words":words,
         "wordsp":page_obj,
+        "pagen":page_navi,
         # "pronounce":pronounce.splitlines(),
         # "forms":forms.splitlines(),
         # "example":set(example),
     }
-    return render(request, "english/words2.html", vars)
+    return render(request, "english/dictionary.html", vars)
 
 def my_words(request):
     words = Revise.objects.filter(user=request.user)
@@ -500,7 +508,7 @@ def revise(request):
     randitem = randitem.word
     pronounce = randitem.pronounce
     example = set(randitem.example.splitlines())
-    context = randitem.context.splitlines()
+    # context = randitem.context.splitlines()
 
     if "/" not in randitem.pronounce:
         if randitem.pos == "verb":
@@ -561,7 +569,7 @@ def revise(request):
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
         "example":example,
-        "context":context,
+        # "context":context,
         "rv_total_count":rv_obj.count(),
         "rv_count":rvp_obj.count(),
     }
