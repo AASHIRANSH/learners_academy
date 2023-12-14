@@ -1,16 +1,25 @@
 from django.db import models
 
-# class Course(models.Model):
-#     name = models.CharField(max_length=50)
+class Language(models.Model):
+    name = models.CharField(max_length=50)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
-# class Python(models.Model):
-#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-#     question = models.CharField(max_length=100)
+class Question(models.Model):
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+    question = models.CharField(max_length=100)
+    answer = models.TextField(default="")
 
-#     def __str__(self):
-#         return self.question
-    
+    def __str__(self):
+        return self.question
+
+
+class SubQuestion(models.Model):
+    mquestion = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.CharField(max_length=100)
+    answer = models.TextField(default="")
+
+    def __str__(self):
+        return self.question
