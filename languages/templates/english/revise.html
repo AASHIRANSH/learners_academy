@@ -90,7 +90,10 @@
         {% endif %}
         {% endif %}
 
-        <div id="def-container" class="position-relative col-12 rounded-3 my-3">
+        <span class="text-white bg-primary col-2 rounded-top mt-3">
+            Definition
+        </span>
+        <div id="def-container" class="position-relative col-12 rounded-end rounded-bottom mb-3">
             <div id="def" class="col-12 fs-4 p-2">
                 <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
 
@@ -114,7 +117,11 @@
         </div>
 
         {% if example %}
-            <div id="example" class="col-12 fst-italic py-3 border border-secondary rounded-2 overflow-auto">
+            <span class="text-white bg-secondary col-3 rounded-top">
+                Example Sentences
+            </span>
+            <div id="example" class="col-12 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-end rounded-bottom py-3 overflow-auto mb-4">
+                <hr class="my-1">
                 {% for line in example %}
                     <div>
                         &#x2022; {{line}}
@@ -127,11 +134,11 @@
         {% if word.context %}
             <div class="my-3">
                 <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
-                    Context
+                    Sentence Usage
                 </div>
                 <div class="mx-2">
                     <!--pre>{{word.context}}</pre-->
-                    <div id="context"></div>
+                    <div id="context"></div><!--this is being modified by Script-->
                 </div>
             </div>
         {% endif %}
@@ -154,6 +161,17 @@
                 </div>
                 <div class="mx-2">
                     {{word.hindi_usage}}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if word.related_post %}
+            <div class="mb-2">
+                <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                    Related Post
+                </div>
+                <div class="mx-2">
+                    {{word.related_post}}
                 </div>
             </div>
         {% endif %}

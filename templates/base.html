@@ -38,16 +38,16 @@
 
     {% block body %}{% endblock body %}
 
-    <!-- Loading square for squar.red network -->
-    <div class="loader-wrapper">
-        <span class="loader"><span class="loader-inner"></span></span>
-    </div>
     <!-- LOADING ANIMATION -->
-    <script>
+    <!--div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div-->
+    <!-- LOADING ANIMATION STOP -->
+    <!--script>
         $(window).on("load", function() {
             $(".loader-wrapper").fadeOut("slow");
         });
-    </script>
+    </script-->
 
     <script src="/static/js/sw.js"></script>
     <script>
@@ -99,11 +99,11 @@
             let content = document.getElementById("content");
             let textContent = `Your network status is ${navigator.onLine ? "Online" : "Offline"} `;
             //content.textContent = textContent;
-          }
+        }
         document.addEventListener("DOMContentLoaded", function () {
-        updateOnlineStatus();
-        window.addEventListener('online',  updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+            window.addEventListener('online',  updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
         });
     </script>
 

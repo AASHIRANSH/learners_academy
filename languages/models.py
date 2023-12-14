@@ -54,7 +54,7 @@ class Word(models.Model):
     definition_hindi = models.TextField(blank=True, null=True)
     definition_urdu = models.TextField(blank=True, null=True)
     hindi_usage = models.TextField(blank=True, null=True)
-    context = models.CharField(max_length=200, default="", blank=True, null=True)
+    context = models.TextField(default="", blank=True, null=True)
     example = models.TextField(blank=True, null=True)
     tip = models.TextField(blank=True, null=True)
     related_post = models.ManyToManyField(Post, blank=True)

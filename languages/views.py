@@ -415,10 +415,9 @@ def dictionary(request):
     else:
         words = Word.objects.all()
     
-
     paginator = Paginator(words, 10)  # Show 6 contacts per page.
-    page_number = vars_get.get("page")
-    page_navi = int(vars_get.get("page"))-1
+    page_number = vars_get.get("page") if vars_get.get("page") else 1
+    page_navi = int(page_number)-1
     page_obj = paginator.get_page(page_number)
 
     vars = {

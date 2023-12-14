@@ -95,7 +95,7 @@
         <tbody>
             {% for word in wordsp %}
             <tr>
-                <td>{% if forloop.last %}{{request.GET.page}}0{% else %}{{pagen}}{{forloop.counter}}{% endif %}</td>
+                <td>{% if forloop.last %}{{request.GET.page|default:1}}0{% else %}{{pagen}}{{forloop.counter}}{% endif %}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
                 <td>{{word.pos}}</td>
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
@@ -130,7 +130,7 @@
 
             <li class="page-item disabled">
                 <span class="page-link">
-                    Page {{ f }} of {{ wordsp.paginator.num_pages }}
+                    Page {{ request.GET.page|default:1 }} of {{ wordsp.paginator.num_pages }}
                 </span>
             </li>
 
@@ -173,6 +173,8 @@
         </tfoot>
     </table-->
 </div>
+
+<div class="mb-5"></div>
 
 <!-- Dict Table Files
 <script defer src="/static/js/web/jquery-3.6.3.min.js"></script>
