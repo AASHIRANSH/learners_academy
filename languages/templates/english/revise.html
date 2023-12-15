@@ -120,14 +120,16 @@
             <span class="text-white bg-secondary col-3 rounded-top">
                 Example Sentences
             </span>
-            <div id="example" class="col-12 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-end rounded-bottom py-3 overflow-auto mb-4">
-                <hr class="my-1">
-                {% for line in example %}
-                    <div>
-                        &#x2022; {{line}}
-                    </div>
+            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-end rounded-bottom py-3 overflow-auto mb-4">
+                <ul>
                     <hr class="my-1">
-                {% endfor %}
+                    {% for line in example %}
+                        <li>
+                            <!--&#x2022; bullet -->{{line}}
+                        </li>
+                        <hr class="my-1">
+                    {% endfor %}
+                </ul>
             </div>
         {% endif %}
 
@@ -165,13 +167,17 @@
             </div>
         {% endif %}
 
-        {% if word.related_post %}
+        {% if word.related_post.count %}
             <div class="mb-2">
                 <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
                     Related Post
                 </div>
-                <div class="mx-2">
-                    {{word.related_post}}
+                <div id="related_post" class="mx-2">
+                    {% for post in word.related_post.all %}
+                        <button class="btn btn-outline-secondary">
+                            {{post.title}}
+                        </button>
+                    {% endfor %}
                 </div>
             </div>
         {% endif %}
@@ -240,30 +246,32 @@
 </div>
 
 
-<!-- Generating HTML content of context -->
+<!-- Generating HTML content of Sentence Usage -->
 <script>
-    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
-    var context = [];
-    for ( let x of contextSt ){
-        x = x.split("+");
-        context.push(x);
-    } // making list of context substrings
+    // Sentence Usage
+    {
+        let contextSt = `{{word.context}}`.split("\n"); // context converted into list
+        var context = [];
+        for ( let x of contextSt ){
+            x = x.split("+");
+            context.push(x);
+        } // making list of context substrings
 
-    var contextDoc = ``;
-    for ( let x of context ){
-        contextDoc += `<div class="mb-2">`;
-        for ( let y=0; y < x.length; y++ ){
-            if (y==x.length-1){
-                contextDoc += `<span class="bg-gray px-2 pb-1 rounded-3">${x[y]}</span>`;
-            } else {
-                contextDoc += `<span class="bg-gray px-2 pb-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+        var contextDoc = ``;
+        for ( let x of context ){
+            contextDoc += `<div class="mb-2">`;
+            for ( let y=0; y < x.length; y++ ){
+                if (y==x.length-1){
+                    contextDoc += `<span class="bg-gray px-2 pb-1 rounded-3">${x[y]}</span>`;
+                } else {
+                    contextDoc += `<span class="bg-gray px-2 pb-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+                }
             }
-        }
-        contextDoc += `</div>`;
-    } // generating HTML content from context list
+            contextDoc += `</div>`;
+        } // generating HTML content from context list
 
-    document.getElementById("context").innerHTML = contextDoc;
-    //console.log(context);
+        document.getElementById("context").innerHTML = contextDoc;
+    }
     //console.log(contextDoc);
 </script>
 

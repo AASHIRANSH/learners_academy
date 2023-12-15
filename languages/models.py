@@ -29,8 +29,8 @@ class Post(models.Model):
     fill_values = models.CharField(max_length=200, blank=True, null=True)
     image = models.ImageField(upload_to=content_file_name, blank=True, null=True)
 
-    def is_pub(self):
-        return f"{'published' if self.published else 'unpublished'}"
+    # def is_pub(self):
+    #     return f"{'published' if self.published else 'unpublished'}"
     
     def __str__(self):
         return f"{self.title} ({'published' if self.published else 'unpublished'})"

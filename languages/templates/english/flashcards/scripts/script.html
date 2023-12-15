@@ -1,16 +1,7 @@
 <script>
-    //uk_ele = document.getElementById("pruk");
-    //us_ele = document.getElementById("prus");
-    def_ele = document.getElementById("def");
-    function def_lang() {
-        def_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
-        //uk_ele.innerText = `{{word.def_}} {{word.definition_hindi}}`;
-        //us_ele.innerText = `{{word.def_inf}} {{word.definition_hindi}}`;
-    };
-</script>
-
-<script>
     var def = document.getElementById("def");
+    var example = document.getElementById("example");
+
     var tag_b_index = 0;
     var tag_start = false;
     for (let x of def.innerHTML) {
@@ -25,22 +16,44 @@
         tag_b_index += tag_b;
         tag_start = tag_start == true?false:true;
     }
+    for (let x of example.innerHTML) {
+        var tag_b = example.innerHTML.indexOf("**", tag_b_index);
+
+        if (tag_start == false){
+            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;font-weight:500;'>");
+        } else {
+            example.innerHTML = example.innerHTML.replace("**", "</span>");
+        }
+
+        tag_b_index += tag_b;
+        tag_start = tag_start == true?false:true;
+    }
 
     def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
 
-    var element = document.getElementById("example");
-    element.innerHTML = element.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-    {
-        // function highlight(text) {
-        //     var inputText = document.getElementById("inputText");
-        //     var innerHTML = inputText.innerHTML;
-        //     var index = innerHTML.indexOf(text);
-        //     if (index >= 0) {
-        //         innerHTML = innerHTML.substring(0,index) + "<span class='highlight'>" + innerHTML.substring(index,index+text.length) + "</span>" + innerHTML.substring(index + text.length);
-        //         inputText.innerHTML = innerHTML;
-        //     }
-        // }
+    example.innerHTML = example.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+
+
+    let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
+    if ( exampleHeight > 300 ){
+        example.classList.add("shadow-b");
     }
+    example.addEventListener("scroll", function(){
+        if (example.scrollTop > 50){
+            example.classList.remove("shadow-b");
+            example.classList.add("shadow-y");
+        }
+        if (example.scrollTop > (exampleHeight-example.offsetHeight-2)){
+            example.classList.remove("shadow-y");
+            example.classList.add("shadow-t");
+        }
+        if (example.scrollTop < 10){
+            example.classList.remove("shadow-y");
+            example.classList.add("shadow-b");
+        }
+        console.log(example.classList);
+    });
+
     var forms = document.getElementById("forms");
     forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
     //var n = words.split(" ");
