@@ -72,6 +72,7 @@
 <div class="container-fluid bg-gray text-primary text-center p-4">
     <h1 class="fw-bold learner">Learners' Dictionary</h1>
 </div>
+<div class="rule"></div>
 
 <div class="container my-4">
     <div>
@@ -82,7 +83,7 @@
 </div>
 
 <div class="container mb-5">
-    <table id="" class="rounded-3 table table-hover" style="width:100%">
+    <table id="" class="table table-hover" style="width:100%;">
         <thead>
             <tr class="bg-gray text-primary border-primary">
                 <th style="width:5%;">#</th>
@@ -119,27 +120,8 @@
             </tr>
         </tfoot>
     </table>
-    <nav aria-label="...">
-        <ul class="pagination">
-            {% if wordsp.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.previous_page_number }}">Previous</a></li>
-            {% else %}
-                <li class="page-item disabled"><span class="page-link">Prev</span></li>
-            {% endif %}
 
-            <li class="page-item disabled">
-                <span class="page-link">
-                    Page {{ request.GET.page|default:1 }} of {{ wordsp.paginator.num_pages }}
-                </span>
-            </li>
-
-            {% if wordsp.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}">Next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}">Last</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+    <div id="pagination"></div>
 
 
     <!--table id="example" class="table table-hover" style="width:100%">
@@ -175,6 +157,46 @@
 </div>
 
 <div class="mb-5"></div>
+
+<script>// Page Numbers
+    let pageEle = document.getElementById("pagination");
+    let totalPages = {{wordsp.paginator.num_pages}};
+    let currentPage = {{request.GET.page}};
+    let pages = ``;
+    pages += `<nav aria-label="..."><ul class="pagination">`;
+    {//if has Previous
+        if ("{{wordsp.has_previous}}" == "True"){
+            pages += `
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.previous_page_number }}&q={{request.GET.q}}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1&q={{request.GET.q}}">1</a></li>
+            `;
+        }else{
+            pages += `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
+        }
+    }
+    pages += `
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page {{ request.GET.page|default:1 }} of {{ wordsp.paginator.num_pages }}
+            </span>
+        </li>
+    `;
+    for (let x = currentPage; x < currentPage+5; x++){
+        pages += `<li class="page-item"><a class="page-link" href="?page=${x}">${x}</a></li>`;
+    }
+    {//if has Next
+        if ("{{wordsp.has_next}}" == "True"){
+            pages += `
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}&q={{request.GET.q}}">{{ wordsp.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}&q={{request.GET.q}}">Next</a></li>
+            `;
+        }else{
+            pages += `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
+        }
+    }
+    pages += `</ul></nav>`;
+    pageEle.innerHTML = pages;
+</script>
 
 <!-- Dict Table Files
 <script defer src="/static/js/web/jquery-3.6.3.min.js"></script>

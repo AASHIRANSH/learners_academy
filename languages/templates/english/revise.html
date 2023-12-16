@@ -54,7 +54,7 @@
                     <button class="btn btn-secondary col-12 fs-5">{{rv_count}} / {{rv_total_count}}</button>
                 </div>
                 <div class="col-12 mb-1">
-                    <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4" onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')" accesskey="m">Mastered</button>
+                    <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m">Mastered</button>
                 </div>
                 <div class="col-12 mb-1">
                     <button title="Easy" class="btn btn-outline-success col-6 fs-4" onclick="window.location.assign('/english/data?data=easy&word={{word.id}}')" accesskey="s">Easy</button>
@@ -90,10 +90,10 @@
         {% endif %}
         {% endif %}
 
-        <span class="text-white bg-primary col-2 rounded-top mt-3">
+        <span class="text-white bg-primary rounded-top mt-3">
             Definition
         </span>
-        <div id="def-container" class="position-relative col-12 rounded-end rounded-bottom mb-3">
+        <div id="def-container" class="position-relative col-12 rounded-bottom mb-3">
             <div id="def" class="col-12 fs-4 p-2">
                 <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
 
@@ -117,10 +117,10 @@
         </div>
 
         {% if example %}
-            <span class="text-white bg-secondary col-3 rounded-top">
+            <span class="text-white bg-secondary rounded-top">
                 Example Sentences
             </span>
-            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-end rounded-bottom py-3 overflow-auto mb-4">
+            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-bottom py-3 overflow-auto mb-3">
                 <ul>
                     <hr class="my-1">
                     {% for line in example %}
@@ -134,7 +134,7 @@
         {% endif %}
 
         {% if word.context %}
-            <div class="my-3">
+            <div class="mb-3 p-0">
                 <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
                     Sentence Usage
                 </div>
@@ -146,18 +146,40 @@
         {% endif %}
 
         {% if word.synonyms %}
-            <div class="mb-3">
-                <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
+            <div class="mb-3 p-0">
+                <div class="{% if word.antonyms %}col-5 {% endif %}bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
                     Synonyms
                 </div>
-                <div class="mx-2">
+                <div id="synonyms" class="mx-2">
                     {{word.synonyms}}
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if word.antonyms %}
+            <div class="mb-3 p-0">
+                <div class="{% if word.synonyms %}col-5 {% endif %}bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
+                    Antonyms
+                </div>
+                <div class="mx-2">
+                    {{word.antonyms}}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if word.compare %}
+            <div class="mb-3 p-0">
+                <div class="bg-primary text-white rounded-3 py-1 px-2 mt-4 mb-2">
+                    Compare
+                </div>
+                <div class="mx-2">
+                    {{word.compare}}
                 </div>
             </div>
         {% endif %}
 
         {% if word.hindi_usage %}
-            <div class="mb-2">
+            <div class="mb-3 p-0">
                 <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
                     Hindi Usage
                 </div>
@@ -168,7 +190,7 @@
         {% endif %}
 
         {% if word.related_post.count %}
-            <div class="mb-2">
+            <div class="mb-3 p-0">
                 <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
                     Related Post
                 </div>
@@ -224,6 +246,26 @@
     </div>
 </div>
 
+<!-- Modal Mastered Confirm -->
+<div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!--div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div-->
+        <div class="modal-body">
+          Have you really mastered this word?
+        </div>
+        <!--div class="modal-footer"-->
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
+            <button type="button" class="btn btn-success    " onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')">Certainly!</button>
+        </div>
+        <!--/div-->
+      </div>
+    </div>
+</div>
 <!-- Modal Delete Confirm -->
 <div class="modal fade" id="deleteRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -273,6 +315,20 @@
         document.getElementById("context").innerHTML = contextDoc;
     }
     //console.log(contextDoc);
+</script>
+<!-- Generating Synonyms content -->
+<script>
+    {
+        let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
+        var synonymsDoc = ``;
+
+        for ( let x of synonymsSt ){
+            x = x.trim()
+            synonymsDoc += `<span class="bg-gray px-2 pb-1 me-2 rounded-3 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("synonyms").innerHTML = synonymsDoc;
+    }
 </script>
 
 {% include 'english/flashcards/scripts/script.html' %}

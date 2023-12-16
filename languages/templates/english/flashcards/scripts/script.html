@@ -4,25 +4,14 @@
 
     var tag_b_index = 0;
     var tag_start = false;
-    for (let x of def.innerHTML) {
-        var tag_b = def.innerHTML.indexOf("**", tag_b_index);
-
-        if (tag_start == false){
-            def.innerHTML = def.innerHTML.replace("**", "<span style='font-weight:600;'>");
-        } else {
-            def.innerHTML = def.innerHTML.replace("**", "</span>");
-        }
-
-        tag_b_index += tag_b;
-        tag_start = tag_start == true?false:true;
-    }
+    
     for (let x of example.innerHTML) {
         var tag_b = example.innerHTML.indexOf("**", tag_b_index);
 
         if (tag_start == false){
-            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;font-weight:500;'>");
+            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;font-weight:500;'>[");
         } else {
-            example.innerHTML = example.innerHTML.replace("**", "</span>");
+            example.innerHTML = example.innerHTML.replace("**", "]</span>");
         }
 
         tag_b_index += tag_b;
@@ -33,7 +22,7 @@
 
     example.innerHTML = example.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
 
-
+    // Example Shadows
     let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
     if ( exampleHeight > 300 ){
         example.classList.add("shadow-b");
