@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 import datetime
+import pytz
+
 # from django.core.cache import cache
 # from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
@@ -15,7 +17,7 @@ class ActiveUserMiddleware:
         if user.is_authenticated:
             now = datetime.datetime.now()+datetime.timedelta(hours=5,minutes=30)
             usrobj = User.objects.get(username=user.username)
-            usrobj.profile.last_seen = now
+            usrobj.profile.last_seen = now.astimezone() # astimezone is used to avoid naive datetimeobject
             usrobj.save()
 
         # print("View Call Middleware Run", user.username)

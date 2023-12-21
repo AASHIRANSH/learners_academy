@@ -1,6 +1,7 @@
-from django.urls import path, include
-from coding.views import views
+from django.urls import path
+from coding import views
 
 urlpatterns = [
-    path('coding/', views.index, name="coding"),
+    path('', views.index, name="coding"),
+    path('coding/revise', views.revise, name="coding_revise"),
 ]

@@ -422,7 +422,7 @@ def dictionary(request):
 
     vars = {
         # "visible":visible,
-        "words":words,
+        "wordscount":words.count(),
         "wordsp":page_obj,
         "pagen":page_navi,
         # "pronounce":pronounce.splitlines(),

@@ -69,18 +69,34 @@
 
 {% block body %}
 {% include 'header.html' %}
+
 <div class="container-fluid bg-gray text-primary text-center p-4">
     <h1 class="fw-bold learner">Learners' Dictionary</h1>
 </div>
 <div class="rule"></div>
 
 <div class="container my-4">
-    <div>
-        <form>
-            <input type="search" name="q" class="form-control" placeholder="Search..." value="{{request.GET.q}}"/>
-        </form>
+    <form>
+    <div class="wrapper col-sm-10 col-md-8">
+        <div class="search-input">
+            <input type="search" name="q" class="form-control" placeholder="Type to search..." value="{{request.GET.q}}" autocomplete="off"/>
+            <div class="autocom-box">
+                <!-- here list is inserted from javascript -->
+            </div>
+            <a><div class="icon"><i class="fas fa-search"></i></div></a>
+        </div>
     </div>
+    </form>
 </div>
+
+<!-- advanced search options -->
+
+{% if request.GET.q %}
+    <div class="text-center mb-3">
+        Showing results for <span class="text-primary">&quot;{{request.GET.q}}&quot;</span> ({{wordscount}} entries found)
+    </div>
+{% endif %}
+
 
 <div class="container mb-5">
     <table id="" class="table table-hover" style="width:100%;">
@@ -121,7 +137,9 @@
         </tfoot>
     </table>
 
-    <div id="pagination"></div>
+    <div class="text-center mb-3">Page {{request.GET.page|default:"1"}} of {{wordsp.paginator.num_pages}}</div>
+
+    <div id="pagination" class="d-flex justify-content-center"></div>
 
 
     <!--table id="example" class="table table-hover" style="width:100%">
@@ -161,38 +179,40 @@
 <script>// Page Numbers
     let pageEle = document.getElementById("pagination");
     let totalPages = {{wordsp.paginator.num_pages}};
-    let currentPage = {{request.GET.page}};
+    let currentPage = {{request.GET.page|default:"1"}};
     let pages = ``;
     pages += `<nav aria-label="..."><ul class="pagination">`;
     {//if has Previous
-        if ("{{wordsp.has_previous}}" == "True"){
-            pages += `
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.previous_page_number }}&q={{request.GET.q}}">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="?page=1&q={{request.GET.q}}">1</a></li>
-            `;
-        }else{
-            pages += `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
+        `{% if wordsp.has_previous %}
+            ${pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page={{ wordsp.previous_page_number }}">Previous</a></li>'}
+        {% else %}
+            ${pages += '<li class="page-item disabled"><span class="page-link">Previous</span></li>'}
+        {% endif %}`;
+    }
+    {//first page
+        if (currentPage>3){
+            pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page=1">&laquo;</a></li>';
         }
     }
-    pages += `
-        <li class="page-item disabled">
-            <span class="page-link">
-                Page {{ request.GET.page|default:1 }} of {{ wordsp.paginator.num_pages }}
-            </span>
-        </li>
-    `;
-    for (let x = currentPage; x < currentPage+5; x++){
-        pages += `<li class="page-item"><a class="page-link" href="?page=${x}">${x}</a></li>`;
+    // middle pages
+    for (let x = currentPage-2; x < currentPage+3; x++){
+        if (x<1 || x>totalPages){continue;}
+        if (x==currentPage){
+            pages += `<li class="page-item active"><a class="page-link" href="?q={{request.GET.q}}&page=${x}">${x}</a></li>`;
+        }else{
+            pages += `<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page=${x}">${x}</a></li>`;
+        }
+    }
+    //last page
+    if (currentPage<totalPages-2){
+        pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page={{ wordsp.paginator.num_pages }}">&raquo;</a></li>';
     }
     {//if has Next
-        if ("{{wordsp.has_next}}" == "True"){
-            pages += `
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.paginator.num_pages }}&q={{request.GET.q}}">{{ wordsp.paginator.num_pages }}</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}&q={{request.GET.q}}">Next</a></li>
-            `;
-        }else{
-            pages += `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
-        }
+        `{% if wordsp.has_next %}
+            ${pages += '<li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}&q={{request.GET.q}}">Next</a></li>'}
+        {% else %}
+            ${pages += '<li class="page-item disabled"><span class="page-link">Next</span></li>'}
+        {% endif %}`;
     }
     pages += `</ul></nav>`;
     pageEle.innerHTML = pages;
@@ -363,12 +383,105 @@
     //tableExample.style.width = tbr+"rem";
 </script>
 -->
+
 {% if perms.languages.add_word %}
-    <div class="position-fixed bottom-0 right-0 m-3">
+    <div class="position-fixed bottom-0 right-0 m-3" style="z-index:1;">
         <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
             <i class="fa-solid fa-plus"></i>
         </a>
     </div>
 {% endif %}
+
+<script>
+    let suggestions = [
+        "Channel",
+        "CodingLab",
+        "CodingNepal",
+        "YouTube",
+        "YouTuber",
+        "YouTube Channel",
+        "Blogger",
+        "Bollywood",
+        "Vlogger",
+        "Vechiles",
+        "Facebook",
+        "Freelancer",
+        "Facebook Page",
+        "Designer",
+        "Developer",
+        "Web Designer",
+        "Web Developer",
+        "Login Form in HTML & CSS",
+        "How to learn HTML & CSS",
+        "How to learn JavaScript",
+        "How to became Freelancer",
+        "How to became Web Designer",
+        "How to start Gaming Channel",
+        "How to start YouTube Channel",
+        "What does HTML stands for?",
+        "What does CSS stands for?",
+    ];
+
+    // getting all required elements
+    const searchWrapper = document.querySelector(".search-input");
+    const inputBox = searchWrapper.querySelector("input");
+    const suggBox = searchWrapper.querySelector(".autocom-box");
+    const icon = searchWrapper.querySelector(".icon");
+    var linkTag = searchWrapper.querySelector("a");
+    var webLink;
+
+    // if user press any key and release
+    inputBox.onkeyup = (e)=>{
+        let userData = e.target.value; //user enetered data
+        let emptyArray = [];
+        if(userData){
+            icon.onclick = ()=>{
+                webLink = `?q=${userData}`;
+                linkTag.setAttribute("href", webLink);
+                linkTag.click();
+            }
+            emptyArray = suggestions.filter((data)=>{
+                //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+                return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+            });
+            emptyArray = emptyArray.map((data)=>{
+                // passing return data inside li tag
+                return data = `<li>${data}</li>`;
+            });
+            searchWrapper.classList.add("active"); //show autocomplete box
+            showSuggestions(emptyArray);
+            let allList = suggBox.querySelectorAll("li");
+            for (let i = 0; i < allList.length; i++) {
+                //adding onclick attribute in all li tag
+                allList[i].setAttribute("onclick", "select(this)");
+            }
+        }else{
+            searchWrapper.classList.remove("active"); //hide autocomplete box
+        }
+    }
+
+    function select(element){
+        let selectData = element.textContent;
+        inputBox.value = selectData;
+        icon.onclick = ()=>{
+            webLink = `?q=${selectData}`;
+            linkTag.setAttribute("href", webLink);
+            linkTag.click();
+        }
+        searchWrapper.classList.remove("active");
+    }
+
+    function showSuggestions(list){
+        let listData;
+        if(!list.length){
+            userValue = inputBox.value;
+            listData = `<li>${userValue}</li>`;
+        }else{
+        listData = list.join('');
+        }
+        suggBox.innerHTML = listData;
+    }
+</script>
+
 {% include "footer.html" %}
 {% endblock body %}

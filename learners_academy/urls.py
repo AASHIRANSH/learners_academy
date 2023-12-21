@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include("users.urls")),
     path('arabic/', include("languages.arabic.urls")),
     path('english/', include("languages.urls")),
+    path('coding/', include("coding.urls")),
 ]
 
 from django.conf import settings

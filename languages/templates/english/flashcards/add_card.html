@@ -75,7 +75,7 @@
               <select class="form-select" name="pos">
                 <option value="">--</option>
                 <option value="noun" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun</option>
-                <option value="verb" {% if pos == 'verb' or pos == none %}selected{% endif %}>verb</option>
+                <option value="verb" {% if pos == 'verb' or pos == None %}selected{% endif %}>verb</option>
                 <option value="phrasal verb" {% if pos == 'phrasal verb' or form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
                 <option value="adjective" {% if pos == 'adjective' or form.pos.value == 'adjective' %}selected{% endif %}>adjective</option>
                 <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
@@ -85,6 +85,7 @@
                 <option value="conjunction" {% if pos == 'conjunction' or form.pos.value == 'conjunction' %}selected{% endif %}>conjunction</option>
                 <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
                 <option value="slang" {% if pos == 'slang' or form.pos.value == 'slang' %}selected{% endif %}>slang</option>
+                <option value="abbreviation" {% if pos == 'abbreviation' or form.pos.value == 'abbreviation' %}selected{% endif %}>abbreviation</option>
               </select>
             </div>
             <!-- grade -->
@@ -118,7 +119,7 @@
           <div class="row col-4">
             <div class="col-12 mb-2">
               {{form.tip.label_tag}}
-              <textarea class="form-control" name="tip" id="id_tip" rows="4"></textarea>
+              <textarea class="form-control" name="tip" id="id_tip" rows="4">{% if edit %}{{form.tip.value}}{% endif %}</textarea>
               {{form.tip.errors}}
             </div>
           </div>

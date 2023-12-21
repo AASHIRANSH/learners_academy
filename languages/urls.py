@@ -2,8 +2,8 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('learn/<int:id>', views.index, name="learn_english"),
     path('', views.post_list, name="posts"),
+    path('learn/<int:id>', views.index, name="learn_english"),
     #Tenses
     path('presentindefinite/', views.pres_ind, name="present_indefinite"),
 

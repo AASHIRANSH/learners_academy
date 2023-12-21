@@ -86,20 +86,27 @@
         {% endif %}
         {% endif %}
 
-
-        <div id="def-container" class="col-12 rounded-3 mt-3">
+        <span class="text-white bg-primary rounded-top mt-3">
+            Definition
+        </span>
+        <div id="def-container" class="position-relative col-12 rounded-bottom mb-3">
             <div id="def" class="col-12 fs-4 p-2">
                 {{word.definition}}
             </div>
         </div>
 
-        <div id="example" class="col-12 fst-italic py-3 overflow-auto">
-            {% for line in example %}
-                <div>
-                    &#x2022; {{line}}
-                </div>
-            {% endfor %}
-        </div>
+        {% if example %}
+            <span class="text-white bg-secondary rounded-top">
+                Example Sentences
+            </span>
+            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-bottom py-3 overflow-auto mb-3">
+                {% for line in example %}
+                    <div>
+                        &#x2022; {{line}}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </div>
 {% if perms.languages.add_word %}

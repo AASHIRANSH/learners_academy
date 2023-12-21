@@ -35,7 +35,13 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} ({'published' if self.published else 'unpublished'})"
 
+# class Thesaurus(models.Model):
+#     name = models.CharField(max_length=100)
+#     words = models.TextField()
 
+#     def __str__(self):
+#         return self.name
+    
 class Word(models.Model):
     category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
     # official = models.ManyToManyField(User, blank=True)
@@ -61,6 +67,8 @@ class Word(models.Model):
     synonyms = models.TextField(blank=True, null=True)
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
+    # thesaurus = models.ForeignKey(Thesaurus, on_delete=models.SET_NULL)
+    # collocation = 
     pic = models.ImageField(upload_to='dictionary/', blank=True, null=True)
     pic_url = models.CharField(max_length=300,blank=True, null=True)
 

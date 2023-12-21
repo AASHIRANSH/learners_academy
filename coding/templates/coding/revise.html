@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+
+{% include "header.html" %}
+{% include 'messages.html' %}
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="d-flex justify-content-between align-items-baseline">
+            <div class="row col-9 d-flex align-items-baseline">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
+                    {{word.word|to_and}}
+                </div>
+                <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                    {{word.pos}}
+                </div>
+
+                <div class="col-12">
+                    <div class="row col-12 mb-3">
+                        {% if word.pic %}
+                            <div class="col-auto">
+                                <div class=""><img class="word-image" src="{{word.pic.url}}"/></div>
+                            </div>
+                        {% endif %}
+
+                        {% if word.pic_url|length > 1 %}
+                            <div class="col-auto">
+                                <div class=""><img class="word-image" src="{{word.pic_url}}"/></div>
+                            </div>    
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <div class="col-12 mb-1">
+                    <button class="btn btn-secondary col-12 fs-5">{{rv_count}} / {{rv_total_count}}</button>
+                </div>
+                <div class="col-12 mb-1">
+                    <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m">Mastered</button>
+                </div>
+                <div class="col-12 mb-1">
+                    <button title="Easy" class="btn btn-outline-success col-6 fs-4" onclick="window.location.assign('/english/data?data=easy&word={{word.id}}')" accesskey="s">Easy</button>
+                    <button title="Hard" class="btn btn-outline-secondary col-5 fs-4" onclick="window.location.assign('/english/data?data=hard&word={{word.id}}')" accesskey="h">Hard</button>
+                </div>
+                <div class="col-12">
+                    <button type="button" title="Find Words" class="btn btn-outline-primary col-8 fs-4" onclick="window.location.assign(`{% url 'dictionary' %}`)"><i class="fa-solid fa-book"></i></button>
+                    <button type="button" title="Remove" class="btn btn-danger col-3 fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        {% if word.pos != 'idiom' %}
+        {% if word.pos != 'phrasal verb' %}
+        {% if forms|length > 1 %}
+        <div id="forms-cont" class="row">
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Other Forms
+                </button>
+            </div>
+            <div class="col-auto" style="position:absolute;left:16%;translate:0 -35%">
+                <div class="collapse" id="collapseExample">
+                    <div id="forms" class="card card-body">
+                        {% for line in forms %}
+                            <div>&#x2022; {{line}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+        <span class="text-white bg-primary rounded-top mt-3">
+            Definition
+        </span>
+        <div id="def-container" class="position-relative col-12 rounded-bottom mb-3">
+            <div id="def" class="col-12 fs-4 p-2">
+                <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
+
+                <div id="carouselExampleControls" class="carousel slide">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <div class="">{{word.definition}}</div>
+                        </div>
+                        <div class="carousel-item">
+                            {% if word.definition_hindi %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="position-absolute top-0 end-0 m-2">
+                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
+                </div>
+            </div>
+        </div>
+
+        {% if example %}
+            <span class="text-white bg-secondary rounded-top">
+                Example Sentences
+            </span>
+            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-bottom py-3 overflow-auto mb-3">
+                <ul>
+                    <hr class="my-1">
+                    {% for line in example %}
+                        <li>
+                            <!--&#x2022; bullet -->{{line}}
+                        </li>
+                        <hr class="my-1">
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal Mastered Confirm -->
+<div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!--div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div-->
+        <div class="modal-body">
+          Have you really mastered this word?
+        </div>
+        <!--div class="modal-footer"-->
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
+            <button type="button" class="btn btn-success    " onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')">Certainly!</button>
+        </div>
+        <!--/div-->
+      </div>
+    </div>
+</div>
+<!-- Modal Delete Confirm -->
+<div class="modal fade" id="deleteRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!--div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div-->
+        <div class="modal-body">
+          Do you want to remove the word from revise?
+        </div>
+        <!--div class="modal-footer"-->
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')">Yes, remove</button>
+        </div>
+        <!--/div-->
+      </div>
+    </div>
+</div>
+
+
+{% include 'english/flashcards/scripts/script.html' %}
+{% endblock body %}
