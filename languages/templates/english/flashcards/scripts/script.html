@@ -49,6 +49,21 @@
     //return n[n.length - 1];
 </script>
 
+<!-- Pronounce -->
+<script>
+    let ukp = document.getElementById("ukpron");
+    let usp = document.getElementById("uspron");
+
+    ukp.onclick= function() {
+        var audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
+        audio1.play();
+    }
+    usp.onclick= function() {
+        var audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
+        audio2.play();
+    }
+</script>
+
 <!--AUTO REFRESHER SCRIPT-->
 <script>
     if ("{{refresh}}" == "True") {

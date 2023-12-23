@@ -408,10 +408,12 @@ def words(request):
 def dictionary(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     vars_get = request.GET
-    search_query = vars_get.get("q")
+    search_query = vars_get.get("q","").strip()
+    search_pos = vars_get.get("pos","").strip()
+    search_in = vars_get.get("in","").strip()
 
     if search_query:
-        words = Word.objects.filter(word__contains=f"{search_query}")
+        words = Word.objects.filter(word__contains=f"{search_query}") | Word.objects.filter(pos=search_pos, definition__contains=f"{search_in}")
     else:
         words = Word.objects.all()
     

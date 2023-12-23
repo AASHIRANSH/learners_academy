@@ -30,21 +30,21 @@
                     <div class="row col-12 mb-3">
                         {% if pronounce.0|length > 1 %}
                             <div class="col-auto">
-                                <div class="text-primary fs-5" style="">UK <span id="pruk">{{pronounce.0}}</span></div>
-                                <div class="text-danger fs-5" style="">US <span id="prus">{{pronounce.1}}</span></div>
+                                <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{{pronounce.0}}</span></div>
+                                <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{{pronounce.1}}</span></div>
                             </div>
                         {% endif %}
 
                         {% if word.pic %}
-                            <div class="col-auto">
+                            <div class="cursor-pointer col-auto">
                                 <div class=""><img class="word-image" src="{{word.pic.url}}"/></div>
                             </div>
                         {% endif %}
 
                         {% if word.pic_url|length > 1 %}
-                            <div class="col-auto">
-                                <div class=""><img class="word-image" src="{{word.pic_url}}"/></div>
-                            </div>    
+                            <div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">
+                                <div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -95,7 +95,7 @@
         </span>
         <div id="def-container" class="position-relative col-12 rounded-bottom mb-3">
             <div id="def" class="col-12 fs-4 p-2">
-                <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %}</div>
+                <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %} {{word.topic.name}}</div>
 
                 <div id="carouselExampleControls" class="carousel slide">
                     <div class="carousel-inner">
@@ -146,9 +146,9 @@
         {% endif %}
 
         {% if word.synonyms %}
-            <div class="mb-3 p-0">
-                <div class="{% if word.antonyms %}col-5 {% endif %}bg-primary text-white rounded-3 py-1 px-2 mb-2">
-                    Synonyms
+            <div class="{% if word.antonyms %}col-5 {% endif %}p-0 me-2 mb-3">
+                <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
+                    synonyms
                 </div>
                 <div id="synonyms" class="mx-2">
                     {{word.synonyms}}
@@ -157,9 +157,9 @@
         {% endif %}
         
         {% if word.antonyms %}
-            <div class="mb-3 p-0">
-                <div class="{% if word.synonyms %}col-5 {% endif %}bg-primary text-white rounded-3 py-1 px-2 mb-2">
-                    Antonyms
+            <div class="{% if word.synonyms %}col-5 {% endif %}mb-3 me-2 p-0">
+                <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
+                    antonyms
                 </div>
                 <div class="mx-2">
                     {{word.antonyms}}
@@ -170,7 +170,7 @@
         {% if word.compare %}
             <div class="mb-3 p-0">
                 <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
-                    Compare
+                    Related Words
                 </div>
                 <div class="mx-2">
                     {{word.compare}}
@@ -248,7 +248,7 @@
 
 <!-- Modal Mastered Confirm -->
 <div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
       <div class="modal-content">
         <!--div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
@@ -284,6 +284,14 @@
         </div>
         <!--/div-->
       </div>
+    </div>
+</div>
+<!-- Image -->
+<div class="modal fade" id="fullImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="text-center" style="width:100%;max-width:500px;height:auto;">
+            <img class="border border-4 border-secondary rounded" src="{{word.pic_url}}"/>
+        </div>
     </div>
 </div>
 
@@ -330,6 +338,5 @@
         document.getElementById("synonyms").innerHTML = synonymsDoc;
     }
 </script>
-
 {% include 'english/flashcards/scripts/script.html' %}
 {% endblock body %}

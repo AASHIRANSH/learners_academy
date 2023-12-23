@@ -32,9 +32,9 @@
 
                     <div class="row col-12 mb-3">
                         {% if pronounce.0|length > 1 %}
-                            <div class="col-auto">
-                                <div class="text-primary fs-5" style="">UK {{pronounce.0}}</div>
-                                <div class="text-danger fs-5" style="">US {{pronounce.1}}</div>
+                            <div class="col-auto ps-3">
+                                <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{{pronounce.0}}</span></div>
+                                <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{{pronounce.1}}</span></div>
                             </div>
                         {% endif %}
 

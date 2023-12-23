@@ -70,11 +70,24 @@
 {% block body %}
 {% include 'header.html' %}
 
+<!-- LOADING ANIMATION -->
+<div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
+</div>
+<!-- LOADING ANIMATION STOP -->
+<script>
+    $(window).on("load", function() {
+        $(".loader-wrapper").fadeOut("slow");
+    });
+</script>
+
+
 <div class="container-fluid bg-gray text-primary text-center p-4">
     <h1 class="fw-bold learner">Learners' Dictionary</h1>
 </div>
 <div class="rule"></div>
 
+<!-- search -->
 <div class="container my-4">
     <form>
     <div class="wrapper col-sm-10 col-md-8">
@@ -85,11 +98,29 @@
             </div>
             <a><div class="icon"><i class="fas fa-search"></i></div></a>
         </div>
+        <div class="row">
+            <div class="col-auto mt-3">Search in:</div>
+            <div class="col-3 mt-3">
+                <select name="pos" class="form-select" aria-label="Default select example">
+                    <option value="" selected>--select--</option>
+                    <option value="noun"{%if request.GET.in == "noun" %} selected{% endif %}>noun</option>
+                    <option value="verb"{%if request.GET.in == "verb" %} selected{% endif %}>verb</option>
+                    <option value="adjective"{%if request.GET.in == "adjective" %} selected{% endif %}>adjective</option>
+                </select>
+            </div>
+            <div class="col-3 mt-3">
+                <select name="in" class="form-select" aria-label="Default select example">
+                    <option value="" selected>--select--</option>
+                    <option value="definition"{%if request.GET.in == "definition" %} selected{% endif %}>definitions</option>
+                    <option value="example"{%if request.GET.in == "example" %} selected{% endif %}>examples</option>
+                </select>
+            </div>
+        </div>
     </div>
     </form>
 </div>
 
-<!-- advanced search options -->
+<!-- advanced search options here -->
 
 {% if request.GET.q %}
     <div class="text-center mb-3">
@@ -97,7 +128,7 @@
     </div>
 {% endif %}
 
-
+<!-- table -->
 <div class="container mb-5">
     <table id="" class="table table-hover" style="width:100%;">
         <thead>
@@ -393,34 +424,7 @@
 {% endif %}
 
 <script>
-    let suggestions = [
-        "Channel",
-        "CodingLab",
-        "CodingNepal",
-        "YouTube",
-        "YouTuber",
-        "YouTube Channel",
-        "Blogger",
-        "Bollywood",
-        "Vlogger",
-        "Vechiles",
-        "Facebook",
-        "Freelancer",
-        "Facebook Page",
-        "Designer",
-        "Developer",
-        "Web Designer",
-        "Web Developer",
-        "Login Form in HTML & CSS",
-        "How to learn HTML & CSS",
-        "How to learn JavaScript",
-        "How to became Freelancer",
-        "How to became Web Designer",
-        "How to start Gaming Channel",
-        "How to start YouTube Channel",
-        "What does HTML stands for?",
-        "What does CSS stands for?",
-    ];
+    let suggestions = [];
 
     // getting all required elements
     const searchWrapper = document.querySelector(".search-input");
@@ -439,6 +443,7 @@
                 webLink = `?q=${userData}`;
                 linkTag.setAttribute("href", webLink);
                 linkTag.click();
+                $(".loader-wrapper").fadeIn("slow");
             }
             emptyArray = suggestions.filter((data)=>{
                 //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
@@ -446,20 +451,22 @@
             });
             emptyArray = emptyArray.map((data)=>{
                 // passing return data inside li tag
-                return data = `<li>${data}</li>`;
+                return data = `<li onclick="window.location.assign('?q=${data}')">${data}</li>`;
             });
             searchWrapper.classList.add("active"); //show autocomplete box
             showSuggestions(emptyArray);
             let allList = suggBox.querySelectorAll("li");
             for (let i = 0; i < allList.length; i++) {
                 //adding onclick attribute in all li tag
-                allList[i].setAttribute("onclick", "select(this)");
+                allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//allList[i].setAttribute("onclick", "select(this)");
             }
         }else{
             searchWrapper.classList.remove("active"); //hide autocomplete box
         }
     }
-
+    window.onclick = (e)=>{
+        searchWrapper.classList.remove("active");
+    }
     function select(element){
         let selectData = element.textContent;
         inputBox.value = selectData;

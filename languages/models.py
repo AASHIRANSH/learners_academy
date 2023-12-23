@@ -1,8 +1,7 @@
-import os
-from django.db import models
 #User Model
 from django.contrib.auth.models import User
-from django.core import validators
+from django.db import models
+import os
 
 ''' this is to rename the image file uploaded by the user Profile Model below as dp '''
 def content_file_name(instance, filename):
@@ -18,30 +17,22 @@ class Topic(models.Model):
         return self.name
 
 
-class Post(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, blank=True, null=True)
-    published = models.BooleanField(default=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    fill_values = models.CharField(max_length=200, blank=True, null=True)
-    image = models.ImageField(upload_to=content_file_name, blank=True, null=True)
-
-    # def is_pub(self):
-    #     return f"{'published' if self.published else 'unpublished'}"
-    
-    def __str__(self):
-        return f"{self.title} ({'published' if self.published else 'unpublished'})"
-
 # class Thesaurus(models.Model):
 #     name = models.CharField(max_length=100)
 #     words = models.TextField()
 
 #     def __str__(self):
 #         return self.name
-    
+
+
+# class RelatedWords(models.Model):
+#     name = models.CharField(max_length=100)
+#     words = models.ManyToManyField("", verbose_name=_(""))
+
+#     def __str__(self):
+#         return self.name
+
+
 class Word(models.Model):
     category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
     # official = models.ManyToManyField(User, blank=True)
@@ -63,7 +54,7 @@ class Word(models.Model):
     context = models.TextField(default="", blank=True, null=True)
     example = models.TextField(blank=True, null=True)
     tip = models.TextField(blank=True, null=True)
-    related_post = models.ManyToManyField(Post, blank=True)
+    related_post = models.ManyToManyField("languages.Post", blank=True)
     synonyms = models.TextField(blank=True, null=True)
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
@@ -75,30 +66,36 @@ class Word(models.Model):
     def __str__(self):
         return f'{self.word} ({self.pos})'
 
-
 class Revise(models.Model):
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     date = models.DateField(auto_now=False, auto_now_add=True)
     rvcount = models.IntegerField(default=0)
+    note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.word.word} ({self.word.pos})"
 
 
 '''Posts'''
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, blank=True, null=True)
+    published = models.BooleanField(default=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    fill_values = models.CharField(max_length=200, blank=True, null=True)
+    #level = models.CharField(choices=(('a1','Beginner'),('a2','Pre Intermediate'),('b1','Intermediate'),('b2','Upper Intermediate'),('c1','Advanced'),('c2','Proficient')), max_length=50)
+    image = models.ImageField(upload_to=content_file_name, blank=True, null=True)
 
-
-class Dislike(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
+    # def is_pub(self):
+    #     return f"{'published' if self.published else 'unpublished'}"
+    
+    def __str__(self):
+        return f"{self.title} ({'published' if self.published else 'unpublished'})"
 
 class Exercise(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
@@ -112,12 +109,16 @@ class Exercise(models.Model):
     
     def __str__(self):
         return f"{self.question} ({self.type})"
-''' End Posts... '''
 
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-
-
-
+class Dislike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
@@ -127,6 +128,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+
+''' End Posts... '''
+
+
+
 
 # class commentLike(models.Model):
 
