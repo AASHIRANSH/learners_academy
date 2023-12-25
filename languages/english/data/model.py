@@ -3,7 +3,7 @@ import json
 
 class Exercise():
     class objects():
-        def all():
+        def all(*args, **kwargs):
             with open("languages/english/data/models.json") as mjson:
                 mjson = json.loads(mjson.read())
             return mjson
@@ -15,3 +15,4 @@ class Exercise():
             return None
         
 print(Exercise.objects.get(name="Asif"))
+print(Exercise.objects.all())

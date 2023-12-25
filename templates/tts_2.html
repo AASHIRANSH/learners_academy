@@ -28,16 +28,12 @@
 
     voices();
 
-    {% comment %} if (ttsLang == "hindi"){
-        var lang = "Microsoft Swara Online (Natural) - Hindi (India)";
-    }else if (ttsLang == "arabic"){
-        var lang = "Microsoft Salma Online (Natural) - Arabic (Egypt)";
-    } {% endcomment %}
-
     function voices() {
         for (let voice of synth.getVoices()) {
             //let selected = voice.name === "Microsoft Kalpana - Hindi (India)" ? "selected" : "";
-            if (voice.name==="Microsoft Swara Online (Natural) - Hindi (India)") {
+            if (voice.name==="Google US English") {
+                var selected = "selected";
+            }else if (voice.name==="Microsoft Swara Online (Natural) - Hindi (India)"){
                 var selected = "selected";
             }else{
                 var selected = "";
@@ -50,7 +46,13 @@
     synth.addEventListener("voiceschanged", voices);
 
     function textToSpeech(text) {
-        let utterance = new SpeechSynthesisUtterance(text);
+        let utterance = new SpeechSynthesisUtterance();
+        utterance.volume = 1; // From 0 to 1
+        utterance.rate = 0.8; // From 0.1 to 10
+        utterance.pitch = 1; // From 0 to 2
+        utterance.text = text;
+
+        //utterance.lang = 'en';
         for (let voice of synth.getVoices()) {
             if (voice.name === voiceList.value) {
                 utterance.voice = voice;

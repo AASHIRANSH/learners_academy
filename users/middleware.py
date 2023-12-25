@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 import datetime
-import pytz
 
 # from django.core.cache import cache
 # from django.conf import settings

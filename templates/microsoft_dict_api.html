@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const data = JSON.stringify([
+            {
+                Text: 'I would really like to drive your car around the block a few times.'
+            }
+        ]);
+
+        let toLang = 'hi';
+
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener('readystatechange', function () {
+            if (this.readyState === this.DONE) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open('POST', 'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+toLang+'&api-version=3.0&profanityAction=NoAction&textType=plain');
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.setRequestHeader('X-RapidAPI-Key', '9ea8b16349msh45b993004bb2674p10f7f1jsnc7a403c6b963');
+        xhr.setRequestHeader('X-RapidAPI-Host', 'microsoft-translator-text.p.rapidapi.com');
+
+        xhr.send(data);
+    </script>
+</body>
+
+</html>

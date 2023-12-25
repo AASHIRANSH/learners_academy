@@ -99,8 +99,8 @@
             <a><div class="icon"><i class="fas fa-search"></i></div></a>
         </div>
         <div class="row">
-            <div class="col-auto mt-3">Search in:</div>
-            <div class="col-3 mt-3">
+            <div class="col mt-3">Search in:</div>
+            <div class="col mt-3">
                 <select name="pos" class="form-select" aria-label="Default select example">
                     <option value="" selected>--select--</option>
                     <option value="noun"{%if request.GET.in == "noun" %} selected{% endif %}>noun</option>
@@ -108,7 +108,7 @@
                     <option value="adjective"{%if request.GET.in == "adjective" %} selected{% endif %}>adjective</option>
                 </select>
             </div>
-            <div class="col-3 mt-3">
+            <div class="col mt-3">
                 <select name="in" class="form-select" aria-label="Default select example">
                     <option value="" selected>--select--</option>
                     <option value="definition"{%if request.GET.in == "definition" %} selected{% endif %}>definitions</option>

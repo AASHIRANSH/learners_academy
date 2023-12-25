@@ -1,4 +1,5 @@
 #User Model
+from tokenize import blank_re
 from django.contrib.auth.models import User
 from django.db import models
 import os
@@ -32,6 +33,12 @@ class Topic(models.Model):
 #     def __str__(self):
 #         return self.name
 
+# class Collocation(models.Model):
+#     word = models.CharField(max_length=50)
+#     pos = models.CharField(max_length=50)
+    
+#     def __str__(self):
+#         return self.word
 
 class Word(models.Model):
     category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
@@ -59,7 +66,7 @@ class Word(models.Model):
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
     # thesaurus = models.ForeignKey(Thesaurus, on_delete=models.SET_NULL)
-    # collocation = 
+    collocation = models.TextField(blank=True, null=True)
     pic = models.ImageField(upload_to='dictionary/', blank=True, null=True)
     pic_url = models.CharField(max_length=300,blank=True, null=True)
 
@@ -67,12 +74,13 @@ class Word(models.Model):
         return f'{self.word} ({self.pos})'
 
 class Revise(models.Model):
+    revise = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    date = models.DateField(auto_now=False, auto_now_add=True)
-    rvcount = models.IntegerField(default=0)
     note = models.TextField(blank=True, null=True)
+    rvcount = models.IntegerField(default=0)
+    date = models.DateField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
         return f"{self.word.word} ({self.word.pos})"
