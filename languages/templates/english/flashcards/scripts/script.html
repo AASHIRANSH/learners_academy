@@ -6,10 +6,10 @@
     var tag_start = false;
     
     for (let x of example.innerHTML) {
-        var tag_b = example.innerHTML.indexOf("**", tag_b_index);
+        let tag_b = example.innerHTML.indexOf("**", tag_b_index);
 
         if (tag_start == false){
-            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;font-weight:500;'>[");
+            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;'>[");
         } else {
             example.innerHTML = example.innerHTML.replace("**", "]</span>");
         }
@@ -44,7 +44,9 @@
     });
 
     var forms = document.getElementById("forms");
-    forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+    if("{{word.forms}}"){
+        forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+    }
     //var n = words.split(" ");
     //return n[n.length - 1];
 </script>
@@ -54,14 +56,16 @@
     let ukp = document.getElementById("ukpron");
     let usp = document.getElementById("uspron");
 
-    ukp.onclick= function() {
-        var audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
-        audio1.play();
-    }
-    usp.onclick= function() {
-        var audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
-        audio2.play();
-    }
+    ukp.addEventListener('click', function() {
+        //let audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
+        //audio1.play();
+        textToSpeech(`{{word.word}}`,"UK")
+    });
+    usp.addEventListener('click', function() {
+        //let audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
+        //audio2.play();
+        textToSpeech(`{{word.word}}`,"US")
+    });
 </script>
 
 <!--AUTO REFRESHER SCRIPT-->

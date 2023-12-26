@@ -125,7 +125,7 @@
                     <hr class="my-1">
                     {% for line in example %}
                         <li class="example">
-                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6" onclick="textToSpeech(this.parentNode.textContent)"></i>
+                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
                         </li>
                         <hr class="my-1">
                     {% endfor %}
@@ -146,7 +146,7 @@
         {% endif %}
 
         {% if word.synonyms %}
-            <div class="{% if word.antonyms %}col-5 {% endif %}p-0 me-2 mb-3">
+            <div class="{% if word.antonyms %}col {% endif %}p-0 me-2 mb-3">
                 <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
                     synonyms
                 </div>
@@ -157,11 +157,11 @@
         {% endif %}
         
         {% if word.antonyms %}
-            <div class="{% if word.synonyms %}col-5 {% endif %}mb-3 me-2 p-0">
-                <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
+            <div class="{% if word.synonyms %}col {% endif %}mb-3 me-2 p-0">
+                <div class="bg-danger text-white rounded-3 py-1 px-2 mb-2">
                     antonyms
                 </div>
-                <div class="mx-2">
+                <div id="antonyms" class="mx-2">
                     {{word.antonyms}}
                 </div>
             </div>
@@ -170,7 +170,7 @@
         {% if word.compare %}
             <div class="mb-3 p-0">
                 <div class="bg-primary text-white rounded-3 py-1 px-2 mb-2">
-                    Related Words
+                    related words
                 </div>
                 <div id="related" class="mx-2">
                     {{word.compare}}
@@ -299,8 +299,8 @@
 </div>
 <!-- Image -->
 <div class="modal fade" id="fullImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="text-center" style="width:100%;max-width:500px;height:auto;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="text-center" style="width:80%;max-width:450px;height:auto;">
             <img class="border border-4 border-secondary rounded" src="{{word.pic_url}}"/>
         </div>
     </div>
@@ -310,66 +310,77 @@
 <!-- Generating HTML content of Sentence Usage -->
 <script>
     // Sentence Usage
-    {
-        let contextSt = `{{word.context}}`.split("\n"); // context converted into list
-        var context = [];
+    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
+    var context = [];
+    var contextDoc = ``;
+    try {
         for ( let x of contextSt ){
-            x = x.split("+");
-            context.push(x);
+            xx = x.split("+");
+            context.push(xx);
         } // making list of context substrings
 
-        var contextDoc = ``;
 
-        if ("{{word.context}}"){
-            for ( let x of context ){
-                contextDoc += `<div class="mb-2">`;
-                for ( let y=0; y < x.length; y++ ){
-                    if (y==x.length-1){
-                        contextDoc += `<span class="d-inline-block bg-gray px-2 pb-1 rounded-3">${x[y]}</span>`;
-                    } else {
-                        contextDoc += `<span class="d-inline-block bg-gray px-2 pb-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
-                    }
+        for ( let x of context ){
+            contextDoc += `<div class="mb-2">`;
+            for ( let y=0; y < x.length; y++ ){
+                if (y==x.length-1){
+                    contextDoc += `<span class="d-inline-block bg-gray px-2 pb-1 rounded-3">${x[y]}</span>`;
+                } else {
+                    contextDoc += `<span class="d-inline-block bg-gray px-2 pb-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
                 }
-                contextDoc += `</div>`;
-            } // generating HTML content from context list
-
-            document.getElementById("context").innerHTML = contextDoc;
-        }
+            }
+            contextDoc += `</div>`;
+        } // generating HTML content from context list
+        document.getElementById("context").innerHTML = contextDoc;
+    }
+    catch(err){
+        alert(err);
     }
     //console.log(contextDoc);
 </script>
 <!-- Generating content -->
 <script>
-    let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
-    var synonymsDoc = ``;
+    try {
+        let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
+        var synonymsDoc = ``;
 
-    if ("{{word.synonyms}}"){
-        for ( let x of synonymsSt ){
-            x = x.trim()
-            synonymsDoc += `<button class="btn btn-outline-primary me-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
-        } // generating HTML content from context list
+        if ("{{word.synonyms}}"){
+            for ( let x of synonymsSt ){
+                x = x.trim()
+                synonymsDoc += `<button class="btn btn-outline-primary me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+            } // generating HTML content from context list
 
-        document.getElementById("synonyms").innerHTML = synonymsDoc;
+            document.getElementById("synonyms").innerHTML = synonymsDoc;
+        }
+
+
+        let relatedSt = `{{word.compare}}`.split(","); // context converted into list
+        var relatedDoc = ``;
+
+        if ("{{word.compare}}"){
+            for ( let x of relatedSt ){
+                x = x.trim()
+                relatedDoc += `<button class="btn btn-outline-primary me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+            } // generating HTML content from context list
+
+            document.getElementById("related").innerHTML = relatedDoc;
+        }
+
+        let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
+        var antonymsDoc = ``;
+
+        if ("{{word.antonyms}}"){
+            for ( let x of antonymsSt ){
+                x = x.trim()
+                antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+            } // generating HTML content from context list
+
+            document.getElementById("antonyms").innerHTML = antonymsDoc;
+        }
     }
-
-
-    let relatedSt = `{{word.compare}}`.split(","); // context converted into list
-    var relatedDoc = ``;
-
-    if ("{{word.compare}}"){
-        for ( let x of relatedSt ){
-            x = x.trim()
-            relatedDoc += `<button class="btn btn-outline-primary me-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
-        } // generating HTML content from context list
-
-        document.getElementById("related").innerHTML = relatedDoc;
+    catch(err) {
+        alert(err.message);
     }
-</script>
-<script>
-    var ex = document.querySelector(".example");
-    ex.addEventListener("click", function(){
-        console.log("Hi");
-    });
 </script>
 {% include "tts_2.html" %}
 {% include 'english/flashcards/scripts/script.html' %}

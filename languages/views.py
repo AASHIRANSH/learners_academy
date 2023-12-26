@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm, ExerciseForm, CommentForm, WordsForm
 #WordsDB Model
-from .models import Word, Revise
+from .models import Collocation, Word, Revise
 from .models import Post, Exercise, Comment, Like, Dislike
 
 from django.http import JsonResponse
@@ -404,7 +404,6 @@ def words(request):
     }
     return render(request, "english/words.html", vars)
 
-
 def dictionary(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     vars_get = request.GET
@@ -432,6 +431,30 @@ def dictionary(request):
         # "example":set(example),
     }
     return render(request, "english/dictionary.html", vars)
+
+def dictionary_collocation(request):
+    # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
+    vars_get = request.GET
+    search_query = vars_get.get("q","").strip()
+    search_pos = vars_get.get("pos","").strip()
+    search_in = vars_get.get("in","").strip()
+
+    if search_query:
+        words = Collocation.objects.filter(word__contains=f"{search_query}") | Collocation.objects.filter(pos=search_pos, definition__contains=f"{search_in}")
+    else:
+        words = Collocation.objects.all()
+    
+    paginator = Paginator(words, 10)  # Show 6 contacts per page.
+    page_number = vars_get.get("page") if vars_get.get("page") else 1
+    page_navi = int(page_number)-1
+    page_obj = paginator.get_page(page_number)
+
+    vars = {
+        "wordscount":words.count(),
+        "wordsp":page_obj,
+        "pagen":page_navi,
+    }
+    return render(request, "english/dictionary_collocation.html", vars)
 
 def my_words(request):
     words = Revise.objects.filter(user=request.user)

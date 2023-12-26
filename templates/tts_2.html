@@ -45,18 +45,25 @@
 
     synth.addEventListener("voiceschanged", voices);
 
-    function textToSpeech(text) {
+    function textToSpeech(text, tt) {
         let utterance = new SpeechSynthesisUtterance();
         utterance.volume = 1; // From 0 to 1
         utterance.rate = 0.8; // From 0.1 to 10
         utterance.pitch = 1; // From 0 to 2
         utterance.text = text;
-
         //utterance.lang = 'en';
-        for (let voice of synth.getVoices()) {
-            if (voice.name === voiceList.value) {
-                utterance.voice = voice;
-            }
+
+        // Select voice from html select options
+        //for (let voice of synth.getVoices()) {
+        //    if (voice.name === voiceList.value) {
+        //        utterance.voice = voice;
+        //    }
+        //}
+        
+        if (tt === 'US'){
+            utterance.voice = synth.getVoices()[9];
+        }else if(tt === 'UK'){
+            utterance.voice = synth.getVoices()[10];
         }
         synth.speak(utterance);
     }

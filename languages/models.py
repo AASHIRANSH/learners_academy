@@ -33,12 +33,15 @@ class Topic(models.Model):
 #     def __str__(self):
 #         return self.name
 
-# class Collocation(models.Model):
-#     word = models.CharField(max_length=50)
-#     pos = models.CharField(max_length=50)
+class Collocation(models.Model):
+    word = models.CharField(max_length=50)
+    pos = models.CharField(max_length=50)
+    entry_pos = models.CharField(max_length=50)
+    entry = models.TextField()
+    examples = models.TextField(blank=True, null=True)
     
-#     def __str__(self):
-#         return self.word
+    def __str__(self):
+        return self.word
 
 class Word(models.Model):
     category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
@@ -66,7 +69,6 @@ class Word(models.Model):
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
     # thesaurus = models.ForeignKey(Thesaurus, on_delete=models.SET_NULL)
-    collocation = models.TextField(blank=True, null=True)
     pic = models.ImageField(upload_to='dictionary/', blank=True, null=True)
     pic_url = models.CharField(max_length=300,blank=True, null=True)
 
