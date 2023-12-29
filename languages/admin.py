@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Topic, Post, Comment, Like, Dislike, Exercise
-from .models import Word, Revise, WordOfTheDay, Quote, Collocation, Thesaurus
+from .models import Word, Revise, WordOfTheDay, Quote, Thesaurus, Collocation 
 
 # Register your models here.
 @admin.register(Exercise)
