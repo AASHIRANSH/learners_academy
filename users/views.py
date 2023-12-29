@@ -317,3 +317,7 @@ def contact_us(request):
         "form":form
     }
     return render(request, "contact_us.html")
+
+def subscription(request):
+    user = request.user
+    return render(request,"subscription.html")

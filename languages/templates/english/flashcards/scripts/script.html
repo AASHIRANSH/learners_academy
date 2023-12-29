@@ -44,7 +44,8 @@
     });
 
     var forms = document.getElementById("forms");
-    if("{{word.forms}}"){
+    let formlen = `{{word.forms}}`.length;
+    if(formlen > 0){
         forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
     }
     //var n = words.split(" ");

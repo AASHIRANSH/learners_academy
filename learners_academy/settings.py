@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'languages.apps.LanguagesConfig',
     'coding.apps.CodingConfig',
-    'dashboard.apps.DashboardConfig'
+    'dashboard.apps.DashboardConfig',
+    'database.apps.DatabaseConfig'
 ]
 
 MIDDLEWARE = [

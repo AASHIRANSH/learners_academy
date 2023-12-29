@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import PostForm, ExerciseForm, CommentForm, WordsForm
+from .forms import PostForm, ExerciseForm, CommentForm, WordsForm, CollocationEntryForm
 #WordsDB Model
 from .models import Collocation, Word, Revise
 from .models import Post, Exercise, Comment, Like, Dislike
@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 import random, datetime, json
 ''' /home/muhammadsog/learners_academy/ '''
-# Create your views here.
+
 def index(request, id):
     with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
         db = fdb.read()
@@ -27,7 +27,6 @@ def index(request, id):
 def pres_ind(request):
 
     return render(request,"english/tenses/present_indefinite.html")
-
 
 
 def exercise_entry(request):
@@ -122,8 +121,11 @@ def post_list(request):
 def post_detail(request, pk):
     # user_obj = User.objects.get(username=request.user.username)
     post = get_object_or_404(Post, pk=pk)
+    post.views += 1
+    post.save()
     comments = post.comments.all()
     user_in_like_set = post.like_set.filter(user__username=request.user.username).exists()
+    
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -455,6 +457,55 @@ def dictionary_collocation(request):
         "pagen":page_navi,
     }
     return render(request, "english/dictionary_collocation.html", vars)
+
+def collocation_entry(request):
+    form = CollocationEntryForm()
+    datag = request.GET
+    if datag.get("edit") == "true":
+        word_id = datag.get("word_id")
+        word_obj = Collocation.objects.get(id=word_id)
+        form = CollocationEntryForm(instance=word_obj)
+
+    if request.method == "POST":
+        datap = request.POST
+        data = request.POST.copy()
+
+        # get_word_root = data.get('word_root')
+        get_word = data.get('word')
+        get_pos = data.get('pos')
+        get_usage = data.get('usage')
+
+        form = CollocationEntryForm(data)
+
+        if form.is_valid():
+
+            form.save()
+            messages.success(request, f'the entry of "{get_word}" was added')
+
+            vars = {
+                "form":form,
+                "word":get_word,
+                "pos":get_pos,
+                "usage":get_usage,
+            }
+            return render(request, "english/flashcards/add_card.html", vars)
+            # return HttpResponseRedirect('/english/flashcards/addcard')
+        else:
+            messages.error(request,"there was an error")
+            print(form.errors)
+    else:
+        pass
+    vars = {
+        "form":form,
+        "word":get_word,
+        "pos":get_pos,
+        "usage":get_usage,
+        "edit":False
+    }
+    return render(request,"english/collocation_entry.html", vars)
+
+def ipa_convert(request):
+    return render(request,"english/ipa_converter.html")
 
 def my_words(request):
     words = Revise.objects.filter(user=request.user)

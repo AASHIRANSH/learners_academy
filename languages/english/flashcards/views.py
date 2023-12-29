@@ -314,6 +314,7 @@ def fledit(request):
     return render(request,"redirect.html")
 
 def word_entry(request):
+    # if request.GET.get("lang") == "tr":
     if request.method == "POST":
         datap = request.POST
         data = request.POST.copy()
@@ -342,7 +343,6 @@ def word_entry(request):
                 ref_id = get_word+"_7"
         else:
             ref_id = ""
-        print(ref_id)
         
 
         # word_root = data.get('word_root')
@@ -404,6 +404,7 @@ def word_entry(request):
             # return HttpResponseRedirect('/english/flashcards/addcard')
         else:
             messages.error(request,"there was an error")
+            print(form.errors)
     else:
         form = WordsForm()
     vars = {

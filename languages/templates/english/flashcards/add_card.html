@@ -13,7 +13,7 @@
 
   <div class="container d-flex justify-content-center my-3">
     <div class="row col-12">
-      <form action="{% if edit %}{% url 'edit_card' %}?word_id={{request.GET.word_id}}{% else %}{% url 'add_card' %}{% endif %}" method="post" enctype="multipart/form-data">
+      <form action="{% if edit %}{% url 'edit_card' %}?word_id={{request.GET.word_id}}{% else %}{% url 'add_card' %}?lang={{request.GET.lang}}{% endif %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
         <!-- entry -->
@@ -29,14 +29,14 @@
             <!-- Root POS -->
             <div class="col-4">
               <label for="id_word_root_pos" class="form-label">Root POS:</label>
-              <select class="form-select" name="word_root_pos">
+              <select class="form-select" name="root_pos">
                 <option value="">-</option>
-                <option value="1">verb</option>
-                <option value="2">noun</option>
-                <option value="3">adjective</option>
-                <option value="4">adverb</option>
-                <option value="5">conjunction</option>
-                <option value="7">preposition</option>
+                <option value="verb">verb</option>
+                <option value="noun">noun</option>
+                <option value="adjective">adjective</option>
+                <option value="adverb">adverb</option>
+                <option value="conjunction">conjunction</option>
+                <option value="preposition">preposition</option>
               </select>
               {{form.word_root_pos.errors}}
             </div>
@@ -182,14 +182,10 @@
         </div>
 
         <div class="row">
-          <div class="col-3 mb-2">
+          <div class="col-6 mb-2">
             {{form.compare.label_tag}}
             <textarea class="form-control" name="compare" id="id_compare" rows="2">{% if edit %}{{form.compare.value}}{% endif %}</textarea>
             {{form.compare.errors}}
-          </div>
-
-          <div class="col-3 mb-2">
-            <!--Form Element-->
           </div>
 
           <div class="col-6 mb-2">

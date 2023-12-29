@@ -75,7 +75,7 @@
                 </div>
             </div>-->
 
-            <!-- Modal -->
+            <!-- Result Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-centered">
                     <div class="modal-content">
@@ -87,6 +87,7 @@
                         <!-- content by javascript -->
                         </div>
                         <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Copy</button>
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
                         </div>
                     </div>
@@ -106,7 +107,7 @@
             <button onclick="check()" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#exampleModal">Check</button>
         </div>
     {% else %}
-    No exercises available for this post.
+        No exercises for this post.
     {% endif %}
 
     <hr>
@@ -115,6 +116,7 @@
     </div>
     <hr>
 </div>
+
 <!-- Comment Form -->
 <div class="container-fluid my-5">
     <div class="row col-12">
@@ -174,7 +176,7 @@
     </div>
 </div>
 
-<script>//from post-content getting all exmple sentences li elements and adding class "".example" to each
+<script>//adding class ".example" to each example
     var post_content = document.getElementById("post-content");
     var li_arr = post_content.getElementsByTagName("li");
     for (var li in li_arr) {
@@ -186,7 +188,7 @@
     var fill_values = "{{post.fill_values}}"
     var target_vals = fill_values.split(",");
     var element = document.getElementsByClassName("example");
-    for (var line in element) {
+    for (let line in element) {
         for (var tvx in target_vals) {
             line_patt = new RegExp("\\b"+target_vals[tvx]+"\\b","gi")
             element[line].innerHTML = element[line].innerHTML.replace(line_patt, `<span style='color:#0d6efd;'>${target_vals[tvx]}</span>`);
@@ -290,7 +292,7 @@
     }
 </script>
 
-<script>//update repo
+<script>//update user reputation/points
     function expost(csrf) {
         xhttp = new XMLHttpRequest();
         //xhttp.onreadystatechange = function() {

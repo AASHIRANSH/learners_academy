@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Topic, Post, Comment, Like, Dislike, Exercise
-from .models import Word, Revise, WordOfTheDay, Quote
+from .models import Word, Revise, WordOfTheDay, Quote, Collocation, Thesaurus
 
 # Register your models here.
 @admin.register(Exercise)
@@ -13,6 +13,17 @@ class ExerciseView(admin.ModelAdmin):
 class WordsView(admin.ModelAdmin):
     list_display = ['word','pos']
 
+
+@admin.register(Collocation)
+class CollocationView(admin.ModelAdmin):
+    list_display = ['word','pos']
+
+@admin.register(Thesaurus)
+class ThesaurusView(admin.ModelAdmin):
+    list_display = ['name']
+
+    class Media:
+        js= ('/static/js/tinyinject.js',)
 
 
 @admin.register(WordOfTheDay)

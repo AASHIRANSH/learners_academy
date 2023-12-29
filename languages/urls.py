@@ -11,6 +11,9 @@ urlpatterns = [
     path('words/', views.words, name="words"),
     path('dictionary/', views.dictionary, name="dictionary"),
     path('dictcoll/', views.dictionary_collocation, name="dictionary_collocation"),
+    path('dictcollentry/', views.collocation_entry, name="collocation_entry"),
+
+    path('ipa_converter/', views.ipa_convert, name="ipa_convert"),
     path('mywords/', views.my_words, name="my_words"),
 
     path('exercise/', views.exercise, name="fexercise"),

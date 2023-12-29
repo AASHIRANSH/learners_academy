@@ -1,7 +1,7 @@
 #User Model
-from tokenize import blank_re
 from django.contrib.auth.models import User
 from django.db import models
+
 import os
 
 ''' this is to rename the image file uploaded by the user Profile Model below as dp '''
@@ -18,12 +18,13 @@ class Topic(models.Model):
         return self.name
 
 
-# class Thesaurus(models.Model):
-#     name = models.CharField(max_length=100)
-#     words = models.TextField()
+class Thesaurus(models.Model):
+    name = models.CharField(max_length=100)
+    content = models.TextField()
+    words = models.CharField(("Words"), max_length=100)
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.name
 
 
 # class RelatedWords(models.Model):
@@ -36,9 +37,11 @@ class Topic(models.Model):
 class Collocation(models.Model):
     word = models.CharField(max_length=50)
     pos = models.CharField(max_length=50)
+    usage = models.CharField(("Usage"), max_length=50, blank=True, null=True)
     entry_pos = models.CharField(max_length=50)
-    entry = models.TextField()
+    context = models.TextField()
     examples = models.TextField(blank=True, null=True)
+    # ref_id = models.BooleanField(default=False)
     
     def __str__(self):
         return self.word
@@ -97,9 +100,10 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
-    fill_values = models.CharField(max_length=200, blank=True, null=True)
-    #level = models.CharField(choices=(('a1','Beginner'),('a2','Pre Intermediate'),('b1','Intermediate'),('b2','Upper Intermediate'),('c1','Advanced'),('c2','Proficient')), max_length=50)
     image = models.ImageField(upload_to=content_file_name, blank=True, null=True)
+    fill_values = models.CharField(max_length=200, blank=True, null=True)
+    views = models.IntegerField(default=0)
+    level = models.CharField(choices=(('a1','Beginner'),('a2','Pre Intermediate'),('b1','Intermediate'),('b2','Upper Intermediate'),('c1','Advanced'),('c2','Proficient')), max_length=50, blank=True, null=True)
 
     # def is_pub(self):
     #     return f"{'published' if self.published else 'unpublished'}"

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %} Collocation Entry {% endblock title %}
+
+{% block body %}
+
+  {% include 'messages.html' %}
+
+  <div class="position-absolute top-0 start-0 m-3">
+    <button class="btn btn-outline-secondary" onclick="window.location.assign('/')">
+      <i class="fa-solid fa-house fs-4"></i>
+    </button>
+  </div>
+
+  <form action="{% if edit %}{% url 'collocation_entry' %}?word_id={{request.GET.word_id}}{% else %}{% url 'collocation_entry' %}?lang={{request.GET.lang}}{% endif %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container my-5">
+      <!-- entry -->
+      <div class="row mb-3">
+        <div class="row col-4">
+          <!-- word -->
+          <div class="col-12 mb-2">
+            {{form.word.label_tag}}
+            <input type="text" class="form-control" name="word" value="{% if edit %}{{form.word.value}}{% else %}{{word|default:''}}{% endif %}" id="id_word"></input>
+            {{form.word.errors}}
+          </div>
+          <!-- pos -->
+          <div class="col-12 mb-2">
+            <label for="pos">POS:</label>
+            <select class="form-select" name="pos">
+                <option value="">--</option>
+                <option value="noun" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun</option>
+                <option value="verb" {% if pos == 'verb' or pos == None %}selected{% endif %}>verb</option>
+                <option value="phrasal verb" {% if pos == 'phrasal verb' or form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
+                <option value="adjective" {% if pos == 'adjective' or form.pos.value == 'adjective' %}selected{% endif %}>adjective</option>
+                <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
+                <option value="idiom" {% if pos == 'idiom' or form.pos.value == 'idiom' %}selected{% endif %}>idiom</option>
+                <option value="adverb" {% if pos == 'adverb' or form.pos.value == 'adverb' %}selected{% endif %}>adverb</option>
+                <option value="preposition" {% if pos == 'preposition' or form.pos.value == 'preposition' %}selected{% endif %}>preposition</option>
+                <option value="conjunction" {% if pos == 'conjunction' or form.pos.value == 'conjunction' %}selected{% endif %}>conjunction</option>
+                <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
+                <option value="slang" {% if pos == 'slang' or form.pos.value == 'slang' %}selected{% endif %}>slang</option>
+                <option value="abbreviation" {% if pos == 'abbreviation' or form.pos.value == 'abbreviation' %}selected{% endif %}>abbreviation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row col-8 p-0 m-0">
+          <div class="col-12 mb-2">
+            {{form.usage.label_tag}}
+            <input type="text" class="form-control" name="usage" value="{% if edit %}{{form.usage.value}}{% else %}{{usage|default:''}}{% endif %}" id="id_usage"></input>
+            {{form.usage.errors}}
+          </div>
+
+          <!-- Entry Pos -->
+          <div class="col-12 mb-2">
+            {{form.entry_pos.label_tag}}
+            <input type="text" class="form-control" name="entry_pos" value="{% if edit %}{{form.entry_pos.value}}{% else %}{{entry_pos|default:''}}{% endif %}" id="id_entry_pos"></input>
+            {{form.entry_pos.error}}
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-4">
+          <label for="context">Example Heading:</label>
+          <textarea class="form-control" name="context" id="id_context" rows="6">{% if edit %}{{form.context.value}}{% endif %}</textarea>
+          {{form.context.errors}}
+        </div>
+
+        <div class="col-8">
+          <label for="c_2">Example Sentences:</label>
+          <textarea class="form-control" rows="6" name="examples" id="id_examples">{% if edit %}{{form.examples.value}}{% endif %}</textarea>
+        </div>
+      </div>
+
+      <div class="row justify-content-end">
+        <div class="col-auto mb-2">
+          <input type="submit" value="Submit" class="btn btn-success"/>
+        </div>
+      </div>
+    </div>
+  </form>
+{% endblock body %}
