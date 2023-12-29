@@ -39,7 +39,7 @@ class Collocation(models.Model):
     pos = models.CharField(max_length=50)
     usage = models.CharField(("Usage"), max_length=50, blank=True, null=True)
     entry_pos = models.CharField(max_length=50)
-    context = models.TextField()
+    context = models.TextField(blank=True, null=True)
     examples = models.TextField(blank=True, null=True)
     # ref_id = models.BooleanField(default=False)
     
