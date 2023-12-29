@@ -47,9 +47,8 @@ class Collocation(models.Model):
         return self.word
 
 class Word(models.Model):
-    # question = models.CharField(("Question"), max_length=200)
-    # official = models.ManyToManyField(User, blank=True)
     category = models.ForeignKey(Topic, on_delete=models.SET_NULL, blank=True, null=True)
+    # official = models.ManyToManyField(User, blank=True)
     ref_id = models.CharField(max_length=50, blank=True, null=True)
     word_root = models.CharField(max_length=100, blank=True, null=True)
     root_pos = models.CharField(max_length=50, blank=True, null=True)
@@ -72,7 +71,7 @@ class Word(models.Model):
     synonyms = models.TextField(blank=True, null=True)
     antonyms = models.TextField(blank=True, null=True)
     compare = models.TextField(blank=True, null=True)
-    thesaurus = models.ForeignKey(Thesaurus, on_delete=models.SET_NULL, blank=True, null=True)
+    # thesaurus = models.ForeignKey(Thesaurus, on_delete=models.SET_NULL)
     pic = models.ImageField(upload_to='dictionary/', blank=True, null=True)
     pic_url = models.CharField(max_length=300,blank=True, null=True)
 

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm, ExerciseForm, CommentForm, WordsForm, CollocationEntryForm
 #WordsDB Model
-from .models import Word, Revise #Collocation,
+from .models import Collocation, Word, Revise
 from .models import Post, Exercise, Comment, Like, Dislike
 
 from django.http import JsonResponse

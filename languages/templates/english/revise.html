@@ -29,8 +29,8 @@
 
                     <div class="row col-12 mb-3">
                         <div class="col-auto">
-                            <div id="ukpron" class="text-primary fs-5" style="">UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
-                            <div id="uspron" class="text-danger fs-5" style="">US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                            <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer d-sm-none d-lg-block"></i> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span></div>
+                            <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span></div>
                         </div>
 
                         {% if word.pic %}
@@ -123,7 +123,7 @@
                     <hr class="my-1">
                     {% for line in example %}
                         <li class="example">
-                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary d-sm-none d-lg-block" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
                         </li>
                         <hr class="my-1">
                     {% endfor %}
@@ -318,20 +318,18 @@
     } // making list of context substrings
 
 
-    if ("{{word.context}}"){
-        for ( let x of context ){
-            contextDoc += `<div class="mb-2">`;
-            for ( let y=0; y < x.length; y++ ){
-                if (y==x.length-1){
-                    contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
-                } else {
-                    contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
-                }
+    for ( let x of context ){
+        contextDoc += `<div class="mb-2">`;
+        for ( let y=0; y < x.length; y++ ){
+            if (y==x.length-1){
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
+            } else {
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
             }
-            contextDoc += `</div>`;
-        } // generating HTML content from context list
-        document.getElementById("context").innerHTML = contextDoc;
-    }
+        }
+        contextDoc += `</div>`;
+    } // generating HTML content from context list
+    document.getElementById("context").innerHTML = contextDoc;
     //console.log(contextDoc);
 </script>
 <!-- Generating content -->
@@ -362,7 +360,6 @@
         document.getElementById("synonyms").innerHTML += relatedDoc;
     }
 
-    
     let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
     var antonymsDoc = ``;
 
