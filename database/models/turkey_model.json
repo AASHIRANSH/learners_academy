@@ -1,0 +1,12 @@
+{
+    "pk_count": 1,
+    "model_name": "turkey_model",
+    "objects": [
+        {
+            "pk": 1,
+            "word": "myfirstword",
+            "pos": "noun",
+            "definition": "this is a word"
+        }
+    ]
+}

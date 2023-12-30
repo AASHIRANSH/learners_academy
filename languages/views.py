@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm, ExerciseForm, CommentForm, WordsForm, CollocationEntryForm
 #WordsDB Model
-from .models import Collocation, Word, Revise
+from .models import Word, Revise, Collocation
 from .models import Post, Exercise, Comment, Like, Dislike
 
 from django.http import JsonResponse
@@ -461,11 +461,6 @@ def dictionary_collocation(request):
 def collocation_entry(request):
 
     datag = request.GET
-
-    get_word = datag.get('word')
-    get_pos = datag.get('pos')
-    get_usage = datag.get('usage')
-
     if datag.get("edit") == "true":
         word_id = datag.get("word_id")
         word_obj = Collocation.objects.get(id=word_id)
@@ -475,6 +470,10 @@ def collocation_entry(request):
         datap = request.POST
         data = request.POST.copy()
 
+        get_word = data.get('word')
+        get_pos = data.get('pos')
+        get_usage = data.get('usage')
+
         form = CollocationEntryForm(data)
 
         if form.is_valid():
@@ -482,11 +481,19 @@ def collocation_entry(request):
             form.save()
             messages.success(request, f'the entry of "{get_word}" was added')
             
-            return render(request, "english/flashcards/add_card.html", vars)
+            vars = {
+                "form":form,
+                "word":get_word,
+                "pos":get_pos,
+                "usage":get_usage,
+                "edit":False
+            }
+            
+            return render(request, "english/collocation_entry.html", vars)
             # return HttpResponseRedirect('/english/flashcards/addcard')
         else:
-            messages.error(request,"there was an error")
-            print(form.errors)
+            messages.error(request,form.errors)
+
     else:
         form = CollocationEntryForm()
     vars = {

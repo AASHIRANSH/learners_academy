@@ -17,23 +17,27 @@ dir_list = os.listdir(models_path)
 class Models:
 
     def __init__(self, *args, **kwargs):
-        with open(f"{models_path/kwargs['name']}.json") as model:
+        with open(f"{models_path/self.mode_name}.json") as model:
             mm = json.load(model)
         self.model = mm
 
     def create(*args, **kwargs):
+
+        model_name = Models.model_name
+
         def_model = {
             "pk_count":0,
-            "model_name":kwargs["model_name"],
+            "model_name":model_name,
             "objects":[]
         }
-        if kwargs["model_name"]+".json" in dir_list:
-            raise Exception(f'''The model "{kwargs["model_name"]}" already exists.''')
+
+        if model_name+".json" in dir_list:
+            raise Exception(f'''The model "{model_name}" already exists.''')
         else:
-            with open(f"{models_path/kwargs['model_name']}.json", mode="w") as write_model:
+            with open(f"{models_path/model_name}.json", mode="w") as write_model:
                 # new_model.write(json.dumps(def_model, indent=4))
                 json.dump(def_model,fp=write_model, indent=4)
-                print(f'''The model "{kwargs["model_name"]}" was created successfully''')
+                print(f'''The model "{model_name}" was created successfully''')
 
     def all():
         if len(dir_list) == 0:
@@ -60,13 +64,17 @@ class Models:
     class objects:
 
         def create(*args, **kwargs):
-            if kwargs["model_name"]+".json" in dir_list:
-                with open(f"{models_path/kwargs['model_name']}.json") as model:
+
+            model_name = Models.model_name
+
+            if model_name+".json" in dir_list:
+                with open(f"{models_path/model_name}.json") as model:
                     model = json.load(model)
             
             obj_dict = {
                 "pk":model["pk_count"]+1
             }
+
             for field in Models.fields:
                 if field in kwargs.keys():
                     obj_dict.update({
@@ -76,38 +84,63 @@ class Models:
             model["pk_count"]+= 1
             model["objects"].append(obj_dict)
                 
-            with open(f"{models_path/kwargs['model_name']}.json", mode="w") as write_model:
+            with open(f"{models_path/model_name}.json", mode="w") as write_model:
                 # new_model.write(json.dumps(def_model, indent=4))
                 json.dump(model,fp=write_model, indent=4)
-                print(f'''The model "{kwargs["model_name"]}" was updated successfully''')
+                print(f'''The model "{model_name}" was updated successfully''')
         
         def get(*args, **kwargs):
-            allowed_fields = Models.fields
-            if kwargs["name"]+".json" in dir_list:
-                with open(f"{models_path/kwargs['name']}.json") as model:
-                    model = json.load(model)
-                return model
+            model_name = Models.model_name
+            # allowed_fields = Models.fields
+
+            if model_name+".json" in dir_list:
+                with open(f"{models_path/model_name}.json") as model:
+                    model_objects = json.load(model)["objects"]
+
+                if len(model_objects) == 0:
+                    raise Exception("The model is empty")
+                for x in model_objects:
+                    if x["pk"] == kwargs["pk"]:
+                        model = x
+                        return model
             else:
-                raise Exception("No model(s) found!")
+                raise Exception("No object found with id {}!".format(kwargs["pk"]))
+
+        # def all(*args, **kwargs):
+        #     if kwargs["model_name"]+".json" in dir_list:
+        #         with open(f"{models_path/kwargs['model_name']}.json") as model:
+                    
+        #         return model
+        #     else:
+        #         raise Exception("No model(s) found!")
+
+
 
 ''' Tables '''
 class Turkey(Models):
+    Models.model_name = "turkey_model"
     Models.fields = ["word","pos","definition","example"]
 
 
-# Turkey.create(model_name="againmodel",
-#     word="myfirstword",
-#     pos="noun",
-#     definition="this is a word"
-# )
+''' Create Model '''
+# Turkey.create()
     
-# Turkey.objects.create(model_name="againmodel",
-#     word="myfirstword",
-#     pos="noun",
-#     definition="this is a word"
-# )
-    
-Turkey.delete(name="againmodel")
 
+''' Create Model Objects '''
+# Turkey.objects.create(
+#     word="myfirstword",
+#     pos="noun",
+#     definition="this is a word"
+# )
+
+
+''' Get Model Objects '''
+# x = Turkey.objects.get(pk=2)
 # print(x)
+
+
+''' Delete Model '''
+# Turkey.delete(name="againmodel")
+
+
 # print(dir(x))
