@@ -10,8 +10,10 @@ urlpatterns = [
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
     path('dictionary/', views.dictionary, name="dictionary"),
+    path('collocation/<int:id>', views.collocation_view, name="collocation_view"),
     path('dictcoll/', views.dictionary_collocation, name="dictionary_collocation"),
     path('dictcollentry/', views.collocation_entry, name="collocation_entry"),
+    path('dictcolledit/', views.collocation_edit, name="collocation_edit"),
 
     path('ipa_converter/', views.ipa_convert, name="ipa_convert"),
     path('mywords/', views.my_words, name="my_words"),

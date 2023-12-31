@@ -414,7 +414,7 @@ def dictionary(request):
     search_in = vars_get.get("in","").strip()
 
     if search_query:
-        words = Word.objects.filter(word__contains=f"{search_query}") | Word.objects.filter(pos=search_pos, definition__contains=f"{search_in}")
+        words = Word.objects.filter(word=search_query) | Word.objects.filter(word__contains=search_query) | Word.objects.filter(pos=search_pos, definition__contains=search_in)
     else:
         words = Word.objects.all()
     
@@ -460,12 +460,6 @@ def dictionary_collocation(request):
 
 def collocation_entry(request):
 
-    datag = request.GET
-    if datag.get("edit") == "true":
-        word_id = datag.get("word_id")
-        word_obj = Collocation.objects.get(id=word_id)
-        form = CollocationEntryForm(instance=word_obj)
-
     if request.method == "POST":
         datap = request.POST
         data = request.POST.copy()
@@ -493,17 +487,43 @@ def collocation_entry(request):
             # return HttpResponseRedirect('/english/flashcards/addcard')
         else:
             messages.error(request,form.errors)
-
     else:
         form = CollocationEntryForm()
     vars = {
         "form":form,
-        "word":get_word,
-        "pos":get_pos,
-        "usage":get_usage,
         "edit":False
     }
     return render(request,"english/collocation_entry.html", vars)
+
+def collocation_edit(request):
+    data = request.GET
+    word_id = data.get('word_id')
+    word_obj = Collocation.objects.get(id=word_id)
+    form = CollocationEntryForm(instance=word_obj)
+
+    if request.method == "POST":
+        datap = request.POST
+        data_form = CollocationEntryForm(datap or None, instance=word_obj)
+        if data_form.is_valid():
+            data_form.save()
+            messages.success(request, "Great! the entry was edited!")
+            return redirect("/english/collocation/"+word_id)
+        else:
+            messages.error(request,form.errors)
+            return HttpResponseRedirect('/english/revise')
+
+    vars = {
+        "form":form,
+        "edit":True
+    }
+    return render(request, "english/collocation_entry.html", vars)
+
+def collocation_view(request, id):
+    word = Collocation.objects.get(id=id)
+    vars = {
+        "word":word
+    }
+    return render(request,"english/collocation.html",vars)
 
 def ipa_convert(request):
     return render(request,"english/ipa_converter.html")

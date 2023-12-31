@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <form action="{% if edit %}{% url 'collocation_entry' %}?word_id={{request.GET.word_id}}{% else %}{% url 'collocation_entry' %}?lang={{request.GET.lang}}{% endif %}" method="post" enctype="multipart/form-data">
+  <form action="{% if edit %}{% url 'collocation_edit' %}?word_id={{request.GET.word_id}}{% else %}{% url 'collocation_entry' %}?lang={{request.GET.lang}}{% endif %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="container my-5">
       <!-- entry -->

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+
+{% include "header.html" %}
+{% include 'messages.html' %}
+
+<div class="container mt-2">
+    <div class="row">
+        <div class="d-flex justify-content-between align-items-baseline">
+            <div class="row col-9 d-flex align-items-baseline">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/dictcolledit?word_id={{word.id}}')"{% endif %}>
+                    {{word.word}}
+                </div>
+                <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                    {{word.pos}}
+                </div>
+
+                <div class="col-12">
+                    {% if word.grade|length > 0 %}
+                    <div class="col-12 mb-2">
+                        <div id="grade" class="col-12 d-inline fs-5 text-uppercase px-2">
+                            {{word.grade}}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row col-12 mb-3">
+                        <div class="col-auto">
+                            <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span></div>
+                            <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-2">
+                <div class="col-12 mb-1">
+                    <button class="btn btn-secondary col-12 fs-5">{{rv_count}} / {{rv_total_count}}</button>
+                </div>
+            </div>
+        </div>
+        
+        {% if word.pos != 'idiom' %}
+        {% if word.pos != 'phrasal verb' %}
+        {% if forms|length > 1 %}
+        <div id="forms-cont" class="row">
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Other Forms
+                </button>
+            </div>
+            <div class="col-auto" style="position:absolute;left:16%;translate:0 -35%">
+                <div class="collapse" id="collapseExample">
+                    <div id="forms" class="card card-body">
+                        {% for line in forms %}
+                            <div>&#x2022; {{line}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+
+        <span class="text-white bg-primary rounded-top mt-3">
+            Definition
+        </span>
+        <div id="def-container" class="position-relative col-12 rounded-bottom mb-3">
+            <div id="def" class="col-12 fs-4 p-2">
+                <div class="fs-6">{% if word.def_inf %}{{word.def_inf}}{% endif %} {{word.topic.name}}</div>
+
+                <div id="carouselExampleControls" class="carousel slide">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <div class="">{{word.usage}}</div>
+                        </div>
+                        <div class="carousel-item">
+                            {% if word.definition_hindi %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="position-absolute top-0 end-0 m-2">
+                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
+                </div>
+            </div>
+        </div>
+
+        {% if example %}
+            <span class="text-white bg-secondary rounded-top">
+                Example Sentences
+            </span>
+            <div id="example" class="col-12 fs-4 fst-italic border-start border-4 border-secondary bg-gray bg-opacity-10 rounded-bottom py-3 overflow-auto mb-3">
+                <ul>
+                    <hr class="my-1">
+                    {% for line in example %}
+                        <li class="example">
+                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary d-sm-none d-lg-block" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                        </li>
+                        <hr class="my-1">
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Generating HTML content of Sentence Usage -->
+<script>
+    // Sentence Usage
+    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
+    var context = [];
+    var contextDoc = ``;
+
+    for ( let x of contextSt ){
+        xx = x.split("+");
+        context.push(xx);
+    } // making list of context substrings
+
+
+    for ( let x of context ){
+        contextDoc += `<div class="mb-2">`;
+        for ( let y=0; y < x.length; y++ ){
+            if (y==x.length-1){
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
+            } else {
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+            }
+        }
+        contextDoc += `</div>`;
+    } // generating HTML content from context list
+    document.getElementById("context").innerHTML = contextDoc;
+    //console.log(contextDoc);
+</script>
+<!-- Generating content -->
+<script>
+    
+    let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
+    var synonymsDoc = ``;
+
+    if ("{{word.synonyms}}"){
+        for ( let x of synonymsSt ){
+            x = x.trim()
+            synonymsDoc += `<span class="d-inline-block border-bottom border-3 border-primary pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("synonyms").innerHTML = synonymsDoc;
+    }
+
+
+    let relatedSt = `{{word.compare}}`.split(","); // context converted into list
+    var relatedDoc = ``;
+
+    if ("{{word.compare}}"){
+        for ( let x of relatedSt ){
+            x = x.trim()
+            relatedDoc += `<span class="d-inline-block border-bottom border-3 border-info pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("synonyms").innerHTML += relatedDoc;
+    }
+
+    let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
+    var antonymsDoc = ``;
+
+    if ("{{word.antonyms}}"){
+        for ( let x of antonymsSt ){
+            x = x.trim()
+            antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+        } // generating HTML content from context list
+
+        document.getElementById("antonyms").innerHTML = antonymsDoc;
+    }
+</script>
+{% include "tts_2.html" %}
+{% include 'english/flashcards/scripts/script.html' %}
+{% endblock body %}
