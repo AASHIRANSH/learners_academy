@@ -10,6 +10,7 @@ urlpatterns = [
     path('word/<int:id>', views.word, name="word"),
     path('words/', views.words, name="words"),
     path('dictionary/', views.dictionary, name="dictionary"),
+    path('dictionaryjson/', views.dictionary_json, name="dictionary_json"),
     path('collocation/<int:id>', views.collocation_view, name="collocation_view"),
     path('dictcoll/', views.dictionary_collocation, name="dictionary_collocation"),
     path('dictcollentry/', views.collocation_entry, name="collocation_entry"),

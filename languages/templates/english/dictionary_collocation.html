@@ -19,7 +19,7 @@
 
 
 <div class="container-fluid bg-gray text-primary text-center p-4">
-    <span class="fs-2 fw-bold learner">Learners' Collocation Dictionary</span>
+    <span class="display-5 fw-bold learner" style="font-family:Majalla;">Learners' Collocation Dictionary</span>
 </div>
 <div class="rule"></div>
 
@@ -71,7 +71,8 @@
             <tr class="bg-gray text-primary border-primary">
                 <th style="width:5%;">#</th>
                 <th style="width:20%;">Word</th>
-                <th style="width:10%;">PoS</th>
+                <th style="width:20%;">PoS</th>
+                <th style="width:40%;">Definition</th>
                 <th style="width:10%;text-align:center;">Fav</th>
             </tr>
         </thead>
@@ -81,6 +82,7 @@
                 <td>{% if forloop.last %}{{request.GET.page|default:1}}0{% else %}{{pagen}}{{forloop.counter}}{% endif %}</td>
                 <td onclick="window.location.assign(`{% url 'collocation_view' word.id %}`)">{{word.word}}</td>
                 <td>{{word.pos}}</td>
+                <td>{{word.usage}}</td>
                 <td class="text-center">
                     {% if word.revise_set.count > 0 %}
                     <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
@@ -96,6 +98,7 @@
                 <th>#</th>
                 <th>Word</th>
                 <th>PoS</th>
+                <th>Definition</th>
                 <th>Fav</th>
             </tr>
         </tfoot>

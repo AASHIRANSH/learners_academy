@@ -7,7 +7,7 @@ from .models import Word, Revise, Collocation
 from .models import Post, Exercise, Comment, Like, Dislike
 
 from django.http import JsonResponse
-
+from django.core import serializers
 from django.contrib.auth.models import User
 import random, datetime, json
 ''' /home/muhammadsog/learners_academy/ '''
@@ -434,6 +434,37 @@ def dictionary(request):
     }
     return render(request, "english/dictionary.html", vars)
 
+''' Creates a file with all dictiory headwords '''
+def dictionary_json(request):
+    # vars_get = request.GET
+    # search_query = vars_get.get("q","").strip()
+
+    # words = Word.objects.filter(word__contains=search_query).order_by('word')[0:10]
+    words = Word.objects.all().order_by('word')
+    
+    headwords = []
+    pos = []
+    unique = []
+    for x in words:
+        if x.word+x.pos not in unique:
+            headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
+            pos.append(x.pos)
+        unique.append(x.word+x.pos)
+    
+    with open("database/models/headwords.json", mode="w") as jsondict:
+        json.dump(headwords, fp=jsondict)
+
+    with open("database/models/pos.json", mode="w") as jsondict:
+        json.dump(pos, fp=jsondict)
+
+
+    # adv_model = serializers.serialize("json",words)
+    # adv_model = json.loads(adv_model)
+    
+
+    # return JsonResponse(adv_model, safe=False)
+    return 
+
 def dictionary_collocation(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     vars_get = request.GET
@@ -471,9 +502,9 @@ def collocation_entry(request):
         form = CollocationEntryForm(data)
 
         if form.is_valid():
-
             form.save()
             messages.success(request, f'the entry of "{get_word}" was added')
+            # messages.success(request, data)
             
             vars = {
                 "form":form,
@@ -509,8 +540,7 @@ def collocation_edit(request):
             messages.success(request, "Great! the entry was edited!")
             return redirect("/english/collocation/"+word_id)
         else:
-            messages.error(request,form.errors)
-            return HttpResponseRedirect('/english/revise')
+            messages.error(request, form.errors)
 
     vars = {
         "form":form,

@@ -29,7 +29,7 @@
 
                     <div class="row col-12 mb-3">
                         <div class="col-auto">
-                            <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer d-sm-none d-lg-block"></i> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span></div>
+                            <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span></div>
                             <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span></div>
                         </div>
 
@@ -123,7 +123,7 @@
                     <hr class="my-1">
                     {% for line in example %}
                         <li class="example">
-                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary d-sm-none d-lg-block" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                            <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
                         </li>
                         <hr class="my-1">
                     {% endfor %}

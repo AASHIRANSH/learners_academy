@@ -30,7 +30,7 @@
             <select class="form-select" name="pos">
                 <option value="">--</option>
                 <option value="noun" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun</option>
-                <option value="verb" {% if pos == 'verb' or pos == None %}selected{% endif %}>verb</option>
+                <option value="verb" {% if pos == 'verb' or form.pos.value == 'verb' %}selected{% endif %}>verb</option>
                 <option value="phrasal verb" {% if pos == 'phrasal verb' or form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
                 <option value="adjective" {% if pos == 'adjective' or form.pos.value == 'adjective' %}selected{% endif %}>adjective</option>
                 <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
@@ -45,15 +45,15 @@
           </div>
         </div>
 
-        <div class="row col-8 p-0 m-0">
-          <div class="col-12 mb-2">
+        <div class="row col-8 p-0 mb-0">
+          <div class="col-12">
             {{form.usage.label_tag}}
             <input type="text" class="form-control" name="usage" value="{% if edit %}{{form.usage.value}}{% else %}{{usage|default:''}}{% endif %}" id="id_usage"></input>
             {{form.usage.errors}}
           </div>
 
           <!-- Entry Pos -->
-          <div class="col-12 mb-2">
+          <div class="col-12">
             {{form.entry_pos.label_tag}}
             <input type="text" class="form-control" name="entry_pos" value="{% if edit %}{{form.entry_pos.value}}{% else %}{{entry_pos|default:''}}{% endif %}" id="id_entry_pos"></input>
             {{form.entry_pos.error}}
@@ -61,24 +61,140 @@
         </div>
       </div>
 
-      <div class="row mb-3">
-        <div class="col-4">
+      <div id="entry" class="row mb-3">
+        <div class="col-4 mb-3">
           <label for="context">Example Heading:</label>
-          <textarea class="form-control" name="context" id="id_context" rows="6">{% if edit %}{{form.context.value}}{% endif %}</textarea>
-          {{form.context.errors}}
+          <textarea class="form-control" name="context" id="id_context" rows="3">{% if edit %}{{form.context.value}}{% endif %}</textarea>
         </div>
 
-        <div class="col-8">
-          <label for="c_2">Example Sentences:</label>
-          <textarea class="form-control" rows="6" name="examples" id="id_examples">{% if edit %}{{form.examples.value}}{% endif %}</textarea>
+        <div class="col-8 mb-3">
+          <label for="examples">Example Sentences:</label>
+          <textarea class="form-control" rows="3" name="examples" id="id_examples">{% if edit %}{{form.examples.value}}{% endif %}</textarea>
         </div>
+
+        {% if edit %}
+          {% if form.context_1.value %}
+            <hr>
+            <div class="col-12 mb-3">
+              {{form.entry_pos_1.label_tag}}
+              <input type="text" class="form-control" name="entry_pos_1" value="{% if edit %}{{form.entry_pos_1.value}}{% else %}{{entry_pos_1|default:''}}{% endif %}" id="id_entry_pos_1"></input>
+              {{form.entry_pos.error}}
+            </div>
+
+            <div class="col-4 mb-3">
+              <label for="context_1">Example Heading2:</label>
+              <textarea class="form-control" name="context_1" id="id_context_1" rows="3">{{form.context_1.value}}</textarea>
+            </div>
+    
+            <div class="col-8 mb-3">
+              <label for="examples_1">Example Sentences2:</label>
+              <textarea class="form-control" rows="3" name="examples_1" id="id_examples_1">{{form.examples_1.value}}</textarea>
+            </div>
+          {% endif %}
+
+          {% if form.context_2.value %}
+            <hr>
+            <div class="col-12 mb-3">
+              {{form.entry_pos_2.label_tag}}
+              <input type="text" class="form-control" name="entry_pos_2" value="{% if edit %}{{form.entry_pos_2.value}}{% else %}{{entry_pos_2|default:''}}{% endif %}" id="id_entry_pos_2"></input>
+              {{form.entry_pos.error}}
+            </div>
+
+            <div class="col-4 mb-3">
+              <label for="context_2">Example Heading2:</label>
+              <textarea class="form-control" name="context_2" id="id_context_2" rows="3">{{form.context_2.value}}</textarea>
+            </div>
+    
+            <div class="col-8 mb-3">
+              <label for="examples_2">Example Sentences2:</label>
+              <textarea class="form-control" rows="3" name="examples_2" id="id_examples_2">{{form.examples_2.value}}</textarea>
+            </div>
+          {% endif %}
+
+          {% if form.context_3.value %}
+            <hr>
+            <div class="col-12 mb-3">
+              {{form.entry_pos_3.label_tag}}
+              <input type="text" class="form-control" name="entry_pos_3" value="{% if edit %}{{form.entry_pos_3.value}}{% else %}{{entry_pos_3|default:''}}{% endif %}" id="id_entry_pos_3"></input>
+              {{form.entry_pos.error}}
+            </div>
+
+            <div class="col-4 mb-3">
+              <label for="context_3">Example Heading2:</label>
+              <textarea class="form-control" name="context_3" id="id_context_3" rows="3">{{form.context_3.value}}</textarea>
+            </div>
+    
+            <div class="col-8 mb-3">
+              <label for="examples_3">Example Sentences2:</label>
+              <textarea class="form-control" rows="3" name="examples_3" id="id_examples_3">{{form.examples_3.value}}</textarea>
+            </div>
+          {% endif %}
+
+          {% if form.context_4.value %}
+            <hr>
+            <div class="col-12 mb-3">
+              {{form.entry_pos_4.label_tag}}
+              <input type="text" class="form-control" name="entry_pos_4" value="{% if edit %}{{form.entry_pos_4.value}}{% else %}{{entry_pos_4|default:''}}{% endif %}" id="id_entry_pos_4"></input>
+              {{form.entry_pos.error}}
+            </div>
+
+            <div class="col-4 mb-3">
+              <label for="context_4">Example Heading2:</label>
+              <textarea class="form-control" name="context_4" id="id_context_4" rows="3">{{form.context_4.value}}</textarea>
+            </div>
+    
+            <div class="col-8 mb-3">
+              <label for="examples_4">Example Sentences2:</label>
+              <textarea class="form-control" rows="3" name="examples_4" id="id_examples_4">{{form.examples_4.value}}</textarea>
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
 
-      <div class="row justify-content-end">
-        <div class="col-auto mb-2">
+      <div class="row">
+        <div class="col">
+          <button id="addBtn" type="button" class="btn btn-secondary text-white">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="col text-end mb-2">
           <input type="submit" value="Submit" class="btn btn-success"/>
         </div>
       </div>
     </div>
   </form>
+
+  <script>//Add Entry
+    let btn = document.getElementById("addBtn");
+    let entry = document.getElementById("entry");
+
+    btn.addEventListener("click", function(){
+      addEntry();
+    });
+
+    var elems = "{{form.context_1.value|length}}" > 0 ? 1 : "{{form.context_2.value|length}}" > 0 ? 2 : "{{form.context_3.value|length}}" > 0 ? 3 : 0;
+    
+    function addEntry(){
+      let option = `
+        <hr>
+        <div class="col-12 mb-3">
+          <label for="context">Entry POS ${elems+2}:</label>
+          <input type="text" class="form-control" name="entry_pos_${elems+1}" id="id_entry_pos_${elems+1}"></input>
+        </div>
+
+        <div class="col-4 mb-3">
+          <label for="context">Example Heading ${elems+2}:</label>
+          <textarea class="form-control" name="context_${elems+1}" id="id_context_${elems+1}" rows="3"></textarea>
+        </div>
+
+        <div class="col-8 mb-3">
+          <label for="c_2">Example Sentences ${elems+2}:</label>
+          <textarea class="form-control" rows="3" name="examples_${elems+1}" id="id_examples_${elems+1}"></textarea>
+        </div>
+      `;
+      entry.insertAdjacentHTML("beforeend",option);
+      elems++;
+    }
+  </script>
 {% endblock body %}

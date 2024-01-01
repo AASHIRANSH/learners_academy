@@ -83,7 +83,7 @@
 
 
 <div class="container-fluid bg-gray text-primary text-center p-4">
-    <span class="fs-1 fw-bold learner">Learners' Dictionary</span>
+    <span class="display-5 fw-bold learner" style="font-family:Majalla;">Learners' Dictionary</span>
 </div>
 <div class="rule"></div>
 
@@ -98,22 +98,27 @@
             </div>
             <a><div class="icon"><i class="fas fa-search"></i></div></a>
         </div>
-        <div class="row">
-            <div class="col mt-3">Search in:</div>
-            <div class="col mt-3">
-                <select name="pos" class="form-select" aria-label="Default select example">
-                    <option value="" selected>--select--</option>
-                    <option value="noun"{%if request.GET.in == "noun" %} selected{% endif %}>noun</option>
-                    <option value="verb"{%if request.GET.in == "verb" %} selected{% endif %}>verb</option>
-                    <option value="adjective"{%if request.GET.in == "adjective" %} selected{% endif %}>adjective</option>
-                </select>
-            </div>
-            <div class="col mt-3">
-                <select name="in" class="form-select" aria-label="Default select example">
-                    <option value="" selected>--select--</option>
-                    <option value="definition"{%if request.GET.in == "definition" %} selected{% endif %}>definitions</option>
-                    <option value="example"{%if request.GET.in == "example" %} selected{% endif %}>examples</option>
-                </select>
+
+        <div class="card bg-gray bg-opacity-25 my-1">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">Search in:</div>
+                    <div class="col">
+                        <select name="pos" class="form-select" aria-label="Default select example">
+                            <option value="" selected>---------</option>
+                            <option value="noun"{%if request.GET.in == "noun" %} selected{% endif %}>noun</option>
+                            <option value="verb"{%if request.GET.in == "verb" %} selected{% endif %}>verb</option>
+                            <option value="adjective"{%if request.GET.in == "adjective" %} selected{% endif %}>adjective</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select name="in" class="form-select" aria-label="Default select example">
+                            <option value="" selected>---------</option>
+                            <option value="definition"{%if request.GET.in == "definition" %} selected{% endif %}>definitions</option>
+                            <option value="example"{%if request.GET.in == "example" %} selected{% endif %}>examples</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -423,8 +428,28 @@
     </div>
 {% endif %}
 
+
 <script>
-    let suggestions = [];
+    let pos = {% include "english/dictionary/pos.json" %};
+    let suggestions_comma = {% include "english/dictionary/headwords_comma.json" %};
+    let suggestions = {% include "english/dictionary/headwords.json" %};
+
+    function loadDoc() {
+        var data = document.getElementById("id_company").value;
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText)
+                var fields = JSON.parse(this.responseText)[0]["fields"]
+                id_name.value = fields["name"];
+            } else {
+                id_name.value = "";
+            }
+        };
+        xhttp.open("GET", "?action=company&company="+data, true);
+        xhttp.send();
+    }
 
     // getting all required elements
     const searchWrapper = document.querySelector(".search-input");
@@ -445,21 +470,26 @@
                 linkTag.click();
                 $(".loader-wrapper").fadeIn("slow");
             }
+
             emptyArray = suggestions.filter((data)=>{
                 //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
                 return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
             });
+
             emptyArray = emptyArray.map((data)=>{
                 // passing return data inside li tag
-                return data = `<li onclick="window.location.assign('?q=${data}')">${data}</li>`;
+                return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${data} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
             });
+
             searchWrapper.classList.add("active"); //show autocomplete box
             showSuggestions(emptyArray);
-            let allList = suggBox.querySelectorAll("li");
-            for (let i = 0; i < allList.length; i++) {
-                //adding onclick attribute in all li tag
-                allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//allList[i].setAttribute("onclick", "select(this)");
-            }
+            
+            // NOTE: use the below code to edit or overwrite the results "li tag"
+            //let allList = suggBox.querySelectorAll("li");
+            //for (let i = 0; i < allList.length; i++) {
+            //    //adding onclick attribute in all li tag
+            //    allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//setAttribute("onclick", "select(this)");
+            //}
         }else{
             searchWrapper.classList.remove("active"); //hide autocomplete box
         }

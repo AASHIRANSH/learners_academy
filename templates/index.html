@@ -15,20 +15,8 @@
     color: #3cb371;
     z-index: 100;
   }
-  #word-of-the-day {
-    position: relative;
-    display: block;
-    background-color: var(--blue-ii);
-    width: 100%;
-    padding: 0 0 2rem 0;
-  }
-  #wod-word {
-    width: 100vw;
-    text-align: center;
-    font-size: 4rem;
-    cursor: pointer;
-  }
 </style>
+
 {% if request.user.is_superuser %}
 {% else %}
 <div id="dstate">
@@ -50,10 +38,11 @@
   </div>
 </div>
 {% endif %}
+
 <section id="sl">
   <div id="headersl">
   </div>
-  <div id="caption" class="d-none d-sm-inline-block">
+  <div id="caption" class="d-none d-lg-inline-block">
     <div id="text">
       <h1>Learn</h1>
       <h1>&amp;</h1>
@@ -69,24 +58,25 @@
     </div>
   </div>
 </section>
-<div class="b-example-divider"></div>
-<div id="word-of-the-day" class="">
-  <div class="bg-primary position-absolute top-0 start-0 m-3 rounded-2">
-    <span class="text-white p-3">Word of the Day</span>
-  </div>
 
-  <div class="bg-blue-ii p-3 text-end">
-    <span class="bg-secondary text-light py-1 px-3 rounded-2">{% now "D, d M, Y" %}</span>
+<!--div class="b-example-divider"></div-->
+
+<div class="d-flex justify-content-center w-100">
+<div class="col-sm-12 col-md-8 my-5">
+  <div class="d-flex justify-content-between bg-primary bg-opacity-50 p-3 rounded-3">
+    <span class="col-auto bg-primary text-white py-1 px-3 rounded-2">Word of the Day</span>
+    <span class="col-auto text-end bg-secondary text-light py-1 px-3 rounded-2">{% now "D, d M, Y" %}</span>
   </div>
   
-  <div id="wod-word" class="text-secondary px-2" onclick="window.location.assign('{% url 'word' word.word.id %}')">
-    <div class="text-primary">{{word.word.word}}</div>
+  <div class="text-center text-secondary px-2 py-4 cursor-pointer" onclick="window.location.assign('{% url 'word' word.word.id %}')">
+    <div class="display-5 text-primary">{{word.word.word}}</div>
     <div class="fs-5">({{word.word.pos}})<hr></div>
     <div class="fs-4">{{word.word.definition}}</div>
   </div>
 
-  <div class="position-absolute bottom-0 start-0 bg-blue-ii p-2 text-center w-100">
+  <div class="text-center bg-primary bg-opacity-50 p-2 rounded-3">
   </div>
+</div>
 </div>
 
 <div class="m-5">
@@ -101,14 +91,14 @@
         <div id="lesson_title" class="d-flex justify-content-center align-items-center">
           <div class="">
             <div class="fs-2">. . .</div>
-            <div class="fs-2">{{post.topic.name|title}}</div>
+            <div class="fs-1 fst-italic" style="font-family:Poppins;">{{post.topic.name|title}}</div>
             <div class="fs-2">. . .</div>
           </div>
         </div>
       </div>
       <div class="col-sm-12 col-md-5 text-dark mb-2">
         <div class="">
-          <a class="text-dark" href="{% url 'post_detail' post.pk %}">
+          <a class="text-secondary fw-bold" href="{% url 'post_detail' post.pk %}">
             <div class="fs-4">{{ post.title }}</div>
           </a>
         </div>

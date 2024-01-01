@@ -135,12 +135,12 @@ class ArabicDictionary(Models):
     
 
 ''' Create Model Objects '''
-Turkey.objects.create(
-    word="myfirstword",
-    pos="noun",
-    definition="this is a word",
-    waht="dhaht"
-)
+# Turkey.objects.create(
+#     word="myfirstword",
+#     pos="noun",
+#     definition="this is a word",
+#     waht="dhaht"
+# )
 
 
 ''' Get Model Objects '''

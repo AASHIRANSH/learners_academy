@@ -26,22 +26,31 @@ class Thesaurus(models.Model):
     def __str__(self):
         return self.name
 
-
-# class RelatedWords(models.Model):
-#     name = models.CharField(max_length=100)
-#     words = models.ManyToManyField("", verbose_name=_(""))
-
-#     def __str__(self):
-#         return self.name
-
 class Collocation(models.Model):
+    ref_id = models.BooleanField(default=False)
     word = models.CharField(max_length=50)
     pos = models.CharField(max_length=50)
     usage = models.CharField(("Usage"), max_length=50, blank=True, null=True)
+
     entry_pos = models.CharField(max_length=50)
     context = models.TextField(blank=True, null=True)
     examples = models.TextField(blank=True, null=True)
-    # ref_id = models.BooleanField(default=False)
+
+    entry_pos_1 = models.CharField(max_length=50, blank=True, null=True)
+    context_1 = models.TextField(blank=True, null=True)
+    examples_1 = models.TextField(blank=True, null=True)
+    
+    entry_pos_2 = models.CharField(max_length=50, blank=True, null=True)
+    context_2 = models.TextField(blank=True, null=True)
+    examples_2 = models.TextField(blank=True, null=True)
+
+    entry_pos_3 = models.CharField(max_length=50, blank=True, null=True)
+    context_3 = models.TextField(blank=True, null=True)
+    examples_3 = models.TextField(blank=True, null=True)
+
+    entry_pos_4 = models.CharField(max_length=50, blank=True, null=True)
+    context_4 = models.TextField(blank=True, null=True)
+    examples_4 = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return self.word
