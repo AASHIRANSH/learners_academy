@@ -21,6 +21,7 @@ urlpatterns = [
 
     path('exercise/', views.exercise, name="fexercise"),
     path('revise/', views.revise, name="frevise"),
+    path('note-edit/<int:id>', views.note_edit, name="note_edit"),
 
     path('wordedit/', views.edit, name="edit_card"),
     path('data', views.data),

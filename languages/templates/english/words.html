@@ -72,9 +72,9 @@
                     Other Forms
                 </button>
             </div>
-            <div class="col-auto" style="position:absolute;left:16%;translate:0 -35%">
+            <div class="card col-auto shadow" style="position:absolute;left:16%;translate:0 -35%;z-index:1;">
                 <div class="collapse" id="collapseExample">
-                    <div id="forms" class="card card-body">
+                    <div id="forms" class="card-body">
                         {% for line in forms %}
                             <div>&#x2022; {{line}}</div>
                         {% endfor %}
@@ -198,17 +198,19 @@
                 </div>
             </div>
         {% endif %}
+
+        {% if collocation %}
+            <div class="mb-3 p-0">
+                <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                    collocation
+                </div>
+                <div class="mx-2">
+                    <a class="btn btn-outline-secondary" href="{% url "collocation_view" collocation.id %}">{{collocation}}</a>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
-
-
-{% if perms.languages.add_word %}
-    <div class="position-fixed bottom-0 right-0 m-3">
-        <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
-            <i class="fa-solid fa-plus"></i>
-        </a>
-    </div>
-{% endif %}
 
 
 {% include 'english/flashcards/scripts/script.html' %}

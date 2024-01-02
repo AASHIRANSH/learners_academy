@@ -296,7 +296,7 @@ def word(request,id):
     else:
         forms = word.forms
 
-    
+    collocation = Collocation.objects.filter(word=word.word, pos=word.pos).first()
     example = word.example.splitlines()
     # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
     
@@ -305,6 +305,7 @@ def word(request,id):
         "word":word,
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
+        "collocation":collocation,
         "example":set(example),
         "refresh":False
     }
@@ -449,7 +450,7 @@ def dictionary_json(request):
         if x.word+x.pos not in unique:
             headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
             pos.append(x.pos)
-        unique.append(x.word+x.pos)
+            unique.append(x.word+x.pos)
     
     with open("database/models/headwords.json", mode="w") as jsondict:
         json.dump(headwords, fp=jsondict)
@@ -630,8 +631,8 @@ def revise(request):
     list_1 = list(rvp_obj[0:5])
     items = list(rvp_obj.order_by('-date')[0:5])
     items.extend(list_1)
-    randitem = random.choice(items)
-    randitem = randitem.word
+    revise = random.choice(items)
+    randitem = revise.word
     pronounce = randitem.pronounce
     example = set(randitem.example.splitlines())
     # context = randitem.context.splitlines()
@@ -688,6 +689,8 @@ def revise(request):
             forms = randitem.forms
     else:
         forms = randitem.forms
+
+    collocation = Collocation.objects.filter(word=randitem.word, pos=randitem.pos).first()
     
     # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
     vars = {
@@ -695,12 +698,27 @@ def revise(request):
         "pronounce":pronounce.splitlines(),
         "forms":forms.splitlines(),
         "example":example,
-        # "context":context,
+        "collocation":collocation,
         "rv_total_count":rv_obj.count(),
         "rv_count":rvp_obj.count(),
+        "revise":revise
     }
     return render(request, "english/revise.html", vars)
 
+@login_required
+def note_edit(request,id):
+    if request.method == "POST":
+        note = request.POST.get("note")
+        word = Revise.objects.get(word_id=id)
+        
+        word.note = note
+        word.save()
+
+        messages.success(request, "The note was edited")
+        return HttpResponseRedirect("/english/revise")
+    else:
+        pass
+    return HttpResponseRedirect("/english/revise")
 
 def edit(request):
     data = request.GET

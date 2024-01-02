@@ -93,7 +93,7 @@
     <div class="wrapper col-sm-10 col-md-8">
         <div class="search-input">
             <input type="search" name="q" class="form-control" placeholder="Type to search..." value="{{request.GET.q}}" autocomplete="off"/>
-            <div class="autocom-box">
+            <div class="autocom-box mt-1 rounded-bottom shadow">
                 <!-- here list is inserted from javascript -->
             </div>
             <a><div class="icon"><i class="fas fa-search"></i></div></a>
@@ -473,12 +473,12 @@
 
             emptyArray = suggestions.filter((data)=>{
                 //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
-                return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+                return data.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
             });
 
             emptyArray = emptyArray.map((data)=>{
                 // passing return data inside li tag
-                return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${data} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
+                return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${suggestions_comma[suggestions.indexOf(data)]} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
             });
 
             searchWrapper.classList.add("active"); //show autocomplete box
@@ -494,9 +494,11 @@
             searchWrapper.classList.remove("active"); //hide autocomplete box
         }
     }
+
     window.onclick = (e)=>{
         searchWrapper.classList.remove("active");
     }
+    
     function select(element){
         let selectData = element.textContent;
         inputBox.value = selectData;
