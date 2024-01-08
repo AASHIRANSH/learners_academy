@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+{% include "header.html" %}
+
+<div class="container w-100 bg-secondary p-5">
+    <div class="row align-items-center">
+        <div class="col">
+            <form>
+            <textarea class="form-control" rows="15"></textarea>
+            </form>
+        </div>
+        <div class="col">
+            <iframe src="http://localhost:8000/coding/tryresult/" width="200" height="400"></iframe>
+        </div>
+    </div>
+</div>
+
+{% endblock  %}

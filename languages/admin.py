@@ -11,7 +11,7 @@ class ExerciseView(admin.ModelAdmin):
 
 @admin.register(Word)
 class WordsView(admin.ModelAdmin):
-    list_display = ['word','pos']
+    list_display = ['word','pos','pk']
 
 
 @admin.register(Collocation)

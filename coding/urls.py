@@ -3,5 +3,8 @@ from coding import views
 
 urlpatterns = [
     path('', views.index, name="coding"),
-    path('coding/revise', views.revise, name="coding_revise"),
+    path('<str:course>/', views.course, name="course"),
+    path('revise', views.revise, name="coding_revise"),
+    path('tryit', views.tryit, name="tryit"),
+    path('tryresult', views.tryresult, name="tryresult"),
 ]

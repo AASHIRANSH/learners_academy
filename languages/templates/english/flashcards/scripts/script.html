@@ -1,57 +1,3 @@
-<script>
-    var def = document.getElementById("def");
-    var example = document.getElementById("example");
-
-    var tag_b_index = 0;
-    var tag_start = false;
-    
-    for (let x of example.innerHTML) {
-        let tag_b = example.innerHTML.indexOf("**", tag_b_index);
-
-        if (tag_start == false){
-            example.innerHTML = example.innerHTML.replace("**", "<span style='font-style:normal;'>[");
-        } else {
-            example.innerHTML = example.innerHTML.replace("**", "]</span>");
-        }
-
-        tag_b_index += tag_b;
-        tag_start = tag_start == true?false:true;
-    }
-
-    def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
-
-    example.innerHTML = example.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-
-    // Example Shadows
-    let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
-    if ( exampleHeight > 300 ){
-        example.classList.add("shadow-b");
-    }
-    example.addEventListener("scroll", function(){
-        if (example.scrollTop > 50){
-            example.classList.remove("shadow-b");
-            example.classList.add("shadow-y");
-        }
-        if (example.scrollTop > (exampleHeight-example.offsetHeight-2)){
-            example.classList.remove("shadow-y");
-            example.classList.add("shadow-t");
-        }
-        if (example.scrollTop < 10){
-            example.classList.remove("shadow-y");
-            example.classList.add("shadow-b");
-        }
-        console.log(example.classList);
-    });
-
-    var forms = document.getElementById("forms");
-    let formlen = `{{word.forms}}`.length;
-    if(formlen > 0){
-        forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-    }
-    //var n = words.split(" ");
-    //return n[n.length - 1];
-</script>
-
 <!-- Pronounce -->
 <script>
     let ukp = document.getElementById("ukpron");
@@ -67,6 +13,70 @@
         //audio2.play();
         textToSpeech(`{{word.word}}`,"US")
     });
+</script>
+
+
+<script>
+    let def = document.getElementById("definition");
+    def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
+
+    var example = document.getElementById("example");
+    var examples = example.getElementsByTagName("li");
+ 
+    
+    
+    for (let x of examples) {
+        let tag_start = false;
+
+        x.innerHTML = x.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+
+        if (tag_start == false){
+            x.innerHTML = x.innerHTML.replace("**", "<span style='font-style:normal;'>[");
+            tag_start = true;
+        }
+
+        if (tag_start == true){
+            x.innerHTML = x.innerHTML.replace("**", "]</span>");
+            tag_start = false;
+        }
+
+        if (tag_start == false){
+            x.innerHTML = x.innerHTML.replace("*", "<span class='fst-normal'>");
+            tag_start = true;
+        }
+
+        if (tag_start == true){
+            x.innerHTML = x.innerHTML.replace("*", "</span>");
+            tag_start = false;
+        }
+    }
+
+    // Example Shadows
+    let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
+    if ( exampleHeight > 300 ){
+        example.classList.add("shadow-b");
+    }
+    example.addEventListener("scroll", function(){
+        if (example.scrollTop > 40){
+            example.classList.remove("shadow-b");
+            example.classList.add("shadow-y");
+        }
+        if (example.scrollTop > (exampleHeight-example.offsetHeight-2)){
+            example.classList.remove("shadow-y");
+            example.classList.add("shadow-t");
+        }
+        if (example.scrollTop < 10){
+            example.classList.remove("shadow-y");
+            example.classList.add("shadow-b");
+        }
+        //console.log(example.classList);
+    });
+
+    //var forms = document.getElementById("forms");
+    //let formlen = `{{word.forms}}`.length;
+    //if(formlen > 0){
+    //    forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
+    //}
 </script>
 
 <!--AUTO REFRESHER SCRIPT-->

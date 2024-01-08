@@ -1,15 +1,18 @@
 from django.contrib import admin
-from coding.models import Language, Question, SubQuestion
+from coding.models import Python, PythonQuestion#, SubQuestion
 
-# Register your models here.
-@admin.register(Language)
-class LanguageView(admin.ModelAdmin):
-    list_display = ['name']
+# # Register your models here.
+@admin.register(Python)
+class PythonView(admin.ModelAdmin):
+    list_display = ['chapter_name']
 
-@admin.register(Question)
+    class Media:
+        js= ('/static/js/tinyinject.js',)
+
+@admin.register(PythonQuestion)
 class QuestionView(admin.ModelAdmin):
-    list_display = ['question','language']
+    list_display = ['question','chapter']
 
-@admin.register(SubQuestion)
-class SubQView(admin.ModelAdmin):
-    list_display = ['question','mquestion']
+# @admin.register(SubQuestion)
+# class SubQView(admin.ModelAdmin):
+#     list_display = ['question','mquestion']

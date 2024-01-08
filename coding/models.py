@@ -1,25 +1,27 @@
 from django.db import models
 
-class Language(models.Model):
-    name = models.CharField(max_length=50)
-
+class Python(models.Model):
+    chapter_name = models.CharField(("Chapter Name"), max_length=100)
+    content = models.TextField(("Content"))
+    
     def __str__(self):
-        return self.name
+        return self.chapter_name
 
 
-class Question(models.Model):
-    language = models.ForeignKey(Language, on_delete=models.CASCADE)
+class PythonQuestion(models.Model):
+    chapter = models.ForeignKey(Python, on_delete=models.CASCADE)
     question = models.CharField(max_length=100)
     answer = models.TextField(default="")
+    mcq = models.CharField(("MCQ"),max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.question
 
 
-class SubQuestion(models.Model):
-    mquestion = models.ForeignKey(Question, on_delete=models.CASCADE)
-    question = models.CharField(max_length=100)
-    answer = models.TextField(default="")
+# class SubQuestion(models.Model):
+#     mquestion = models.ForeignKey(Question, on_delete=models.CASCADE)
+#     question = models.CharField(max_length=100)
+#     answer = models.TextField(default="")
 
-    def __str__(self):
-        return self.question
+#     def __str__(self):
+#         return self.question

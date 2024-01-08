@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load to_and %}
+
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+
+{% include "header.html" %}
+{% include 'messages.html' %}
+{% include "english/rv_settings.html" %}
+
+<div class="container mt-2">
+
+    <div class="d-flex justify-content-between align-items-baseline">
+        <div class="row col-9 d-flex align-items-baseline">
+            <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
+                {{word.word}}
+            </div>
+            <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                {{word.pos}}
+            </div>
+
+            <div class="col-12">
+                {% if word.grade|length > 0 %}
+                    <div class="col-12 mb-2">
+                        <div id="grade" class="col-12 d-inline fs-5 text-uppercase px-1">
+                            {{word.grade}}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="row col-12 mb-3">
+                    <div class="col-auto" style="font-family:Arial;">
+                        <div id="ukpron" class="text-primary fs-5" style=""> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                        <div id="uspron" class="text-danger fs-5" style=""> US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                    </div>
+
+                    {% if word.pic %}
+                        <div class="cursor-pointer col-auto">
+                            <div class=""><img class="word-image" src="{{word.pic.url}}"/></div>
+                        </div>
+                    {% endif %}
+
+                    {% if word.pic_url|length > 1 %}
+                        <div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">
+                            <div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3 col-lg-2 p-1 rounded shadow">
+            <div class="col mb-1">
+                <div class="text-center text-light bg-secondary col-12 fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
+            </div>
+            <div class="col mb-1">
+                <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4 px-1 py-0" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m">Mastered</button>
+            </div>
+            <div class="d-flex gap-1 justify-content-end col-12 mb-1">
+                <button title="Easy" class="btn btn-outline-success col fs-4 px-1 py-0" onclick="window.location.assign('/english/data?data=easy&word={{word.id}}')" accesskey="s">Easy</button>
+                <button title="Hard" class="btn btn-outline-secondary col fs-4 px-1 py-0" onclick="window.location.assign('/english/data?data=hard&word={{word.id}}')" accesskey="h">Hard</button>
+            </div>
+            <div class="d-flex gap-1 justify-content-end col-12">
+                <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign(`{% url 'dictionary' %}`)"><i class="fa-solid fa-book"></i></button>
+                <button type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+            </div>
+        </div>
+    </div>
+
+    {% if word.pos != 'idiom' %}
+        {% if word.pos != 'phrasal verb' %}
+        {% if forms|length > 1 %}
+        <div id="forms-cont" class="row">
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Other Forms
+                </button>
+            </div>
+            <div class="card col-auto" style="position:absolute;left:16%;translate:0 -35%;z-index:1;">
+                <div class="collapse" id="collapseExample">
+                    <div id="forms" class="card-body">
+                        {% for line in forms %}
+                            <div>&#x2022; {{line}} {% if forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 or forloop.counter == 15%}<i class="fa-solid fa-volume-high cursor-pointer"></i>{% endif %}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    {% endif %}
+
+    <div class="bg-primary rounded my-3 shadow">
+        <span class="text-white ps-2 mb-1">Definition</span>
+        
+        <div id="def-container" class="bg-gray position-relative rounded p-1">
+            <div id="def" class="bg-primary bg-opacity-25 fs-4 p-2 rounded">
+                <div class="fs-6 mb-1">
+                    <div>{{word.category.name}}</div>
+                    {% if word.def_inf %}<span class="d-inline-block bg-light bg-opacity-25 border border-light px-2 py-1 rounded">{{word.def_inf}}</span>{% endif %}
+                </div>
+
+                <div id="carouselExampleControls" class="carousel slide">
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active">
+                            <div id="definition" class="">{{word.definition}}</div>
+                        </div>
+                        <div class="carousel-item">
+                            {% if word.definition_hindi %}{{word.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="position-absolute top-0 end-0 m-2">
+                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if example %}
+        <div class="bg-secondary m-0 my-3 rounded shadow">
+            <span class="text-white ps-2 mb-1">Example Sentences</span>
+            <div class="bg-white rounded p-1">
+                <div id="example" class="fs-4 fst-italic bg-gray bg-opacity-10 rounded pt-1 overflow-auto">
+                    <ul>
+                        <hr class="my-1">
+                        {% for line in example %}
+                            <li class="example p-0">
+                                <!--&#x2022; bullet -->{{line}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                            </li>
+                            <hr class="my-1">
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.context %}
+        <div class="my-3 p-0">
+            <div class="bg-primary text-white py-1 rounded px-2 mb-2">
+                sentence usage
+            </div>
+            <div class="mx-2">
+                <!--pre>{{word.context}}</pre-->
+                <div id="context"></div><!--this is being modified by Script-->
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.synonyms %}
+        <div class="{% if word.antonyms %}col {% endif %}p-0 my-3">
+            <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                synonyms
+            </div>
+            <div id="synonyms" class="mx-2">
+                {{word.synonyms}}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.antonyms %}
+        <div class="{% if word.synonyms %}col {% endif %}p-0 my-3">
+            <div class="bg-danger text-white rounded py-1 px-2 mb-2">
+                antonyms
+            </div>
+            <div id="antonyms" class="mx-2">
+                {{word.antonyms}}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.compare %}
+        <div class="my-3 p-0">
+            <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                related words
+            </div>
+            <div id="related" class="mx-2">
+                {{word.compare}}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.hindi_usage %}
+        <div class="my-3 p-0">
+            <div class="bg-secondary text-white rounded py-1 px-2 mb-2">
+                Hindi Usage
+            </div>
+            <div class="mx-2">
+                {{word.hindi_usage}}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if word.related_post.count %}
+        <div class="my-3 p-0">
+            <div class="bg-secondary text-white rounded py-1 px-2 mb-2">
+                Related Post
+            </div>
+            <div id="related_post" class="mx-2">
+                {% for post in word.related_post.all %}
+                    <button class="btn btn-outline-secondary" onclick="window.location.assign(`{% url 'post_detail' post.pk %}`)">
+                        {{post.title}}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if collocation %}
+        <div class="my-3 p-0">
+            <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                collocation
+            </div>
+            <div class="mx-2">
+                <a class="btn btn-secondary" href="{% url "collocation_view" collocation.id %}">{{collocation}}</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="my-3">
+        <div class="d-flex justify-content-between bg-danger bg-opacity-50 text-white rounded-3 py-1 px-2 mb-2">
+            <div>my note</div>
+            <div class="bg-danger text-white cursor-pointer px-3 rounded" data-bs-toggle="modal" data-bs-target="#myNote"><i class="fa-regular fa-pen-to-square"></i></div>
+        </div>
+        <div class="px-3 bg-gray">
+            {{revise.note|default:"you have no notes for this word."}}
+        </div>
+    </div>
+
+    <div class="mb-5"></div>
+    <!--div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                Context
+            </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+            <div class="accordion-body">
+                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                Synonyms
+            </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+            <div class="accordion-body">
+                <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                Hindi Usage
+            </button>
+            </h2>
+            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+            <div class="accordion-body">
+                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+            </div>
+            </div>
+        </div>
+    </div-->
+</div>
+
+<!-- Modal Mastered Confirm -->
+<div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <!--div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div-->
+        <div class="modal-body">
+          Have you really mastered this word?
+        </div>
+        <!--div class="modal-footer"-->
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
+            <button type="button" class="btn btn-success    " onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')">Certainly!</button>
+        </div>
+        <!--/div-->
+      </div>
+    </div>
+</div>
+<!-- Modal Delete Confirm -->
+<div class="modal fade" id="deleteRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!--div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div-->
+        <div class="modal-body">
+          Do you want to remove the word from revise?
+        </div>
+        <!--div class="modal-footer"-->
+        <div class="text-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            <button type="button" class="btn btn-danger" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')">Yes, remove</button>
+        </div>
+        <!--/div-->
+      </div>
+    </div>
+</div>
+<!-- Image -->
+<div class="modal fade" id="fullImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-1">
+        <div class="">
+            {% if word.pic %}
+                <img class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic.url}}"/>
+            {% else %}
+                <img class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic_url}}"/>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+</div>  
+<!-- My Note -->
+<div class="modal fade" id="myNote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title bg-danger bg-opacity-75 text-white p-2 rounded fs-5" id="exampleModalLabel">My Note - Edit</div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url "note_edit" word.id %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <textarea class="form-control" name="note" rows="4" placeholder="Type here to make your note....">{% if word.note %}{{word.note}}{% endif %}</textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Generating HTML content of Sentence Usage -->
+<script>
+    // Sentence Usage
+    if ("{{word.context|length}}" != "0"){
+    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
+    var context = [];
+    var contextDoc = ``;
+
+    for ( let x of contextSt ){
+        xx = x.split("+");
+        context.push(xx);
+    } // making list of context substrings
+
+
+    for ( let x of context ){
+        contextDoc += `<div class="mb-2">`;
+        for ( let y=0; y < x.length; y++ ){
+            if (y==x.length-1){
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
+            } else {
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+            }
+        }
+        contextDoc += `</div>`;
+    } // generating HTML content from context list
+    document.getElementById("context").innerHTML = contextDoc;
+    //console.log(contextDoc);
+    }
+</script>
+
+<!-- Generating content -->
+<script>
+    
+    let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
+    var synonymsDoc = ``;
+
+    if ("{{word.synonyms}}"){
+        for ( let x of synonymsSt ){
+            x = x.trim()
+            synonymsDoc += `<span class="d-inline-block border-bottom border-3 border-primary pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("synonyms").innerHTML = synonymsDoc;
+    }
+
+
+    let relatedSt = `{{word.compare}}`.split(","); // context converted into list
+    var relatedDoc = ``;
+
+    if ("{{word.compare}}"){
+        for ( let x of relatedSt ){
+            x = x.trim()
+            relatedDoc += `<span class="d-inline-block border-bottom border-3 border-info pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("related").innerHTML = relatedDoc;
+    }
+
+    let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
+    var antonymsDoc = ``;
+
+    if ("{{word.antonyms}}"){
+        for ( let x of antonymsSt ){
+            x = x.trim()
+            antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+        } // generating HTML content from context list
+
+        document.getElementById("antonyms").innerHTML = antonymsDoc;
+    }
+</script>
+
+{% include "tts_2.html" %}
+{% include 'english/flashcards/scripts/script.html' %}
+{% endblock body %}

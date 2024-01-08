@@ -407,31 +407,27 @@ def words(request):
     }
     return render(request, "english/words.html", vars)
 
+from django.db.models import Q
 def dictionary(request):
-    # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
-    vars_get = request.GET
-    search_query = vars_get.get("q","").strip()
-    search_pos = vars_get.get("pos","").strip()
-    search_in = vars_get.get("in","").strip()
+    get = request.GET
+    search_query = get.get("q","").strip()
+    search_pos = get.get("pos","").strip()
+    search_in = get.get("in","").strip()
 
     if search_query:
-        words = Word.objects.filter(word=search_query) | Word.objects.filter(word__contains=search_query) | Word.objects.filter(pos=search_pos, definition__contains=search_in)
+        words = Word.objects.filter(Q(word__startswith=search_query) | Q(word__contains=search_query) | Q(pos=search_pos, definition__contains=search_in))
     else:
         words = Word.objects.all()
     
     paginator = Paginator(words, 10)  # Show 6 contacts per page.
-    page_number = vars_get.get("page") if vars_get.get("page") else 1
+    page_number = get.get("page") if get.get("page") else 1
     page_navi = int(page_number)-1
     page_obj = paginator.get_page(page_number)
 
     vars = {
-        # "visible":visible,
         "wordscount":words.count(),
         "wordsp":page_obj,
         "pagen":page_navi,
-        # "pronounce":pronounce.splitlines(),
-        # "forms":forms.splitlines(),
-        # "example":set(example),
     }
     return render(request, "english/dictionary.html", vars)
 
@@ -560,15 +556,27 @@ def ipa_convert(request):
     return render(request,"english/ipa_converter.html")
 
 def my_words(request):
-    words = Revise.objects.filter(user=request.user)
+    get = request.GET
+    search_query = get.get("q","").strip()
+    search_pos = get.get("pos","").strip()
+    search_in = get.get("in","").strip()
+
+    if search_query:
+        words = Revise.objects.filter(Q(user=request.user) | Q(word__startswith=search_query) | Q(word__contains=search_query) | Q(pos=search_pos, definition__contains=search_in))
+    else:
+        words = Revise.objects.filter(user=request.user)
+    
+    paginator = Paginator(words, 10)  # Show 6 contacts per page.
+    page_number = get.get("page") if get.get("page") else 1
+    page_navi = int(page_number)-1
+    page_obj = paginator.get_page(page_number)
 
     vars = {
-        # "visible":visible,
-        "words":words,
-        # "pronounce":pronounce.splitlines(),
-        # "forms":forms.splitlines(),
+        "wordscount":words.count(),
+        "wordsp":page_obj,
+        "pagen":page_navi,
     }
-    return render(request, "english/my_words.html", vars)
+    return render(request, "english/dictionary.html", vars)
 
 @login_required
 def exercise(request):
@@ -608,7 +616,7 @@ def exercise(request):
     return render(request, "english/exercise.html", vars)
 
 @login_required
-def revise(request):
+def revise1(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     # with open(file_path, "r", encoding="UTF-8") as file:
     #     added_words = file.readlines()
@@ -706,6 +714,136 @@ def revise(request):
     return render(request, "english/revise.html", vars)
 
 @login_required
+def revise(request):
+    # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
+    # with open(file_path, "r", encoding="UTF-8") as file:
+    #     added_words = file.readlines()
+
+    user = request.user
+    rv_obj = Revise.objects.filter(user=user)
+    if not rv_obj.exists():
+        messages.warning(request, "You have not added any words yet!")
+        return redirect("words")
+
+    today = datetime.date.today()
+    today = today.strftime("%Y-%m-%d")
+
+    rvp_obj = rv_obj.filter(date__lte=today)
+    if not rvp_obj.exists():
+        messages.warning(request, "You do not have any words due for revision!")
+        return redirect("words")
+    
+    in_rv = list(rvp_obj[0:5])
+    items = list(rvp_obj.order_by('-date')[0:5])
+    in_rv.extend(items)
+  
+    ''' JS '''
+    objs = []
+    
+    for x in in_rv:
+        word = x.word
+        #print(word.id)
+        if word.pronounce:
+            pronounce = x.word.pronounce.splitlines()
+        else:
+            if word.pos == "verb":
+                obj = Word.objects.filter(ref_id=word.word+"_1").first()
+                if obj:
+                    pronounce = obj.pronounce.splitlines()
+                    pronounce = [pronounce[0],pronounce[1]]
+                else:
+                    pronounce = ["",""]
+            elif word.pos == "noun":
+                obj = Word.objects.filter(ref_id=word.word+"_2").first()
+                if obj:
+                    pronounce = obj.pronounce.splitlines()
+                    pronounce = [pronounce[0],pronounce[1]]
+                else:
+                    pronounce = ["",""]
+            elif word.pos == "adjective":
+                obj = Word.objects.filter(ref_id=word.word+"_3").first()
+                if obj:
+                    pronounce = obj.pronounce.splitlines()
+                    pronounce = [pronounce[0],pronounce[1]]
+                else:
+                    pronounce = ["",""]
+            elif word.pos == "adverb":
+                obj = Word.objects.filter(ref_id=word.word+"_4").first()
+                if obj:
+                    pronounce = obj.pronounce.splitlines()
+                    pronounce = [pronounce[0],pronounce[1]]
+                else:
+                    pronounce = ["",""]
+            elif word.pos == "conjunction":
+                obj = Word.objects.filter(ref_id=word.word+"_5").first()
+                if obj:
+                    pronounce = obj.pronounce.splitlines()
+                    pronounce = [pronounce[0],pronounce[1]]
+                else:
+                    pronounce = ["",""]
+            else:
+                pronounce = ["",""]
+
+        if word.forms:
+            forms = x.word.forms
+        else:
+            if word.pos == "verb":
+                obj = Word.objects.filter(ref_id=word.word+"_1").first()
+                if obj:
+                    forms = obj.forms
+                else:
+                    forms = ""
+            elif word.pos == "noun":
+                obj = Word.objects.filter(ref_id=word.word+"_2").first()
+                if obj:
+                    forms = obj.forms
+                else:
+                    forms = ""
+            else:
+                forms = ""
+
+        collocation = Collocation.objects.filter(word=word, pos=word.pos).first()
+
+        objs.append({
+            "rv_id":x.pk,
+            "w_id":x.word.pk,
+            "date":x.date.strftime("%Y-%m-%d"),
+            "word":word.word,
+            "pos":word.pos,
+            "grade":word.grade if word.grade else "",
+            "word_root":word.word_root,
+            "root_pos":word.root_pos,
+            "pruk":pronounce[0],
+            "prus":pronounce[1],
+            "forms":forms.splitlines(),
+            "def_inf":word.def_inf,
+            "basic_definition":word.basic_definition,
+            "definition":word.definition,
+            "definition_hindi":word.definition_hindi,
+            "definition_urdu":word.definition_urdu,
+            "example":word.example.splitlines() if word.example else "",
+            "context":word.context,
+            "synonyms":word.synonyms,
+            "antonyms":word.antonyms,
+            "compare":word.compare,
+            "note":x.note,
+            "pic_url":word.pic.url if word.pic else "",
+            "pic_url_url":word.pic_url,
+            "collocation":{"pk":1,"collocation":"nail"} if collocation else None
+        })
+    # print(objs)
+
+    # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
+    vars = {
+        "objs":json.dumps(objs),
+        "rv_total_count":rv_obj.count(),
+        "rv_count":rvp_obj.count(),
+        "revise":revise
+        # "collocation":collocation,
+    }
+    return render(request, "english/revise.html", vars)
+
+@login_required
 def note_edit(request,id):
     if request.method == "POST":
         note = request.POST.get("note")
@@ -719,6 +857,7 @@ def note_edit(request,id):
     else:
         pass
     return HttpResponseRedirect("/english/revise")
+
 
 def edit(request):
     data = request.GET

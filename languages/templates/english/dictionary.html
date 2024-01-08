@@ -71,9 +71,17 @@
 {% include 'header.html' %}
 
 <!-- LOADING ANIMATION -->
-<div class="loader-wrapper">
+<!--div class="loader-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
-</div>
+</div-->
+<button class="btn btn-primary" type="button" disabled>
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span class="visually-hidden">Loading...</span>
+</button>
+<button class="btn btn-primary" type="button" disabled>
+<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+Loading...
+</button>
 <!-- LOADING ANIMATION STOP -->
 <script>
     $(window).on("load", function() {
@@ -154,9 +162,9 @@
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
                 <td class="text-center">
                     {% if word.revise_set.count > 0 %}
-                    <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                    <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.word.id}}')"><i class="fa-solid fa-heart"></i></button>
                     {% else %}
-                    <button title="Add it" class="btn btn-outline-primary fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button>
+                    <button title="Add it" class="btn btn-outline-primary fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.word.id}}')"><i class="fa-regular fa-heart"></i></button>
                     {% endif %}
                 </td>
             </tr>
