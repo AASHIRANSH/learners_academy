@@ -28,67 +28,65 @@
         r_obj = objs[r_num];
 
         let ms = `
-            <div class="d-flex justify-content-between align-items-baseline">
-                <div class="row col-9 d-flex align-items-baseline">
-                    <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.w_id}')"{% endif %}>
-                        ${r_obj.word}
-                    </div>
-
-                    <div id="pos" class="col-auto fs-4 d-inline text-secondary">
-                        ${r_obj.pos}
-                    </div>
-
-                    <div class="col-12">
-                        ${r_obj.grade ?
-                            '<div class="col-12 mb-2"><div id="grade" class="col-12 d-inline fs-5 text-uppercase px-1">'
-                                +r_obj.grade+
-                            '</div></div>':''
-                        }
-                        <div class="row col-12 mb-3">
-                            <div class="col-auto" style="font-family:Arial;">
-                                <div id="ukpron" class="text-primary fs-5" style=""> UK <span id="pruk">${r_obj.pruk}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
-                                <div id="uspron" class="text-danger fs-5" style=""> US <span id="prus">${r_obj.prus}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
-                            </div>
-        
-                            {% if word.pic %}
-                                <div class="cursor-pointer col-auto">
-                                    <div class=""><img id="pic_url" class="word-image" src="{{word.pic.url}}"/></div>
-                                </div>
-                            {% endif %}
-        
-                            ${r_obj.pic_url_url?
-                                '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
-                                '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
-                                '</div>':''
-                            }
-                        </div>
-                    </div>
+            <div class="row align-items-baseline">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.w_id}')"{% endif %}>
+                    ${r_obj.word}
                 </div>
 
-                <div class="col-sm-3 col-lg-2 p-1 rounded shadow">
-                    <div class="col mb-1">
-                        <div class="text-center text-light bg-secondary col-12 fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
-                    </div>
+                <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                    ${r_obj.pos}
+                </div>
 
-                    <div class="col mb-1">
-                        <button title="Postpone for 30 days" class="btn btn-outline-success col-12 fs-4 px-1 py-0" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m">Mastered</button>
-                    </div>
-
-                    <div class="d-flex gap-1 justify-content-end col-12 mb-1">
-                        <button id="easy" title="Easy" class="btn btn-outline-success col fs-4 px-1 py-0" onclick="window.location.assign('/english/data?data=easy&word=${r_obj.w_id}')" accesskey="s">Easy</button>
-                        <button id="hard" title="Hard" class="btn btn-outline-secondary col fs-4 px-1 py-0" onclick="window.location.assign('/english/data?data=hard&word=${r_obj.w_id}')" accesskey="h">Hard</button>
-                    </div>
-
-                    <div class="d-flex gap-1 justify-content-end col-12">
-                        <button type="button" title="Reload" class="btn btn-outline-primary col-auto fs-4" onclick="master();"><i class="fa-solid fa-rotate-right"></i></button>
-                        <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
-                        <button id="remove" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+                <div class="col-12">
+                    ${r_obj.grade ?
+                        '<div class="col-12 mb-2"><div id="grade" class="col-12 d-inline fs-5 text-uppercase px-1">'
+                            +r_obj.grade+
+                        '</div></div>':''
+                    }
+                    <div class="row col-12 mb-3">
+                        <div class="col-auto" style="font-family:Arial;">
+                            <div id="ukpron" class="text-primary fs-5" style=""> UK <span id="pruk">${r_obj.pruk}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                            <div id="uspron" class="text-danger fs-5" style=""> US <span id="prus">${r_obj.prus}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                        </div>
+    
+                        {% if word.pic %}
+                            <div class="cursor-pointer col-auto">
+                                <div class=""><img id="pic_url" class="word-image" src="{{word.pic.url}}"/></div>
+                            </div>
+                        {% endif %}
+    
+                        ${r_obj.pic_url_url?
+                            '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
+                            '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
+                            '</div>':''
+                        }
                     </div>
                 </div>
             </div>
 
-            <div id="forms-cont" class="row">
+            <div class="d-flex align-items-baseline gap-1 rounded p-1 border border-4">
+
+                <div class="col-3">
+                    <div id="forms-cont">
+                    </div>
+                </div>
+                <div class="col-9 text-end">
+
+                    <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
                 
+                    <button title="masterd" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
+                
+                    <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" onclick="window.location.assign('/english/data?data=easy&word=${r_obj.w_id}')" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
+                    
+                    <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" onclick="window.location.assign('/english/data?data=hard&word=${r_obj.w_id}')" accesskey="h"><i class="fa-regular fa-face-angry"></i></button>
+                
+                    <button type="button" title="Reload" class="btn btn-outline-primary col-auto fs-4" onclick="master();"><i class="fa-solid fa-rotate-right"></i></button>
+                    
+                    <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
+                    
+                    <button id="remove" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+            
+                </div>
             </div>
         `;
 
@@ -507,10 +505,10 @@
     master();
 
     function navigate(){
-        len.push(r_num);
         if (len.length == objs.length) {
             window.location.reload();
         }
+        len.push(r_num);
     }
     //for ( let y of Object.keys(r_obj)){      
     //    document.getElementById(y).innerText = r_obj[y];
