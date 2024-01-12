@@ -7,6 +7,7 @@
             {% if request.user.is_authenticated %}
                 <div id="ui_container" class="ui_container pb-4">
                     <div class="d-none d-md-block">{{request.user.username}}</div>
+                    <div class="d-block d-md-none">{{request.user.username|slice:"0:1"}}</div>
                     <div class="hidden">
                         <div class="ui_main shadow-lg">
                             <ul>

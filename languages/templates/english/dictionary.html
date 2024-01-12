@@ -64,6 +64,12 @@
             width: 100%;
             text-align: center;
         }
+
+        /*when navigating through the items using the arrow keys:*/
+        .autocom-box-active {
+            background-color: DodgerBlue; 
+            color: #ffffff;
+        }
     </style>
 {% endblock head %}
 
@@ -71,17 +77,10 @@
 {% include 'header.html' %}
 
 <!-- LOADING ANIMATION -->
-<!--div class="loader-wrapper">
+<div class="loader-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
-</div-->
-<button class="btn btn-primary" type="button" disabled>
-    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-    <span class="visually-hidden">Loading...</span>
-</button>
-<button class="btn btn-primary" type="button" disabled>
-<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-Loading...
-</button>
+</div>
+
 <!-- LOADING ANIMATION STOP -->
 <script>
     $(window).on("load", function() {
@@ -97,11 +96,10 @@ Loading...
 
 <!-- search -->
 <div class="container my-4">
-    <form>
     <div class="wrapper col-sm-10 col-md-8">
         <div class="search-input">
             <input type="search" name="q" class="form-control" placeholder="Type to search..." value="{{request.GET.q}}" autocomplete="off"/>
-            <div class="autocom-box mt-1 rounded-bottom shadow">
+            <div id="subox" class="autocom-box mt-1 rounded-bottom shadow">
                 <!-- here list is inserted from javascript -->
             </div>
             <a><div class="icon"><i class="fas fa-search"></i></div></a>
@@ -130,7 +128,6 @@ Loading...
             </div>
         </div>
     </div>
-    </form>
 </div>
 
 <!-- advanced search options here -->
@@ -162,9 +159,9 @@ Loading...
                 <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
                 <td class="text-center">
                     {% if word.revise_set.count > 0 %}
-                    <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                    <button title="Already added" class="btn btn-outline-danger fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
                     {% else %}
-                    <button title="Add it" class="btn btn-outline-primary fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.word.id}}')"><i class="fa-regular fa-heart"></i></button>
+                    <button title="Add it" class="btn btn-outline-primary fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button>
                     {% endif %}
                 </td>
             </tr>
@@ -466,40 +463,91 @@ Loading...
     const icon = searchWrapper.querySelector(".icon");
     var linkTag = searchWrapper.querySelector("a");
     var webLink;
+    var currentFocus = -1;
+    var scval = 0;
 
     // if user press any key and release
     inputBox.onkeyup = (e)=>{
-        let userData = e.target.value; //user enetered data
-        let emptyArray = [];
-        if(userData){
-            icon.onclick = ()=>{
-                webLink = `?q=${userData}`;
-                linkTag.setAttribute("href", webLink);
-                linkTag.click();
-                $(".loader-wrapper").fadeIn("slow");
+        /*execute a function presses a key on the keyboard:*/
+        var x = document.getElementById("subox");
+        if (x) x = x.getElementsByTagName("li");
+        if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+
+            //scroll on keydown
+            if (currentFocus>4){
+                scval += 47;
+                suggBox.scrollTo(0, scval);
+            } else if (currentFocus==0){
+                scval = 0;
+                suggBox.scrollTo(0, 0);
             }
+        } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            //scroll on keyup
+            if (currentFocus==x.length-1){
+                scval = suggBox.scrollHeight;
+                suggBox.scrollTo(0, scval);
+            } else if (currentFocus<x.length) {
+                scval -= 47;
+                suggBox.scrollTo(0, scval);
+            }
+        } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            } else {
+                window.location.assign("?q="+userData);
+            }
+        } else {
+            let userData = e.target.value; //user enetered data
+            let emptyArray = [];
+            if(userData){
+                icon.onclick = ()=>{
+                    webLink = `?q=${userData}`;
+                    linkTag.setAttribute("href", webLink);
+                    linkTag.click();
+                    $(".loader-wrapper").fadeIn("slow");
+                }
 
-            emptyArray = suggestions.filter((data)=>{
-                //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
-                return data.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
-            });
+                emptyArray = suggestions.filter((data)=>{
+                    //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+                    return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+                });
 
-            emptyArray = emptyArray.map((data)=>{
-                // passing return data inside li tag
-                return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${suggestions_comma[suggestions.indexOf(data)]} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
-            });
+                emptyArray2 = suggestions.filter((data)=>{
+                    return data.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
+                });
 
-            searchWrapper.classList.add("active"); //show autocomplete box
-            showSuggestions(emptyArray);
-            
-            // NOTE: use the below code to edit or overwrite the results "li tag"
-            //let allList = suggBox.querySelectorAll("li");
-            //for (let i = 0; i < allList.length; i++) {
-            //    //adding onclick attribute in all li tag
-            //    allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//setAttribute("onclick", "select(this)");
-            //}
-        }else{
-            searchWrapper.classList.remove("active"); //hide autocomplete box
+                emptyArray = emptyArray.concat(emptyArray2);
+                emptyArray = emptyArray.slice(0,20).map((data)=>{ //remove slice method to return all matches
+                    // passing return data inside li tag
+                    return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${suggestions_comma[suggestions.indexOf(data)]} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
+                });
+
+                searchWrapper.classList.add("active"); //show autocomplete box
+                showSuggestions(emptyArray);
+                
+                // NOTE: use the below code to edit or overwrite the results "li tag"
+                //let allList = suggBox.querySelectorAll("li");
+                //for (let i = 0; i < allList.length; i++) {
+                //    //adding onclick attribute in all li tag
+                //    allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//setAttribute("onclick", "select(this)");
+                //}
+            }else{
+                searchWrapper.classList.remove("active"); //hide autocomplete box
+            }
+            currentFocus = -1; // reset currentFocus
         }
     }
 
@@ -527,6 +575,23 @@ Loading...
         listData = list.join('');
         }
         suggBox.innerHTML = listData;
+    }
+    
+    function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocom-box-active");
+    }
+    function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocom-box-active");
+        }
     }
 </script>
 

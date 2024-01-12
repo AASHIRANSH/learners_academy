@@ -118,9 +118,9 @@
         <div class="row mb-3"><!-- Hindi -->
           <div class="row col-4">
             <div class="col-12 mb-2">
-              {{form.tip.label_tag}}
-              <textarea class="form-control" name="tip" id="id_tip" rows="4">{% if edit %}{{form.tip.value}}{% endif %}</textarea>
-              {{form.tip.errors}}
+              {{form.definition_urdu.label_tag}}
+              <textarea class="form-control" name="definition_urdu" id="id_definition_urdu" rows="4">{% if edit %}{{form.definition_urdu.value}}{% endif %}</textarea>
+              {{form.definition_urdu.errors}}
             </div>
           </div>
           <div class="row col-8 mx-0">
@@ -209,9 +209,9 @@
 
           
           <div class="col-6 mb-2">
-            {{form.collocation.label_tag}}
-            <textarea class="form-control" name="collocation" id="id_collocation" rows="2">{% if edit %}{% if form.collocation.value %}{{form.collocation.value}}{% endif %}{% endif %}</textarea>
-            {{form.collocation.errors}}
+            {{form.tip.label_tag}}
+            <textarea class="form-control" name="tip" id="id_tip" rows="2">{% if edit %}{% if form.tip.value %}{{form.tip.value}}{% endif %}{% endif %}</textarea>
+            {{form.tip.errors}}
           </div>
           
           <div class="col-6 mb-2">

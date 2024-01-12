@@ -1095,9 +1095,10 @@ theader #title_bar #user {
   position: absolute;
   top: 80%;
   right: 0;
-  width: 210px;
+  width: 12rem;
   height: auto;
   background-color: #eeeeee;
+  border: 4px solid #ddd;
   border-radius: 0.75rem;
   overflow: hidden;
   animation: rubberBand 0.5s;
@@ -1128,7 +1129,7 @@ theader #title_bar #user {
   color: #333;
   display: block;
   text-decoration: none;
-  padding: 0.2rem;
+  padding: 0.3rem 0;
 }
 
 .ui_main ul li a:hover {

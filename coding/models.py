@@ -25,3 +25,11 @@ class PythonQuestion(models.Model):
 
 #     def __str__(self):
 #         return self.question
+    
+class Post(models.Model):
+    title = models.CharField(("Title"), max_length=50)
+    content = models.TextField((""))
+    language = models.CharField(("Language"), max_length=50)
+
+    def __str__(self):
+        return f'{self.title} ({self.language})'

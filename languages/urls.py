@@ -24,7 +24,7 @@ urlpatterns = [
     path('note-edit/<int:id>', views.note_edit, name="note_edit"),
 
     path('wordedit/', views.edit, name="edit_card"),
-    path('data', views.data),
+    path('data', views.data, name="data"),
     path('flashcards/', include("languages.english.flashcards.urls")),
     
     # Ex-Action

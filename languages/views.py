@@ -13,6 +13,7 @@ import random, datetime, json
 ''' /home/muhammadsog/learners_academy/ '''
 
 def index(request, id):
+    
     with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
         db = fdb.read()
         db = json.loads(db)
@@ -94,7 +95,8 @@ def post_entry(request):
             messages.error(request, "There was an error!")
             return redirect("post_entry")
     vars = {
-        "form":form
+        "form":form,
+        "edit":True
     }
     return render(request, "post_entry.html", vars)
 
@@ -415,7 +417,7 @@ def dictionary(request):
     search_in = get.get("in","").strip()
 
     if search_query:
-        words = Word.objects.filter(Q(word__startswith=search_query) | Q(word__contains=search_query) | Q(pos=search_pos, definition__contains=search_in))
+        words = Word.objects.filter(Q(word__startswith=search_query, pos=search_pos, definition__contains=search_in) | Q(word__contains=search_query))
     else:
         words = Word.objects.all()
     
@@ -433,10 +435,6 @@ def dictionary(request):
 
 ''' Creates a file with all dictiory headwords '''
 def dictionary_json(request):
-    # vars_get = request.GET
-    # search_query = vars_get.get("q","").strip()
-
-    # words = Word.objects.filter(word__contains=search_query).order_by('word')[0:10]
     words = Word.objects.all().order_by('word')
     
     headwords = []
@@ -444,12 +442,12 @@ def dictionary_json(request):
     unique = []
     for x in words:
         if x.word+x.pos not in unique:
-            headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
+            # headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
             pos.append(x.pos)
             unique.append(x.word+x.pos)
     
-    with open("database/models/headwords.json", mode="w") as jsondict:
-        json.dump(headwords, fp=jsondict)
+    # with open("database/models/headwords.json", mode="w") as jsondict:
+    #     json.dump(headwords, fp=jsondict)
 
     with open("database/models/pos.json", mode="w") as jsondict:
         json.dump(pos, fp=jsondict)
@@ -460,7 +458,7 @@ def dictionary_json(request):
     
 
     # return JsonResponse(adv_model, safe=False)
-    return 
+    return None
 
 def dictionary_collocation(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
@@ -734,7 +732,7 @@ def revise(request):
         return redirect("words")
     
     in_rv = list(rvp_obj[0:5])
-    items = list(rvp_obj.order_by('-date')[0:5])
+    items = list(rvp_obj.order_by('date')[0:5])
     in_rv.extend(items)
   
     ''' JS '''
@@ -742,7 +740,6 @@ def revise(request):
     
     for x in in_rv:
         word = x.word
-        #print(word.id)
         if word.pronounce:
             pronounce = x.word.pronounce.splitlines()
         else:
@@ -750,35 +747,30 @@ def revise(request):
                 obj = Word.objects.filter(ref_id=word.word+"_1").first()
                 if obj:
                     pronounce = obj.pronounce.splitlines()
-                    pronounce = [pronounce[0],pronounce[1]]
                 else:
                     pronounce = ["",""]
             elif word.pos == "noun":
                 obj = Word.objects.filter(ref_id=word.word+"_2").first()
                 if obj:
                     pronounce = obj.pronounce.splitlines()
-                    pronounce = [pronounce[0],pronounce[1]]
                 else:
                     pronounce = ["",""]
             elif word.pos == "adjective":
                 obj = Word.objects.filter(ref_id=word.word+"_3").first()
                 if obj:
                     pronounce = obj.pronounce.splitlines()
-                    pronounce = [pronounce[0],pronounce[1]]
                 else:
                     pronounce = ["",""]
             elif word.pos == "adverb":
                 obj = Word.objects.filter(ref_id=word.word+"_4").first()
                 if obj:
                     pronounce = obj.pronounce.splitlines()
-                    pronounce = [pronounce[0],pronounce[1]]
                 else:
                     pronounce = ["",""]
             elif word.pos == "conjunction":
                 obj = Word.objects.filter(ref_id=word.word+"_5").first()
                 if obj:
                     pronounce = obj.pronounce.splitlines()
-                    pronounce = [pronounce[0],pronounce[1]]
                 else:
                     pronounce = ["",""]
             else:
@@ -806,15 +798,15 @@ def revise(request):
 
         objs.append({
             "rv_id":x.pk,
-            "w_id":x.word.pk,
+            "pk":word.pk,
             "date":x.date.strftime("%Y-%m-%d"),
             "word":word.word,
             "pos":word.pos,
             "grade":word.grade if word.grade else "",
             "word_root":word.word_root,
             "root_pos":word.root_pos,
-            "pruk":pronounce[0],
-            "prus":pronounce[1],
+            "pruk":pronounce[0] if len(pronounce) > 1 else "smt is wrong with prnounce",
+            "prus":pronounce[1] if len(pronounce) > 1 else "word id is '{}'".format(word.pk),
             "forms":forms.splitlines(),
             "def_inf":word.def_inf,
             "basic_definition":word.basic_definition,
@@ -867,10 +859,38 @@ def edit(request):
 
     if request.method == "POST":
         datap = request.POST
-        data_form = WordsForm(datap or None, instance=word_obj)
+        data = request.POST.copy()
+
+        get_word_root = data.get('word_root')
+        get_word = data.get('word')
+        get_pos = data.get('pos')
+        get_grade = data.get('grade')
+
+        '''ref id'''
+        ref_id = datap.get('ref_id')
+        print("ref_id is", get_word)
+
+        if ref_id == "yes":
+            if get_pos == "verb":
+                ref_id = get_word+"_1"
+            elif get_pos == "noun":
+                ref_id = get_word+"_2"
+            elif get_pos == "adjective":
+                ref_id = get_word+"_3"
+            elif get_pos == "adverb":
+                ref_id = get_word+"_4"
+            elif get_pos == "conjunction":
+                ref_id = get_word+"_5"
+            elif get_pos == "preposition":
+                ref_id = get_word+"_7"
+        else:
+            ref_id = ""
+
+        data.update({"ref_id":ref_id})
+        data_form = WordsForm(data or None, instance=word_obj)
         if data_form.is_valid():
             data_form.save()
-            messages.success(request, "Great! the word was edited!")
+            messages.success(request,'The word "{}" was edited!'.format(get_word))
             return HttpResponseRedirect('/english/revise')
         else:
             messages.error(request, "There was an error!")

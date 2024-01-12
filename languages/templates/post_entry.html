@@ -18,46 +18,53 @@
     <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.date_created}}
-        <div class="row col-rows-3">
-            <div class="col mb-3">
+        <div class="row col-rows-3 mb-3">
+            <div class="col">
                 {{form.title.label_tag}}
                 {{form.title}}
                 {{form.title.error}}
             </div>
 
-            <div class="col mb-3">
+            <div class="col">
                 {{form.fill_values.label_tag}}
                 {{form.fill_values}}
                 {{form.fill_values.error}}
             </div>
             
-            <div class="col mb-3">
+            <div class="col">
                 {{form.image.label_tag}}
                 {{form.image}}
                 {{form.image.error}}
             </div>
         </div>
 
-        <div class="col mb-3">
+        <div class="mb-3">
             {{form.content.label_tag}}
-            <textarea name="content" cols="40" rows="10" id="id_content">
+            <textarea name="content" rows="10" id="id_content">
             {{form.content.value}}
             </textarea>
             {{form.content.error}}
         </div>
 
-        <div class="col">
+        <div class="row col-rows-3 mb-3">
+            <div class="col">
+                {{form.published.label_tag}}
+                {{form.published}}
+            </div>
+
+            <div class="col">
+                {{form.level.label_tag}}
+                {{form.level}}
+            </div>
+        </div>
+
+        <div class="col text-end">
             <input type="submit" value="Submit" class="btn btn-primary"/>
         </div>
     </form>
 </div>
 
-<script>
-    var inps = document.getElementsByTagName("input")
-    for (x in inps){
-        inps[x].classList.add("form-control")
-    }
-</script>
+{% include "static/components/bs_form.html" %}
 
 <script>
     document.body.onload = function(){

@@ -6,6 +6,21 @@
 
 {% include "header.html" %}
 {% include 'messages.html' %}
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+</svg>
+<div id="message">
+</div>
+
 {% include "english/rv_settings.html" %}
 <div id="KK"></div>
 <div id="cont" class="container mt-2"></div>
@@ -13,14 +28,16 @@
 <script>
     const objs = JSON.parse("{{objs|escapejs}}");
     const len = [];//used for current page if there are more than one card
+    const easy_arr = [];
+    const hard_arr = [];
 
     //for (let x = 0; x<fields.length; x++){
     //    document.getElementById(fields[x]).innerHTML = r_obj[fields[x]];
     //}
-    
+
     function master(){
         r_num = Math.floor(Math.random() * (objs.length - 0)) + 0;
-        
+
         while (len.includes(r_num)) {
             r_num = Math.floor(Math.random() * (objs.length - 0)) + 0;
         }
@@ -28,8 +45,8 @@
         r_obj = objs[r_num];
 
         let ms = `
-            <div class="row align-items-baseline">
-                <div id="word" class="col-auto fw-bold text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.w_id}')"{% endif %}>
+            <div class="row align-items-baseline bg-light">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" style="font-size:${r_obj.word.length > 25 ? (r_obj.word.length > 35 ? 1.5 : 2) : 2.5}rem;font-weight:700;" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.pk}')"{% endif %}>
                     ${r_obj.word}
                 </div>
 
@@ -48,13 +65,12 @@
                             <div id="ukpron" class="text-primary fs-5" style=""> UK <span id="pruk">${r_obj.pruk}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
                             <div id="uspron" class="text-danger fs-5" style=""> US <span id="prus">${r_obj.prus}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
                         </div>
-    
-                        {% if word.pic %}
-                            <div class="cursor-pointer col-auto">
-                                <div class=""><img id="pic_url" class="word-image" src="{{word.pic.url}}"/></div>
-                            </div>
-                        {% endif %}
-    
+
+                        ${r_obj.pic_url?
+                            '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
+                            '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
+                            '</div>':''
+                        }
                         ${r_obj.pic_url_url?
                             '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
                             '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
@@ -64,28 +80,29 @@
                 </div>
             </div>
 
-            <div class="d-flex align-items-baseline gap-1 rounded p-1 border border-4">
+            <div class="d-flex align-items-baseline gap-1 rounded p-1">
 
                 <div class="col-3">
                     <div id="forms-cont">
                     </div>
                 </div>
+
                 <div class="col-9 text-end">
 
                     <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
-                
-                    <button title="masterd" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
-                
-                    <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" onclick="window.location.assign('/english/data?data=easy&word=${r_obj.w_id}')" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
-                    
-                    <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" onclick="window.location.assign('/english/data?data=hard&word=${r_obj.w_id}')" accesskey="h"><i class="fa-regular fa-face-angry"></i></button>
-                
-                    <button type="button" title="Reload" class="btn btn-outline-primary col-auto fs-4" onclick="master();"><i class="fa-solid fa-rotate-right"></i></button>
-                    
+
+                    <button id="" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
+
+                    <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
+
+                    <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" accesskey="h"><i class="fa-regular fa-face-meh"></i></button>
+
+                    <button id="reload" data-action="reload" type="button" title="Reload" class="btn btn-outline-primary col-auto fs-4"><i class="fa-solid fa-rotate-right"></i></button>
+
                     <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
-                    
+
                     <button id="remove" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
-            
+
                 </div>
             </div>
         `;
@@ -94,29 +111,29 @@
         ms += `
             <div class="bg-primary rounded my-3 shadow">
                 <span class="text-white ps-2 mb-1">Definition</span>
-                
+
                 <div id="def-container" class="bg-gray position-relative rounded p-1">
-                    <div id="def" class="bg-primary bg-opacity-25 fs-4 p-2 rounded">
+                    <div id="def" class="bg-primary bg-opacity-25 fs-4 p-2 rounded" data-bs-target="#carouselExampleControls" data-bs-slide="next">
                         <div class="fs-6 mb-1">
                             <div>{{word.category.name}}</div>
                             ${r_obj.def_inf ? '<span class="d-inline-block bg-light bg-opacity-25 border border-light px-2 py-1 rounded">'+r_obj.def_inf+'</span>':''}
                         </div>
-        
+
                         <div id="carouselExampleControls" class="carousel slide">
                             <div class="carousel-inner">
-        
+
                                 <div class="carousel-item active">
                                     <div id="definition" class="">${r_obj.definition}</div>
                                 </div>
                                 <div class="carousel-item">
                                     ${r_obj.definition_hindi ? r_obj.definition_hindi : '<span class="fs-5 text-danger">Hindi definition not available for this word</span>'}
                                 </div>
-                                
+
                             </div>
                         </div>
-        
+
                         <div class="position-absolute top-0 end-0 m-2">
-                            <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls" data-bs-slide="next"></i>
+                            <i class="fa-solid fa-language fs-3 text-primary cursor-pointer"></i>
                         </div>
                     </div>
                 </div>
@@ -142,7 +159,7 @@
             </div>
             </div>
         `;
-        
+
         if (r_obj.context){
             ms+= `
             <div class="my-3 p-0">
@@ -205,7 +222,7 @@
                 `;
             }
         }
-        
+
         if (r_obj.compare){
             ms+= `<div class="my-3 p-0">
                 <div class="bg-primary text-white rounded py-1 px-2 mb-2">
@@ -255,17 +272,18 @@
         }
 
         document.getElementById("cont").innerHTML = ms+`
-            <div class="my-3">
-                <div class="d-flex justify-content-between bg-danger bg-opacity-50 text-white rounded-3 py-1 px-2 mb-2">
+            <div class="bg-gray rounded-3 my-3">
+                <div class="d-flex justify-content-between bg-danger bg-opacity-50 text-white rounded-3 py-1 px-2">
                     <div>my note</div>
                     <div class="bg-danger text-white cursor-pointer px-3 rounded" data-bs-toggle="modal" data-bs-target="#myNote"><i class="fa-regular fa-pen-to-square"></i></div>
                 </div>
-                <div id="note" class="px-3 bg-gray">
+                <div id="note" class="p-2">
                     {{revise.note|default:"you have no notes for this word."}}
                 </div>
             </div>
-        
+
             <div class="mb-5"></div>
+            
             <!--div class="accordion" id="accordionPanelsStayOpenExample">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -304,7 +322,7 @@
                     </div>
                 </div>
             </div-->
-    
+
             <!-- Modal Mastered Confirm -->
             <div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -319,7 +337,7 @@
                     <!--div class="modal-footer"-->
                     <div class="text-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
-                        <button id="master_confirm" type="button" class="btn btn-success" onclick="window.location.assign('/english/data?data=mastered&word={{word.id}}')">Certainly!</button>
+                        <button id="master" type="button" class="btn btn-success">Certainly!</button>
                     </div>
                     <!--/div-->
                 </div>
@@ -350,15 +368,11 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content p-1">
                     <div class="">
-                        {% if word.pic %}
-                            <img id="pic_url" class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic.url}}"/>
-                        {% else %}
-                            <img id="pic_url_url" class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic_url}}"/>
-                        {% endif %}
+                        <img id="pic_url" class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="${r_obj.pic_url ? r_obj.pic_url : r_obj.pic_url_url}"/>
                     </div>
                     </div>
                 </div>
-            </div>  
+            </div>
             <!-- My Note -->
             <div class="modal fade" id="myNote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -381,10 +395,9 @@
                 </div>
             </div>
         `;
-        
+
         if (r_obj.pos == "verb"){
             document.getElementById("forms-cont").innerHTML = `
-                <div>${r_obj.synonyms} ${r_obj.antonyms }</div>
                 <div class="col-auto">
                     <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Other Forms
@@ -432,21 +445,18 @@
                 contextDoc += `<div class="mb-2">`;
                 for ( let y=0; y < x.length; y++ ){
                     if (y==x.length-1){
-                        contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
+                        contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-10 px-2 py-1 rounded-3">${x[y]}</span>`;
                     } else {
-                        contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+                        contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-10 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
                     }
                 }
                 contextDoc += `</div>`;
             } // generating HTML content from context list
-        
+
             document.getElementById("context").innerHTML = contextDoc;
         }
 
-        //console.log(contextDoc);
-
         // Generating content
-        
         let synonymsSt = `${r_obj.synonyms}`.split(","); // context converted into list
         var synonymsDoc = ``;
 
@@ -484,41 +494,50 @@
             document.getElementById("antonyms").innerHTML = antonymsDoc;
         }
 
-        let ukp = document.getElementById("ukpron");
-        let usp = document.getElementById("uspron");
+        {//pronounce
+            let ukp = document.getElementById("ukpron");
+            let usp = document.getElementById("uspron");
 
-        ukp.addEventListener('click', function() {
-            //let audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
-            //audio1.play();
-            textToSpeech(r_obj.word,"UK")
-        });
-        usp.addEventListener('click', function() {
-            //let audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
-            //audio2.play();
-            textToSpeech(r_obj.word,"US")
-        });
+            ukp.addEventListener('click', function() {
+                //let audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
+                //audio1.play();
+                textToSpeech(r_obj.word,"UK")
+            });
+            usp.addEventListener('click', function() {
+                //let audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
+                //audio2.play();
+                textToSpeech(r_obj.word,"US")
+            });
+        }
 
         colors();
-        navigate();
+        
+        $('button').on('click', function () {
+            if (this.id=="reload"){
+                navigate();
+            }
+            if (this.id=="easy"){
+                easy_arr.push(r_obj.pk);
+                exAction("easy");
+            }
+            if (this.id=="hard"){
+                hard_arr.push(r_obj.pk);
+                exAction("hard");
+            }
+            if (this.id=="mastered"){
+                //mastered_arr.push(r_obj.pk);
+                exAction("mastered");
+            }
+        });
     }
-    
-    master();
 
-    function navigate(){
-        if (len.length == objs.length) {
-            window.location.reload();
-        }
-        len.push(r_num);
+    function exAction(action){
+        //let act = action == "easy" ? "easy" : action == "hard" ? "hard" : "";
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET","{% url 'data' %}?data="+action+"&word="+r_obj.pk, true);
+        xhttp.send();
     }
-    //for ( let y of Object.keys(r_obj)){      
-    //    document.getElementById(y).innerText = r_obj[y];
-    //}
 
-    //document.getElementById("KK").innerHTML = r_obj.w_id;
-</script>
-
-<!-- COLORS -->
-<script>
     function colors(){
         let def = document.getElementById("definition");
         def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
@@ -574,20 +593,32 @@
             //console.log(example.classList);
         });
     }
-    colors();
-</script>
 
-<!--AUTO REFRESHER SCRIPT-->
-<script>
-    if ("{{refresh}}" == "True") {
-        setTimeout(function() {
-            location.reload();
-        }, 4000);
-    } else {
-        setTimeout(function() {
-            location.reload();
-        }, 60000);
-    };
+    function navigate(){
+        if (len.length == objs.length-1) {
+            window.location.reload();
+        } else {
+            len.push(r_num);
+            master();
+        }
+    }
+
+    master();
+    
+    {//AUTO REFRESHER SCRIPT
+        if ("{{refresh}}" == "True") {
+            setTimeout(function() {location.reload();}, 4000);
+        } else {
+            setInterval(navigate, 60000);
+        }
+    }
+
+    //const btnAct = {
+    //    easy: function(){},
+    //    hard: function(){},
+    //    mastered: function(){}
+    //}
+    //btnAct.easy()
 </script>
 
 {% include "tts_2.html" %}
