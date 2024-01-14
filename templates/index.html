@@ -93,7 +93,7 @@
 
   <hr class="mt-0">
   {% for post in posts %}
-    <div class="d-flex col-md-8 bg-gray rounded">
+    <div class="d-flex flex-wrap col-md-8 bg-gray rounded">
         <div id="lesson_cont" class="position-relative col-sm-12 col-md-5 rounded-3 border border-2 border-secondary m-2" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
           <div class="position-absolute top-0 start-0 bg-secondary bg-opacity-75 py-1 px-2 fst-italic rounded text-light">
             {{post.created_at|date:"j-m-y"}}

@@ -493,6 +493,76 @@ def collocation_entry(request):
         fields = []
         field = {}
         for x,y in data.items():
+            if x.startswith("entry_pos"):
+                field.update({
+                    x:y
+                })
+            if x.startswith("context"):
+                field.update({
+                    x:y
+                })
+            if x.startswith("examples"):
+                field.update({
+                    x:y
+                })
+            if len(field) == 3:
+                fields.append(field)
+                field = {}
+
+        data.update({
+            "fields":fields
+        })
+
+        get_word = data.get('word')
+        get_pos = data.get('pos')
+        get_usage = data.get('usage')
+
+        form = CollocationEntryForm(data)
+
+        if form.is_valid():
+            # form.save()
+            messages.success(request, f'the entry of "{get_word}" was added')
+            # messages.success(request, dict(data))
+            messages.success(request, fields)
+            
+            vars = {
+                "form":form,
+                "word":get_word,
+                "pos":get_pos,
+                "usage":get_usage,
+                "edit":False
+            }
+            
+            return render(request, "english/collocation_entry.html", vars)
+            # return HttpResponseRedirect('/english/flashcards/addcard')
+        else:
+            messages.error(request, form)
+
+    else:
+        form = CollocationEntryForm()
+
+    vars = {
+        "form":form,
+        "edit":False
+    }
+    return render(request,"english/collocation_entry.html", vars)
+
+def collocation_edit(request):
+    data = request.GET
+    word_id = data.get('word_id')
+    word_obj = Collocation.objects.get(id=word_id)
+    fields = json.loads(word_obj.fields)
+
+    form = CollocationEntryForm(instance=word_obj)
+
+    if request.method == "POST":
+        datap = request.POST
+        data = datap.copy()
+
+        fields = []
+        field = {}
+
+        for x, y in data.items():
             
             if x.startswith("entry_pos"):
                 field.update({
@@ -509,50 +579,11 @@ def collocation_entry(request):
             if len(field) == 3:
                 fields.append(field)
                 field = {}
+
         data.update({
             "fields":fields
         })
 
-        get_word = data.get('word')
-        get_pos = data.get('pos')
-        get_usage = data.get('usage')
-
-        form = CollocationEntryForm(data)
-
-        if form.is_valid():
-            # form.save()
-            messages.success(request, f'the entry of "{get_word}" was added')
-            # messages.success(request, dict(data))
-            messages.success(request, data)
-            
-            vars = {
-                "form":form,
-                "word":get_word,
-                "pos":get_pos,
-                "usage":get_usage,
-                "edit":False
-            }
-            
-            return render(request, "english/collocation_entry.html", vars)
-            # return HttpResponseRedirect('/english/flashcards/addcard')
-        else:
-            messages.error(request,form.errors)
-    else:
-        form = CollocationEntryForm()
-    vars = {
-        "form":form,
-        "edit":False
-    }
-    return render(request,"english/collocation_entry.html", vars)
-
-def collocation_edit(request):
-    data = request.GET
-    word_id = data.get('word_id')
-    word_obj = Collocation.objects.get(id=word_id)
-    form = CollocationEntryForm(instance=word_obj)
-
-    if request.method == "POST":
-        datap = request.POST
         data_form = CollocationEntryForm(datap or None, instance=word_obj)
         if data_form.is_valid():
             data_form.save()
@@ -563,6 +594,7 @@ def collocation_edit(request):
 
     vars = {
         "form":form,
+        "fields":fields,
         "edit":True
     }
     return render(request, "english/collocation_entry.html", vars)

@@ -38,7 +38,7 @@
     {//inf
         let inff = `<div class="text-light">{{rv_count}}/{{rv_total_count}}</div>
             <div class=""></div>
-            <div class=""><select class="form-control p-0">
+            <div class=""><select class="form-control py-0 px-2">
         `;
         for (let x of objs){
             inff += `<option>${x.word}</option>`;
@@ -102,7 +102,7 @@
     
                         <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
     
-                        <button id="" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
+                        <button id="msb" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
     
                         <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
     
@@ -346,7 +346,7 @@
                     </div>
                     <!--div class="modal-footer"-->
                     <div class="text-center">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
+                        <button type="button" data-action="reload" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
                         <button id="mastered" type="button" class="btn btn-success">Certainly!</button>
                     </div>
                     <!--/div-->
@@ -520,10 +520,12 @@
             });
         }
 
+        myTimeout = setTimeout(navigate, 60000);
+
         colors();
         
         $('button').on('click', function () {
-            if (this.id=="reload"){
+            if (this.getAttribute("data-action")=="reload"){
                 navigate();
             }
             if (this.id=="easy"){
@@ -534,10 +536,18 @@
                 hard_arr.push(r_obj.pk);
                 exAction("hard");
             }
+
+            //mastered
+            if (this.id=="msb"){
+                //mastered_arr.push(r_obj.pk);
+                clearTimeout(myTimeout);
+            }
             if (this.id=="mastered"){
                 //mastered_arr.push(r_obj.pk);
                 exAction("mastered");
             }
+
+            
             if (this.id=="delete"){
                 //mastered_arr.push(r_obj.pk);
                 exAction("delete");
@@ -619,14 +629,7 @@
     }
 
     master();
-    
-    {//AUTO REFRESHER SCRIPT
-        if ("{{refresh}}" == "True") {
-            setTimeout(function() {location.reload();}, 4000);
-        } else {
-            myInterval = setInterval(navigate, 60000);
-        }
-    }
+
 
     //const btnAct = {
     //    easy: function(){},

@@ -56,22 +56,7 @@
 
       <!-- Entry Pos -->
       <div id="entry" class="row mb-3">
-        <div class="col-12">
-          {{form.entry_pos.label_tag}}
-          <input type="text" class="form-control" name="entry_pos" value="{% if edit %}{{form.entry_pos.value}}{% else %}{{entry_pos|default:''}}{% endif %}" id="id_entry_pos"></input>
-          {{form.entry_pos.error}}
-        </div>
-
-        <div class="col-4 mb-3">
-          <label for="context">Example Heading:</label>
-          <textarea class="form-control" name="context" id="id_context" rows="3">{% if edit %}{{form.context.value}}{% endif %}</textarea>
-        </div>
-
-        <div class="col-8 mb-3">
-          <label for="examples">Example Sentences:</label>
-          <textarea class="form-control" rows="3" name="examples" id="id_examples">{% if edit %}{{form.examples.value}}{% endif %}</textarea>
-        </div>
-
+        
         {% if edit %}
           {% if form.context_1.value %}
             <hr>
@@ -166,8 +151,14 @@
   </form>
 
   <script>//Add Entry
+    let worde = document.getElementById("id_word");
+    let word = worde.value;
     let btn = document.getElementById("addBtn");
     let entry = document.getElementById("entry");
+
+    worde.onchange = (e)=> {
+      word = e.target.value;
+    }
 
     btn.addEventListener("click", function(){
       addEntry();
@@ -179,18 +170,35 @@
       let option = `
         <hr>
         <div class="col-12 mb-3">
-          <label for="context">Entry POS ${elems+1}:</label>
-          <input type="text" class="form-control" name="entry_pos_${elems+1}" id="id_entry_pos_${elems+1}"></input>
+          <label for="context">Entry POS ${elems}:</label>
+          <select class="form-select" name="entry_pos_${elems}" id="id_context_${elems}">
+            <option value="">--</option>
+            <option value="noun" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun</option>
+            <option value="noun+${word}" {% if pos == 'noun' or form.pos.value == 'noun' %}selected{% endif %}>noun+${word}</option>
+            <option value="verb" {% if pos == 'verb' or form.pos.value == 'verb' %}selected{% endif %}>verb</option>
+            <option value="verb+${word}" {% if pos == 'verb' or form.pos.value == 'verb' %}selected{% endif %}>verb+${word}</option>
+            <option value="${word}+verb" {% if pos == 'verb' or form.pos.value == 'verb' %}selected{% endif %}>${word}+verb</option>
+            <option value="phrasal verb" {% if pos == 'phrasal verb' or form.pos.value == 'phrasal verb' %}selected{% endif %}>phrasal verb</option>
+            <option value="adjective" {% if pos == 'adjective' or form.pos.value == 'adjective' %}selected{% endif %}>adjective</option>
+            <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
+            <option value="idiom" {% if pos == 'idiom' or form.pos.value == 'idiom' %}selected{% endif %}>idiom</option>
+            <option value="adverb" {% if pos == 'adverb' or form.pos.value == 'adverb' %}selected{% endif %}>adverb</option>
+            <option value="preposition" {% if pos == 'preposition' or form.pos.value == 'preposition' %}selected{% endif %}>preposition</option>
+            <option value="conjunction" {% if pos == 'conjunction' or form.pos.value == 'conjunction' %}selected{% endif %}>conjunction</option>
+            <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
+            <option value="slang" {% if pos == 'slang' or form.pos.value == 'slang' %}selected{% endif %}>slang</option>
+            <option value="abbreviation" {% if pos == 'abbreviation' or form.pos.value == 'abbreviation' %}selected{% endif %}>abbreviation</option>
+          </select>
         </div>
 
         <div class="col-4 mb-3">
           <label for="context">Example Heading:</label>
-          <textarea class="form-control" name="context_${elems+1}" id="id_context_${elems+1}" rows="3"></textarea>
+          <textarea class="form-control" name="context_${elems}" id="id_context_${elems}" rows="3"></textarea>
         </div>
 
         <div class="col-8 mb-3">
           <label for="c_2">Example Sentences:</label>
-          <textarea class="form-control" rows="3" name="examples_${elems+1}" id="id_examples_${elems+1}"></textarea>
+          <textarea class="form-control" rows="3" name="examples_${elems}" id="id_examples_${elems}"></textarea>
         </div>
       `;
       entry.insertAdjacentHTML("beforeend",option);
