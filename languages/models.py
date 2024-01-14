@@ -31,6 +31,7 @@ class Collocation(models.Model):
     word = models.CharField(max_length=50)
     pos = models.CharField(max_length=50)
     usage = models.CharField(("Usage"), max_length=50, blank=True, null=True)
+    # fields = models.TextField(("Fields"))
 
     entry_pos = models.CharField(max_length=50)
     context = models.TextField(blank=True, null=True)

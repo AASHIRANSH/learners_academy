@@ -16,10 +16,10 @@ def index(request, id):
     
     with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
         db = fdb.read()
-        db = json.loads(db)
+        
     vars = {
         "id":id,
-        "data":json.dumps(db)
+        "data":db
     }
     return render(request, "english/learn.html", vars)
 
@@ -488,7 +488,30 @@ def collocation_entry(request):
 
     if request.method == "POST":
         datap = request.POST
-        data = request.POST.copy()
+        data = datap.copy()
+
+        fields = []
+        field = {}
+        for x,y in data.items():
+            
+            if x.startswith("entry_pos"):
+                field.update({
+                    x:y
+                })
+            if x.startswith("context"):
+                field.update({
+                    x:y
+                })
+            if x.startswith("examples"):
+                field.update({
+                    x:y
+                })
+            if len(field) == 3:
+                fields.append(field)
+                field = {}
+        data.update({
+            "fields":fields
+        })
 
         get_word = data.get('word')
         get_pos = data.get('pos')
@@ -497,9 +520,10 @@ def collocation_entry(request):
         form = CollocationEntryForm(data)
 
         if form.is_valid():
-            form.save()
+            # form.save()
             messages.success(request, f'the entry of "{get_word}" was added')
-            # messages.success(request, data)
+            # messages.success(request, dict(data))
+            messages.success(request, data)
             
             vars = {
                 "form":form,
@@ -797,6 +821,7 @@ def revise(request):
         collocation = Collocation.objects.filter(word=word, pos=word.pos).first()
 
         objs.append({
+            "rv_count":rv_obj.count(),
             "rv_id":x.pk,
             "pk":word.pk,
             "date":x.date.strftime("%Y-%m-%d"),

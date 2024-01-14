@@ -132,6 +132,7 @@ class ArabicDictionary(Models):
 
 ''' Create Model '''
 # Turkey.create()
+# ArabicDictionary.create()
     
 
 ''' Create Model Objects '''
@@ -149,7 +150,7 @@ class ArabicDictionary(Models):
 
 
 ''' Delete Model '''
-# Turkey.delete(name="againmodel")
+# Turkey.delete(name="turkey_model")
 
 
 # print(dir(x))

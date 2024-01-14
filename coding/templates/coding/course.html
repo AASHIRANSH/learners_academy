@@ -1,28 +1,49 @@
 {% extends "base.html" %}
+{% block head %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+  <!-- and it's easy to individually load additional languages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+{% endblock head %}
+
 {% block body %}
 {% include "header.html" %}
 
-<button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-  <i class="fa-solid fa-bars"></i>
-</button>
-  
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{course|capfirst}} <i class="fa-brands fa-python fs-5"></i></h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div>
-      {% for x in model %}
-          <div class="bg-gray px-2"><a href="?chapter={{x.pk}}" class="d-block py-1">{{x.chapter_name}}</a></div>
-      {% endfor %}
+<div id="coding" class="container bg-light py-3 mb-5">
+
+  <div class="d-flex justify-content-between gap-2 bg-gray p-5 rounded-3">
+    <button class="btn btn-outline-secondary" title="contents" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="overflow-y: scroll;">
+      <div class="offcanvas-header">
+        <h4 class="offcanvas-title" id="offcanvasExampleLabel">{{course|capfirst}} <i class="fa-brands fa-python fs-4"></i></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="bg-light">
+          {% for x in model %}
+              <div class="px-2"><a href="?chapter={{x.pk}}" class="d-block py-1">{{x.chapter_name}}</a></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+    <div class="learner text-center fs-1 fw-bold">
+      {{chapter.chapter_name}}
     </div>
   </div>
-</div>
 
-<div id="coding" class="container my-5">
-
-  <div>{{chapter.chapter_name}}</div>
+  <div class="row my-3">
+    <div class="col">
+      <a href="?chapter={{chapter_num|add:-1}}" class="btn btn-success text-light {% if has_prev %}disabled{% endif %}" role="button">Prev</a>
+    </div>
+    <div class="col text-end">
+      <a href="?chapter={{chapter_num|add:1}}" class="btn btn-success text-light {% if has_next %}disabled{% endif %}" role="button">Next</a>
+    </div>
+  </div>
+  <hr>
   <div>{{chapter.content|safe}}</div>
 
   <!-- pagination -->
@@ -40,11 +61,21 @@
 <script>
   let h2 = document.getElementsByTagName("h2");
   let h3 = document.getElementsByTagName("h3");
+  let tryit = document.querySelectorAll(".w3-btn");
+
   for (let x of h2){
-    x.classList.add("fs-3","p-2","border-bottom","border-2","border-secondary");
+    x.classList.add("fs-3","p-2","mt-3","border-bottom","border-1","border-secondary");
   }
+
   for (let x of h3){
-    x.classList.add("fs-4","p-2","border-bottom","border-2","border-secondary");
+    x.classList.add("fs-4","p-2","mt-3","border-bottom","border-1","border-secondary");
   }
+
+  for (let x of tryit){
+    x.classList.remove("w3-btn");
+    x.classList.add("btn","btn-success");
+  }
+
+  hljs.highlightAll();
 </script>
 {% endblock body %}

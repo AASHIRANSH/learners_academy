@@ -12,7 +12,7 @@
         <div class="row">
             <label>Select Voice</label>
             <div class="outer">
-                <select></select>
+                <select id="ttss"></select>
             </div>
         </div>
         <button>Convert To Speech</button>
@@ -20,7 +20,7 @@
 </div>
 <script>
     const textarea = document.querySelector("textarea"),
-        voiceList = document.querySelector("select"),
+        voiceList = document.querySelector("#ttss"),
         speechBtn = document.querySelector("button");
 
     let synth = speechSynthesis,

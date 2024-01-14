@@ -22,7 +22,11 @@
 </div>
 
 {% include "english/rv_settings.html" %}
-<div id="KK"></div>
+<button id="reload" data-action="reload" class="position-fixed m-3 btn btn-primary p-2 rounded-circle d-flex align-items-center justify-content-center customizer-btn" type="button" style="bottom:3rem;right:0.2rem;" accesskey="r">
+    <i class="fa-solid fa-rotate-right fs-5"></i>
+</button>
+
+<div class="d-flex justify-content-between gap-2 bg-secondary p-1" id="cards"></div>
 <div id="cont" class="container mt-2"></div>
 
 <script>
@@ -31,9 +35,17 @@
     const easy_arr = [];
     const hard_arr = [];
 
-    //for (let x = 0; x<fields.length; x++){
-    //    document.getElementById(fields[x]).innerHTML = r_obj[fields[x]];
-    //}
+    {//inf
+        let inff = `<div class="text-light">{{rv_count}}/{{rv_total_count}}</div>
+            <div class=""></div>
+            <div class=""><select class="form-control p-0">
+        `;
+        for (let x of objs){
+            inff += `<option>${x.word}</option>`;
+        }
+        inff += `</select></div>`
+        document.getElementById("cards").innerHTML = inff;
+    }
 
     function master(){
         r_num = Math.floor(Math.random() * (objs.length - 0)) + 0;
@@ -45,7 +57,7 @@
         r_obj = objs[r_num];
 
         let ms = `
-            <div class="row align-items-baseline bg-light">
+            <div class="row align-items-baseline bg-light rounded p-2 m-0">
                 <div id="word" class="col-auto fw-bold text-primary d-inline" style="font-size:${r_obj.word.length > 25 ? (r_obj.word.length > 35 ? 1.5 : 2) : 2.5}rem;font-weight:700;" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.pk}')"{% endif %}>
                     ${r_obj.word}
                 </div>
@@ -78,31 +90,29 @@
                         }
                     </div>
                 </div>
-            </div>
 
-            <div class="d-flex align-items-baseline gap-1 rounded p-1">
+                <div class="d-flex align-items-baseline gap-1 rounded p-1">
 
-                <div class="col-3">
-                    <div id="forms-cont">
+                    <div class="col-3">
+                        <div id="forms-cont">
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-9 text-end">
-
-                    <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
-
-                    <button id="" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
-
-                    <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
-
-                    <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" accesskey="h"><i class="fa-regular fa-face-meh"></i></button>
-
-                    <button id="reload" data-action="reload" type="button" title="Reload" class="btn btn-outline-primary col-auto fs-4"><i class="fa-solid fa-rotate-right"></i></button>
-
-                    <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
-
-                    <button id="remove" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
-
+    
+                    <div class="col-9 text-end">
+    
+                        <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
+    
+                        <button id="" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
+    
+                        <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
+    
+                        <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" accesskey="h"><i class="fa-regular fa-face-meh"></i></button>
+        
+                        <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
+    
+                        <button id="" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+    
+                    </div>
                 </div>
             </div>
         `;
@@ -337,7 +347,7 @@
                     <!--div class="modal-footer"-->
                     <div class="text-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
-                        <button id="master" type="button" class="btn btn-success">Certainly!</button>
+                        <button id="mastered" type="button" class="btn btn-success">Certainly!</button>
                     </div>
                     <!--/div-->
                 </div>
@@ -357,7 +367,7 @@
                     <!--div class="modal-footer"-->
                     <div class="text-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button id="delete" type="button" class="btn btn-danger" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')">Yes, remove</button>
+                        <button id="delete" type="button" class="btn btn-danger" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')">Yes, remove!</button>
                     </div>
                     <!--/div-->
                 </div>
@@ -528,6 +538,10 @@
                 //mastered_arr.push(r_obj.pk);
                 exAction("mastered");
             }
+            if (this.id=="delete"){
+                //mastered_arr.push(r_obj.pk);
+                exAction("delete");
+            }
         });
     }
 
@@ -536,6 +550,7 @@
         const xhttp = new XMLHttpRequest();
         xhttp.open("GET","{% url 'data' %}?data="+action+"&word="+r_obj.pk, true);
         xhttp.send();
+        navigate();
     }
 
     function colors(){
@@ -609,7 +624,7 @@
         if ("{{refresh}}" == "True") {
             setTimeout(function() {location.reload();}, 4000);
         } else {
-            setInterval(navigate, 60000);
+            myInterval = setInterval(navigate, 60000);
         }
     }
 

@@ -6,8 +6,8 @@ from coding.models import Python, PythonQuestion, Post#, SubQuestion
 class PythonView(admin.ModelAdmin):
     list_display = ['chapter_name']
 
-    class Media:
-        js= ('/static/js/tinyinject.js',)
+    # class Media:
+    #     js= ('/static/js/tinyinject.js',)
 
 @admin.register(PythonQuestion)
 class QuestionView(admin.ModelAdmin):

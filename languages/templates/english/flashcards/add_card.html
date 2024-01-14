@@ -81,6 +81,7 @@
                 <option value="phrase" {% if pos == 'phrase' or form.pos.value == 'phrase' %}selected{% endif %}>phrase</option>
                 <option value="idiom" {% if pos == 'idiom' or form.pos.value == 'idiom' %}selected{% endif %}>idiom</option>
                 <option value="adverb" {% if pos == 'adverb' or form.pos.value == 'adverb' %}selected{% endif %}>adverb</option>
+                <option value="noun, name" {% if pos == 'noun, name' or form.pos.value == 'noun, name' %}selected{% endif %}>noun, name</option>
                 <option value="preposition" {% if pos == 'preposition' or form.pos.value == 'preposition' %}selected{% endif %}>preposition</option>
                 <option value="conjunction" {% if pos == 'conjunction' or form.pos.value == 'conjunction' %}selected{% endif %}>conjunction</option>
                 <option value="exclamation" {% if pos == 'exclamation' or form.pos.value == 'exclamation' %}selected{% endif %}>exclamation</option>
@@ -224,4 +225,40 @@
     </form>
     </div>
   </div>
+
+  <script>
+    let input = document.getElementById("id_definition");
+    input.onchange = (e)=> {
+      translate(e.target.value,'ur');
+      translate(e.target.value,'hi');
+    }
+
+    function translate(text,lang){
+      const data = JSON.stringify([
+        {
+          Text: text
+        }
+      ]);
+
+      let toLang = lang;
+      let langid = lang == 'ur'?'urdu':'hindi';
+
+      const xhr = new XMLHttpRequest();
+      xhr.withCredentials = true;
+
+      xhr.addEventListener('readystatechange', function () {
+        if (this.readyState === this.DONE) {
+          let response = JSON.parse(this.responseText);
+          document.getElementById("id_definition_"+langid).innerHTML = response[0].translations[0].text;
+        }
+      });
+
+      xhr.open('POST', 'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+toLang+'&api-version=3.0&profanityAction=NoAction&textType=plain');
+      xhr.setRequestHeader('content-type', 'application/json');
+      xhr.setRequestHeader('X-RapidAPI-Key', '9ea8b16349msh45b993004bb2674p10f7f1jsnc7a403c6b963');
+      xhr.setRequestHeader('X-RapidAPI-Host', 'microsoft-translator-text.p.rapidapi.com');
+
+      xhr.send(data);
+    }
+  </script>
 {% endblock body %}

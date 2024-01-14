@@ -15,6 +15,76 @@
     });
 </script>
 
+<!-- Generating HTML content of Sentence Usage -->
+<script>
+    // Sentence Usage
+    if ("{{word.context|length}}" != "0"){
+    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
+    var context = [];
+    var contextDoc = ``;
+
+    for ( let x of contextSt ){
+        xx = x.split("+");
+        context.push(xx);
+    } // making list of context substrings
+
+
+    for ( let x of context ){
+        contextDoc += `<div class="mb-2">`;
+        for ( let y=0; y < x.length; y++ ){
+            if (y==x.length-1){
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
+            } else {
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
+            }
+        }
+        contextDoc += `</div>`;
+    } // generating HTML content from context list
+    document.getElementById("context").innerHTML = contextDoc;
+    //console.log(contextDoc);
+    }
+</script>
+
+<!-- Generating content -->
+<script>
+    
+    let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
+    var synonymsDoc = ``;
+
+    if ("{{word.synonyms}}"){
+        for ( let x of synonymsSt ){
+            x = x.trim()
+            synonymsDoc += `<span class="d-inline-block border-bottom border-3 border-primary pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("synonyms").innerHTML = synonymsDoc;
+    }
+
+
+    let relatedSt = `{{word.compare}}`.split(","); // context converted into list
+    var relatedDoc = ``;
+
+    if ("{{word.compare}}"){
+        for ( let x of relatedSt ){
+            x = x.trim()
+            relatedDoc += `<span class="d-inline-block border-bottom border-3 border-info pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+        } // generating HTML content from context list
+
+        document.getElementById("related").innerHTML = relatedDoc;
+    }
+
+    let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
+    var antonymsDoc = ``;
+
+    if ("{{word.antonyms}}"){
+        for ( let x of antonymsSt ){
+            x = x.trim()
+            antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+        } // generating HTML content from context list
+
+        document.getElementById("antonyms").innerHTML = antonymsDoc;
+    }
+</script>
 
 <script>
     let def = document.getElementById("definition");

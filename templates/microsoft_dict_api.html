@@ -8,30 +8,39 @@
 </head>
 
 <body>
+    <input id="input" type="text"/>
+    <div id="demo"></div>
+
     <script>
-        const data = JSON.stringify([
-            {
-                Text: 'I would really like to drive your car around the block a few times.'
-            }
-        ]);
+        let input = document.getElementById("input");
+        input.onkeyup = (e)=> {
+            translate(e.target.value);
+        }
+        function translate(text){
+            const data = JSON.stringify([
+                {
+                    Text: text
+                }
+            ]);
 
-        let toLang = 'hi';
+            let toLang = 'hi';
 
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
+            const xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
 
-        xhr.addEventListener('readystatechange', function () {
-            if (this.readyState === this.DONE) {
-                console.log(this.responseText);
-            }
-        });
+            xhr.addEventListener('readystatechange', function () {
+                if (this.readyState === this.DONE) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            });
 
-        xhr.open('POST', 'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+toLang+'&api-version=3.0&profanityAction=NoAction&textType=plain');
-        xhr.setRequestHeader('content-type', 'application/json');
-        xhr.setRequestHeader('X-RapidAPI-Key', '9ea8b16349msh45b993004bb2674p10f7f1jsnc7a403c6b963');
-        xhr.setRequestHeader('X-RapidAPI-Host', 'microsoft-translator-text.p.rapidapi.com');
+            xhr.open('POST', 'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+toLang+'&api-version=3.0&profanityAction=NoAction&textType=plain');
+            xhr.setRequestHeader('content-type', 'application/json');
+            xhr.setRequestHeader('X-RapidAPI-Key', '9ea8b16349msh45b993004bb2674p10f7f1jsnc7a403c6b963');
+            xhr.setRequestHeader('X-RapidAPI-Host', 'microsoft-translator-text.p.rapidapi.com');
 
-        xhr.send(data);
+            xhr.send(data);
+        }
     </script>
 </body>
 
