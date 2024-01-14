@@ -31,7 +31,7 @@ class Collocation(models.Model):
     word = models.CharField(max_length=50)
     pos = models.CharField(max_length=50)
     usage = models.CharField(("Usage"), max_length=50, blank=True, null=True)
-    fields = models.TextField(("Fields"))
+    fields = models.JSONField(default=dict)
     
     def __str__(self):
         return self.word

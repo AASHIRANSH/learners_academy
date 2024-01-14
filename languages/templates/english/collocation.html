@@ -27,8 +27,8 @@
 
                 <div class="row col-12 mb-3">
                     <div class="col-auto">
-                        <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{% if pronounce.0|length > 1 %}{{pronounce.0}}{% endif %}</span></div>
-                        <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{% if pronounce.0|length > 1 %}{{pronounce.1}}{% endif %}</span></div>
+                        <div id="ukpron" class="text-primary fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{{pronounce.0}}</span></div>
+                        <div id="uspron" class="text-danger fs-5" style=""><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{{pronounce.1}}</span></div>
                     </div>
                 </div>
             </div>
@@ -45,44 +45,15 @@
     </div>
 
     <div class="m-3">
-
-        <div class="mb-3">
-            <div class="fw-bold text-decoration-underline">{{word.entry_pos}}</div>
-            <div>{{word.context}}</div>
-            {% if word.examples %}<div class="fst-italic">&#x2022; {{word.examples}}</div>{% endif %}
-        </div>
-
-        {% if word.context_1 %}
+        {% for x in word.fields %}
             <div class="mb-3">
-                <div class="fw-bold text-decoration-underline">{{word.entry_pos_1}}</div>
-                <div>{{word.context_1}}</div>
-                {% if word.examples_1 %}<div class="fst-italic">&#x2022; {{word.examples_1}}</div>{% endif %}
+                <div class="fw-bold text-decoration-underline">{{x.entry_pos}}</div>
+                <div>{{x.context}}</div>
+                {% if x.examples %}
+                    <div class="fst-italic">&#x2022; {{x.examples}}</div>
+                {% endif %}
             </div>
-        {% endif %}
-
-        {% if word.context_2 %}
-            <div class="mb-3">
-                <div class="fw-bold text-decoration-underline">{{word.entry_pos_2}}</div>
-                <div>{{word.context_2}}</div>
-                {% if word.examples_2 %}<div class="fst-italic">&#x2022; {{word.examples_2}}</div>{% endif %}
-            </div>
-        {% endif %}
-
-        {% if word.context_3 %}
-            <div class="mb-3">
-                <div class="fw-bold text-decoration-underline">{{word.entry_pos_3}}</div>
-                <div>{{word.context_3}}</div>
-                {% if word.examples_3 %}<div class="fst-italic">&#x2022; {{word.examples_3}}</div>{% endif %}
-            </div>
-        {% endif %}
-
-        {% if word.context_4 %}
-            <div class="mb-3">
-                <div class="fw-bold text-decoration-underline">{{word.entry_pos_4}}</div>
-                <div>{{word.context_4}}</div>
-                {% if word.examples_4 %}<div class="fst-italic">&#x2022; {{word.examples_4}}</div>{% endif %}
-            </div>
-        {% endif %}
+        {% endfor %}
     </div>
 
     {% if example %}

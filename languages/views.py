@@ -495,15 +495,15 @@ def collocation_entry(request):
         for x,y in data.items():
             if x.startswith("entry_pos"):
                 field.update({
-                    x:y
+                    "entry_pos":y
                 })
             if x.startswith("context"):
                 field.update({
-                    x:y
+                    "context":y
                 })
             if x.startswith("examples"):
                 field.update({
-                    x:y
+                    "examples":y
                 })
             if len(field) == 3:
                 fields.append(field)
@@ -551,7 +551,7 @@ def collocation_edit(request):
     data = request.GET
     word_id = data.get('word_id')
     word_obj = Collocation.objects.get(id=word_id)
-    fields = json.loads(word_obj.fields)
+    fields = word_obj.fields
 
     form = CollocationEntryForm(instance=word_obj)
 
@@ -566,15 +566,15 @@ def collocation_edit(request):
             
             if x.startswith("entry_pos"):
                 field.update({
-                    x:y
+                    "entry_pos":y
                 })
             if x.startswith("context"):
                 field.update({
-                    x:y
+                    "context":y
                 })
             if x.startswith("examples"):
                 field.update({
-                    x:y
+                    "examples":y
                 })
             if len(field) == 3:
                 fields.append(field)
@@ -584,7 +584,7 @@ def collocation_edit(request):
             "fields":fields
         })
 
-        data_form = CollocationEntryForm(datap or None, instance=word_obj)
+        data_form = CollocationEntryForm(data or None, instance=word_obj)
         if data_form.is_valid():
             data_form.save()
             messages.success(request, "Great! the entry was edited!")
@@ -601,8 +601,12 @@ def collocation_edit(request):
 
 def collocation_view(request, id):
     word = Collocation.objects.get(id=id)
+    word_entry = Word.objects.get(ref_id=word.word+"_"+("2" if word.pos == "noun" else "1"))
+    fields = word.fields
     vars = {
-        "word":word
+        "word":word,
+        "pronounce":word_entry.pronounce.splitlines if word_entry else "",
+        "fields":fields
     }
     return render(request,"english/collocation.html",vars)
 
