@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
-{% load to_and %}
-
+{% block head %}
+<link rel="stylesheet" href="/static/css/animate.min.css"/>
+<style>
+    .bg-navy {
+        background-color: #000080;
+    }
+    .hover-grey:hover {
+        background-color: #ccc;
+    }
+</style>
+{% endblock head %}
 {% block body %}
 {% include 'english/flashcards/styles/flashcards.html' %}
-
-{% include "header.html" %}
+{% comment %} {% include "header.html" %} {% endcomment %}
 {% include 'messages.html' %}
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -22,12 +30,12 @@
 </div>
 
 {% include "english/rv_settings.html" %}
-<button id="reload" data-action="reload" class="position-fixed m-3 btn btn-primary p-2 rounded-circle d-flex align-items-center justify-content-center customizer-btn" type="button" style="bottom:3rem;right:0.2rem;" accesskey="r">
-    <i class="fa-solid fa-rotate-right fs-5"></i>
-</button>
 
 <div class="d-flex justify-content-between gap-2 bg-secondary p-1" id="cards"></div>
-<div id="cont" class="container mt-2"></div>
+<div id="cont" class="my-2">
+    <!--content-->
+</div>
+
 
 <script>
     const objs = JSON.parse("{{objs|escapejs}}");
@@ -56,7 +64,19 @@
 
         r_obj = objs[r_num];
 
+        {//generating 4 choices
+            var choices_arr = [[r_obj.definition,"easy"]];
+            for (let x in objs) {
+                if (x == r_num){continue;}else{choices_arr.push([objs[x].definition,"hard"]);}
+                
+                if (choices_arr.length == 4){break;}
+            }
+        }
+        choices_arr.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
+
         let ms = `
+        <!--div id="animator" class="w-100 animate__animated animate__fadeInRight"-->
+        <div class="container">
             <div class="row align-items-baseline bg-light rounded p-2 m-0">
                 <div id="word" class="col-auto fw-bold text-primary d-inline" style="font-size:${r_obj.word.length > 25 ? (r_obj.word.length > 35 ? 1.5 : 2) : 2.5}rem;font-weight:700;" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj.pk}')"{% endif %}>
                     ${r_obj.word}
@@ -91,7 +111,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex align-items-baseline gap-1 rounded p-1">
+                <div class="d-flex align-items-baseline gap-1">
 
                     <div class="col-3">
                         <div id="forms-cont">
@@ -107,7 +127,11 @@
                         <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
     
                         <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" accesskey="h"><i class="fa-regular fa-face-meh"></i></button>
-        
+
+                        <button id="reload" data-action="reload" class="btn btn-outline-primary col-auto fs-4" type="button" accesskey="r">
+                            <i class="fa-solid fa-rotate-right fs-5"></i>
+                        </button>
+
                         <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
     
                         <button id="" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
@@ -159,10 +183,14 @@
                         <ul>
                             <hr class="my-1">
         `;
-
+        
+        const examples = [];
         for (let x of r_obj.example){
-            ms += `<li class="example p-0"><!--&#x2022; bullet -->${x} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i></li><hr class="my-1">`;
+            examples.push(`<li class="example p-0"><!--&#x2022; bullet -->${x} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i></li><hr class="my-1">`);
         }
+
+        ms += examples.join('');
+
         ms += `
             </ul>
             </div>
@@ -332,6 +360,56 @@
                     </div>
                 </div>
             </div-->
+            </div>
+            <!--/div--><!--this is animator's div-->
+
+            <div id="vocab" class="bg-navy position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="z-index:1;">
+                <div class="position-absolute top-0 start-0 m-4">
+                    <a href="/" class="text-light"><i class="fa-solid fa-arrow-left"></i></a>
+                </div>
+
+                <div id="vocabc" class="bg-light col-10 col-md-8 p-4 rounded animate__animated animate__fadeInRight">
+                    <div>
+                        <span class="text-dark fw-bold fs-5 pe-2">${r_obj.word} (${r_obj.pos})</span>
+                        <span class="text-secondary">means:</span>
+                    </div>
+                    <hr class="my-2">
+                    ${examples.join('')}
+
+                    <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="1">
+                        <input class="form-check-input" data-action="${choices_arr[0][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                          A. ${choices_arr[0][0]}
+                        </label>
+                    </div>
+                    <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="2">
+                        <input class="form-check-input" data-action="${choices_arr[1][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                          B. ${choices_arr[1][0]}
+                        </label>
+                    </div>
+                    <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="3">
+                        <input class="form-check-input" data-action="${choices_arr[2][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                        <label class="form-check-label" for="flexRadioDefault3">
+                          C. ${choices_arr[2][0]}
+                        </label>
+                    </div>
+                    <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="4">
+                        <input class="form-check-input" data-action="${choices_arr[3][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+                        <label class="form-check-label" for="flexRadioDefault4">
+                          D. ${choices_arr[3][0]}
+                        </label>
+                    </div>
+
+
+                    <div id="exmenu" class="">
+                        <div class="d-flex justify-content-between bg-gray p-2">
+                            <button class="btn btn-primary py-1" data-action="defpage">word page</button>
+                            <button class="btn btn-primary py-1" data-action="reload">next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal Mastered Confirm -->
             <div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -406,7 +484,7 @@
             </div>
         `;
 
-        if (r_obj.pos == "verb"){
+        if (r_obj.pos == "verb"){//forms
             document.getElementById("forms-cont").innerHTML = `
                 <div class="col-auto">
                     <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -528,6 +606,16 @@
             if (this.getAttribute("data-action")=="reload"){
                 navigate();
             }
+            if (this.getAttribute("data-action")=="next"){
+                if (hard_arr.includes(r_obj.pk)){
+                    exAction("hard");
+                } else {
+                    exAction("easy");
+                }
+            }
+            if (this.getAttribute("data-action")=="defpage"){
+                $("#vocab").addClass("d-none");
+            }
             if (this.id=="easy"){
                 easy_arr.push(r_obj.pk);
                 exAction("easy");
@@ -551,6 +639,43 @@
             if (this.id=="delete"){
                 //mastered_arr.push(r_obj.pk);
                 exAction("delete");
+            }
+
+            const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+
+            const alert = (message, type) => {
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
+
+            alertPlaceholder.append(wrapper)
+            }
+
+            const alertTrigger = document.getElementById('liveAlertBtn')
+            if (alertTrigger) {
+                alertTrigger.addEventListener('click', () => {
+                    alert('Nice, you triggered this alert message!', 'success')
+                })
+            }
+        });
+
+        $('#vocab div').on('click', function () {
+            if (this.getAttribute("data-action")=="exbtn"){
+                let inpp = this.getElementsByTagName("input")[0];
+
+                if (inpp.getAttribute("data-action")=="hard"){
+                    $(this).addClass('text-danger animate__animated animate__shakeX');
+                    inpp.classList.add('bg-danger');
+                    hard_arr.push(r_obj.pk);
+                }
+
+                if (inpp.getAttribute("data-action")=="easy"){
+                    easy_arr.push(r_obj.pk);
+                }
             }
         });
     }
@@ -620,12 +745,20 @@
     }
 
     function navigate(){
-        if (len.length == objs.length-1) {
-            window.location.reload();
-        } else {
-            len.push(r_num);
-            master();
-        }
+        //let ani = document.getElementById("animator");
+        //ani.classList.add("animate__fadeOutLeft");
+        let vocabc = document.getElementById("vocabc");
+        vocabc.classList.add("animate__fadeOutLeft");
+
+        setTimeout(function(){
+            if (len.length == objs.length-1) {
+                window.location.reload();
+            } else {
+                len.push(r_num);
+                clearTimeout(myTimeout);//clear timeout so that there would be no other timeouts
+                master();
+            }
+        },1000)
     }
 
     master();
@@ -641,3 +774,9 @@
 
 {% include "tts_2.html" %}
 {% endblock body %}
+{% comment %} for x in model:
+    if "/" in x.pronounce:
+        x.ref_id = x.word+"_"+("1" if x.pos == "verb" else "2" if x.pos == "noun" else "3" if x.pos == "adjective" else "4")
+    else:
+        x.ref_id = ""
+    x.save() {% endcomment %}

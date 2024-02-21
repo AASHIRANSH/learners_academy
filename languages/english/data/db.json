@@ -1,52 +1,52 @@
 {
     "school": [
-        "principal:प्रधानाचार्य",
-        "clerk:लेखाकार",
-        "teacher:अध्यापक/पढ़ाने वाला",
-        "student:विधार्थी",
-        "peon:चपरासी",
-        "driver:गाड़ी चलाने वाला"
+        ["principal","प्रधानाचार्य"],
+        ["clerk","लेखाकार"],
+        ["teacher","अध्यापक/पढ़ाने वाला"],
+        ["student","विधार्थी/पढ़ने वाला"],
+        ["peon","चपरासी"],
+        ["driver","गाड़ी चलाने वाला"]
     ],
     "hospital": [
-        "doctor:डॉक्टर",
-        "dentist:दांतों का डॉक्टर",
-        "gastrologist:पेट का डॉक्टर"
+        ["doctor","डॉक्टर"],
+        ["dentist","दांतों का डॉक्टर"],
+        ["gastrologist","पेट का डॉक्टर"]
     ],
     "family": [
-        "father:पिताजी",
-        "mother:माताजी",
-        "sister:बहन",
-        "brother:भाई"
+        ["father","पिताजी"],
+        ["mother","माताजी"],
+        ["sister","बहन"],
+        ["brother","भाई"]
     ],
     "in_law_family_bride": [
-        "father-in-law:ससुर",
-        "mother-in-law:सास",
-        "brother-in-law:साला",
-        "sister-in-law:साली"
+        ["father-in-law","ससुर"],
+        ["mother-in-law","सास"],
+        ["brother-in-law","साला"],
+        ["sister-in-law","साली"]
     ],
     "in_law_family_groom": [
-        "father-in-law:ससुर",
-        "mother-in-law:सास",
-        "brother-in-law:देवर",
-        "sister-in-law:ननंद/नन्द"
+        ["father-in-law","ससुर"],
+        ["mother-in-law","सास"],
+        ["brother-in-law","देवर"],
+        ["sister-in-law","ननंद/नन्द"]
     ],
     "paternal_family": [
-        "grandfather:दादा",
-        "grandmother:दादी",
-        "uncle:चाचा/ताया",
-        "aunt:चाची/ताई"
+        ["grandfather","दादा"],
+        ["grandmother","दादी"],
+        ["uncle","चाचा/ताया"],
+        ["aunt","चाची/ताई"]
     ],
     "maternal_family": [
-        "uncle:मामा",
-        "aunt:मामी",
-        "uncle:मौसा/खालू",
-        "aunt:मौसी/खाला"
+        ["uncle","मामा"],
+        ["aunt","मामी"],
+        ["uncle","मौसा/खालू"],
+        ["aunt","मौसी/खाला"]
     ],
     "people": [
-        "man:आदमी",
-        "boy:लड़का",
-        "girl:लड़की",
-        "child:बच्चा",
-        "woman:औरत"
+        ["man","आदमी"],
+        ["boy","लड़का"],
+        ["girl","लड़की"],
+        ["child","बच्चा"],
+        ["woman","औरत"]
     ]
 }

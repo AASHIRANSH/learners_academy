@@ -13,9 +13,12 @@ def content_file_name(instance, filename):
 ''' Posts and Exercises'''
 class Topic(models.Model):
     name = models.CharField(max_length=50)
+    # cefr = models.CharField(("CEFR"), max_length=50, blank=True, null=True)
+    # word = models.ForeignKey("languages.Dictionary", verbose_name=("Word"), on_delete=models.CASCADE)
+    # sense = models.CharField(("Sense"), max_length=50, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.cefr}'
 
 
 class Thesaurus(models.Model):
@@ -66,7 +69,30 @@ class Word(models.Model):
     pic_url = models.CharField(max_length=300,blank=True, null=True)
 
     def __str__(self):
-        return f'{self.word} ({self.pos})'
+        return self.word
+
+class Dictionary(models.Model):
+    word = models.CharField(max_length=100)
+    pos = models.CharField(max_length=50)
+    cefr = models.CharField(max_length=10, blank=True, null=True)
+    pronounciation = models.JSONField(("Pronounciation"), blank=True, null=True)
+    forms = models.JSONField(("Forms"), blank=True, null=True)
+    senses = models.JSONField(("Senses"))
+    related_post = models.ManyToManyField("languages.Post", blank=True)
+    word_details = models.JSONField(("Word Details"), blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.word} {"("+self.pos+")" if self.pos else ""}'
+
+class Fav(models.Model):
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    revise = models.BooleanField(default=True)
+    word = models.ForeignKey("languages.Dictionary", verbose_name=("Word"), on_delete=models.CASCADE)
+    data = models.JSONField(("Data"), default=dict)
+
+    def __str__(self):
+        return f"{self.word.word} ({self.word.pos})"
 
 class Revise(models.Model):
     revise = models.BooleanField(default=True)

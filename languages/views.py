@@ -1,27 +1,288 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from .forms import PostForm, ExerciseForm, CommentForm, WordsForm, CollocationEntryForm
-#WordsDB Model
-from .models import Word, Revise, Collocation
-from .models import Post, Exercise, Comment, Like, Dislike
-
-from django.http import JsonResponse
-from django.core import serializers
+from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect, get_object_or_404
 from django.contrib.auth.models import User
-import random, datetime, json
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
+#WordsDB Model
+from .models import Word, Revise, Collocation, Topic, Dictionary, Fav
+from .models import Post, Exercise, Comment, Like, Dislike
+from .forms import PostForm, ExerciseForm, CommentForm, WordsForm, CollocationEntryForm
+
+from django.core import serializers
+from django.core.paginator import Paginator
+import random, datetime, json, requests
+import urllib.request
+from django.contrib import messages
+
 ''' /home/muhammadsog/learners_academy/ '''
 
 def index(request, id):
-    
+    strid = str(id)
+
+    with open("languages/data/en.json","rt",encoding='UTF-8') as endb:
+        endb = json.load(fp=endb)
+    with open("languages/english/data/db.json","rt",encoding='UTF-8') as tp:
+        tp = json.load(fp=tp)
+
+    dbb = []
+    for x in endb["unit_"+strid]:
+        et = x["type"]
+        if et=="word":
+            it = Dictionary.objects.get(pk=x["pk"])
+            topic = it.senses[x["sense"]]["topics"][0][0] if it.senses[x["sense"]]["topics"] else None
+
+            x["content"] = [[it.word,it.senses[x["sense"]]["definition"]["hi"]["basic"]],tp[topic] if topic else ""]
+            dbb.append(x)
+        elif et=="sentence":
+            pass
+
     with open("languages/english/data/db.json","rt",encoding='UTF-8') as fdb:
         db = fdb.read()
-        
+
     vars = {
         "id":id,
-        "data":db
+        "data":db,
+        "db":json.dumps(dbb)
     }
-    return render(request, "english/learn.html", vars)
+    return render(request, "english/learn_main.html", vars)
+
+def oxtems(request):
+    import os
+    files_dir = "languages/templates/english/dictionary/oxtems/temps/"
+    files = os.listdir(files_dir)
+    get = request.GET
+
+    if get.get("action")=="img":
+        import os
+        files = os.listdir("languages/templates/english/dictionary/oxtems/temps/")
+        for f in files:
+            links = []
+            with open("languages/templates/english/dictionary/oxtems/temps/"+f, encoding="UTF-8") as temp:
+                html = temp.read()
+
+            with open(f"languages/data/imglinks_{files[0]}_{files[-1]}.txt", mode="a+", encoding="UTF-8") as temp:
+                x = True
+                aus = 0
+                while x:
+                    aus = html.find('img class="thumb"',aus+1)
+                    img = html.find('src="',aus+17)
+                    if aus == -1:
+                        break
+                    else:
+                        links.append(html[aus+5:aue]+"\n")
+                temp.writelines(links)
+
+    if get.get("action")=="aud":
+        aus = 0
+        for f in files:
+            links = []
+            with open(files_dir+f, encoding="UTF-8") as temp:
+                html = temp.read()
+
+            with open(f"languages/data/audlinks_{files[0]}_{files[-1]}.txt", mode="a+", encoding="UTF-8") as temp:
+                x = True
+                while x:
+                    aus = html.find('mp3="',aus+1)
+                    aue = html.find('"',aus+5)
+                    if aus == -1:
+                        break
+                    else:
+                        links.append(html[aus+5:aue]+"\n")
+                temp.writelines(links)
+
+    if get.get("action")=="trim":
+        for f in files:
+            with open(files_dir+f, encoding="UTF-8") as temp:
+                html = temp.read()
+                html = html[html.find('<div id="entryContent"'):html.find('<div class="responsive_center')]
+
+            with open(files_dir+f, mode="w", encoding="UTF-8") as temp:
+                temp.write(html)
+
+    if get.get("action")=="del":
+        Dictionary.objects.all().delete()
+
+    if request.method == "POST":
+        data = request.POST.get("data")
+        data = data.replace("ampp","&")
+        # print(data)
+        # with requests.get('https://pastebin.com/raw/X8f4Nz6v', stream=True) as r:
+        #     r.raise_for_status()
+        #     b = bytearray()
+        #     for chunk in r.iter_content(4096):
+        #         b += chunk
+        #     d = json.loads(b.decode())
+        data = json.loads(data)
+
+        if data["forms"]:
+            for x in range(len(data["forms"])):
+                data["forms"][x][0] = " ".join(data["forms"][x][0].split())
+                data["forms"][x][1] = " ".join(data["forms"][x][1].split())
+                data["forms"][x][2] = [" ".join(i.split()) for i in data["forms"][x][2]]
+            
+        for x in data["senses"]:
+            x["labels"] = " ".join(x["labels"].split())
+            x["variants"] = [" ".join(i.split()) for i in x["variants"]]
+            x["definition"] = {
+                "ar": {
+                    "main":"",
+                    "basic":""
+                },
+                "en": {
+                    "main":" ".join(x["definition"].split()),
+                    "basic":""
+                },
+                "hi": {
+                    "main":"",
+                    "basic":""
+                },
+                "ur": {
+                    "main":"",
+                    "basic":""
+                },
+                "tr": {
+                    "main":"",
+                    "basic":""
+                },
+                "gr": {
+                    "main":"",
+                    "basic":""
+                }
+            }
+            x["examples"] = [" ".join(i.split()) for i in x["examples"]]
+
+        ''' Write to JSON file'''
+        # with open("languages/data/oxtems.json", mode="r") as js:
+        #     db = json.load(fp=js)
+        #     db.append(data)
+
+        # with open("languages/data/oxtems.json", mode="w") as js:
+        #     js.write(json.dumps(db,indent=4))
+
+        id_str = data["idioms_startfrom"]
+        if data["pos"]!="phrasal verb":
+            Dictionary.objects.create(
+                word=data["word"],
+                pos=data["pos"],
+                cefr=data["cefr"],
+                pronounciation=data["pronounciation"],
+                forms=data["forms"],
+                senses=data["senses"][0:id_str-1 if id_str else None],
+                word_details=data["word_details"]
+            )
+
+        if id_str:
+            for i in range(len(data["idcuts"][0])):
+                for j in range((data["idcuts"][3][i][-1]+1)-data["idcuts"][3][i][0]):
+                    data["senses"][data["idcuts"][3][i][j]]["sensenum"] = j+1
+                Dictionary.objects.create(
+                    word=data["idcuts"][0][i],
+                    pos="phrasal verb" if data["pos"]=="phrasal verb" else "idiom",
+                    senses=data["senses"][data["idcuts"][3][i][0]:data["idcuts"][3][i][-1]+1],
+                    word_details={
+                        "oxs":data["word_details"]["oxs"],
+                        "grammar":"",
+                        "labels":data["idcuts"][1][i],
+                        "variants":data["idcuts"][2][i],
+                        "inflections":"",
+                        "use":"",
+                        "word_origin":"",
+                        "culture":""
+                    }
+                )
+
+        return JsonResponse(data, safe=False)
+        ''' Write to JSON file end'''
+    else:
+        tn = int(get.get("t","1"))
+        page = requests.get('http://localhost:8000/english/')
+        # r = urllib.request.urlopen('https://w3schools.com/')
+        # page = r.read()
+
+        # links = []
+        # for x in range(1, len(files)+1):
+        #     link = "english/dictionary/oxtems/temps/ox"+f"{x:03n}"
+        #     links.append(link)
+
+        vars = {
+            # "page":templ,
+            # "p":page.text,
+            "link":"english/dictionary/oxtems/temps/ox"+f"{tn:03n}"
+            # "links":links
+        }
+        return render(request,"english/dictionary/oxtems/index.html", vars)
+
+def camtems(request):
+    if request.GET.get("action")=="aud":
+        import os
+        aus = 0
+        files = os.listdir("languages/templates/english/dictionary/oxtems/temps/")
+        for f in files:
+            links = []
+            with open("languages/templates/english/dictionary/oxtems/temps/"+f, encoding="UTF-8") as temp:
+                html = temp.read()
+
+            with open(f"languages/data/audlinks_{files[0]}_{files[-1]}.txt", mode="a+", encoding="UTF-8") as temp:
+                x = True
+                while x:
+                    aus = html.find('mp3="',aus+1)
+                    aue = html.find('"',aus+5)
+                    if aus == -1:
+                        break
+                    else:
+                        links.append(html[aus+5:aue]+"\n")
+                temp.writelines(links)
+
+    if request.GET.get("action")=="trim":
+        import os
+        for f in os.listdir("languages/templates/english/dictionary/oxtems/temps/"):
+            with open("languages/templates/english/dictionary/oxtems/temps/"+f, encoding="UTF-8") as temp:
+                html = temp.read()
+                html = html[html.find('<div class="di-body"'):html.find('<div class="lmt-10')]
+
+            with open("languages/templates/english/dictionary/oxtems/temps/"+f, mode="w", encoding="UTF-8") as temp:
+                temp.write(html)
+
+    if request.method == "POST":
+        data = request.POST.get("data")
+        data = json.loads(data)
+
+        if data["forms"]:
+            for x in range(len(data["forms"])):
+                data["forms"][x][0] = " ".join(data["forms"][x][0].split())
+                data["forms"][x][1] = " ".join(data["forms"][x][1].split())
+                data["forms"][x][2] = [" ".join(i.split()) for i in data["forms"][x][2]]
+            
+        for x in data["senses"]:
+            x["definition"] = " ".join(x["definition"].split())
+            x["examples"] = [" ".join(i.split()) for i in x["examples"]]
+        for x in data["idioms"]:
+            x["labels"] = " ".join(x["labels"].split())
+            x["definition"] = " ".join(x["definition"].split())
+            x["variants"] = " ".join(x["variants"].split())
+            x["examples"] = [" ".join(i.split()) for i in x["examples"]]
+
+      
+        with open("languages/data/oxtems.json", mode="r") as js:
+            db = json.load(fp=js)
+            db.append(data)
+
+        with open("languages/data/oxtems.json", mode="w") as js:
+            js.write(json.dumps(db,indent=4))
+            # json.dump(obj=db, fp=js, indent=4)
+        return JsonResponse(data, safe=False)
+    else:
+        get = request.GET
+        tn = get.get("t","1")
+        page = requests.get('http://localhost:8000/english/')
+        # r = urllib.request.urlopen('https://w3schools.com/')
+        # page = r.read()
+        vars = {
+            # "page":templ,
+            "p":page.text,
+            "link":"english/dictionary/oxtems/temps_cam/ca"+f"{int(tn):03n}"
+        }
+        return render(request,"english/dictionary/oxtems/cam_index.html", vars)
 
 
 '''Tenses'''
@@ -29,7 +290,7 @@ def pres_ind(request):
 
     return render(request,"english/tenses/present_indefinite.html")
 
-
+''' Posts '''
 def exercise_entry(request):
     datag = request.GET
     if datag.get("action") == "editexercise":
@@ -100,7 +361,6 @@ def post_entry(request):
     }
     return render(request, "post_entry.html", vars)
 
-from django.core.paginator import Paginator
 def post_list(request):
     datag = request.GET
     if datag.get("action") == "myposts":
@@ -118,7 +378,6 @@ def post_list(request):
         "page_obj": page_obj
     }
     return render(request, 'english/post_list.html', vars)
-
 
 def post_detail(request, pk):
     # user_obj = User.objects.get(username=request.user.username)
@@ -149,7 +408,6 @@ def post_detail(request, pk):
         }
     return render(request, 'post_detail.html', vars)
 
-
 def exercise(request, pk):
     # user_obj = User.objects.get(username=request.user.username)
     post = get_object_or_404(Post, pk=pk)
@@ -175,11 +433,9 @@ def exercise(request, pk):
         }
     return render(request, 'exercise.html', vars)
 
-
 def post_detail_test(request):
 
     return render(request, 'post_detail_test.html')
-
 
 '''Like and Dislike'''
 @login_required
@@ -313,7 +569,6 @@ def word(request,id):
     }
     return render(request, "english/words.html", vars)
 
-
 def words(request):
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
     words_all = Word.objects.all()
@@ -409,52 +664,43 @@ def words(request):
     }
     return render(request, "english/words.html", vars)
 
-from django.db.models import Q
-def dictionary(request):
-    get = request.GET
-    search_query = get.get("q","").strip()
-    search_pos = get.get("pos","").strip()
-    search_in = get.get("in","").strip()
-
-    if search_query:
-        words = Word.objects.filter(Q(word__startswith=search_query, pos=search_pos, definition__contains=search_in) | Q(word__contains=search_query))
-    else:
-        words = Word.objects.all()
-    
-    paginator = Paginator(words, 10)  # Show 6 contacts per page.
-    page_number = get.get("page") if get.get("page") else 1
-    page_navi = int(page_number)-1
-    page_obj = paginator.get_page(page_number)
-
-    vars = {
-        "wordscount":words.count(),
-        "wordsp":page_obj,
-        "pagen":page_navi,
-    }
-    return render(request, "english/dictionary.html", vars)
-
 ''' Creates a file with all dictiory headwords '''
 def dictionary_json(request):
-    words = Word.objects.all().order_by('word')
+    get = request.GET
+
+    if get.get("action")=="heads":
+        words = Dictionary.objects.all().order_by('word')
+        headwords = []
+        pos = []
+        unique = []
+        for x in words:
+            if x.word+x.pos not in unique:
+                # headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
+                pos.append(x.pos)
+                unique.append(x.word+x.pos)
+        
+        # with open("database/models/headwords.json", mode="w") as jsondict:
+        #     json.dump(headwords, fp=jsondict)
+
+        with open("database/models/pos.json", mode="w") as jsondict:
+            json.dump(pos, fp=jsondict)
     
-    headwords = []
-    pos = []
-    unique = []
-    for x in words:
-        if x.word+x.pos not in unique:
-            # headwords.append(x.word) #model.append({"pk":x.pk,"word":x.word,"pos":x.pos})
-            pos.append(x.pos)
-            unique.append(x.word+x.pos)
-    
-    # with open("database/models/headwords.json", mode="w") as jsondict:
-    #     json.dump(headwords, fp=jsondict)
+    elif get.get("action")=="topic":
+        words = Dictionary.objects.all().order_by('word')
+        for word in words:
+            senses = word.senses
+            for sense in senses:
+                if sense.topic:
+                    Topic.objects.create(name=sense.topic,cefr=sense.topic_cefr,word=word,sense=sense.sensenum)
 
-    with open("database/models/pos.json", mode="w") as jsondict:
-        json.dump(pos, fp=jsondict)
+    elif get.get("action")=="model":
+        words = Word.objects.all().order_by('word')
+        adv_model = serializers.serialize("json",words)
+        adv_model = json.loads(adv_model)
+        with open("languages/data/models/words.json", mode="w", encoding="UTF-8") as file:
+            json.dump(obj=adv_model,fp=file, indent=4)
+        return HttpResponse("The model was converted to JSON successfully")
 
-
-    # adv_model = serializers.serialize("json",words)
-    # adv_model = json.loads(adv_model)
     
 
     # return JsonResponse(adv_model, safe=False)
@@ -601,7 +847,7 @@ def collocation_edit(request):
 
 def collocation_view(request, id):
     word = Collocation.objects.get(id=id)
-    word_entry = Word.objects.get(ref_id=word.word+"_"+("2" if word.pos == "noun" else "1"))
+    word_entry = Word.objects.get(ref_id=word.word+"_"+("1" if word.pos == "verb" else "2" if word.pos == "noun" else "3" if word.pos == "adjective" else "4"))
     fields = word.fields
     vars = {
         "word":word,
@@ -622,7 +868,7 @@ def my_words(request):
     if search_query:
         words = Revise.objects.filter(Q(user=request.user) | Q(word__startswith=search_query) | Q(word__contains=search_query) | Q(pos=search_pos, definition__contains=search_in))
     else:
-        words = Revise.objects.filter(user=request.user)
+        words = Fav.objects.filter(user=request.user)
     
     paginator = Paginator(words, 10)  # Show 6 contacts per page.
     page_number = get.get("page") if get.get("page") else 1
@@ -634,7 +880,7 @@ def my_words(request):
         "wordsp":page_obj,
         "pagen":page_navi,
     }
-    return render(request, "english/dictionary.html", vars)
+    return render(request, "english/my_words.html", vars)
 
 @login_required
 def exercise(request):
@@ -792,7 +1038,7 @@ def revise(request):
         return redirect("words")
     
     in_rv = list(rvp_obj[0:5])
-    items = list(rvp_obj.order_by('date')[0:5])
+    items = list(rvp_obj.order_by('-created_at')[0:5])
     in_rv.extend(items)
   
     ''' JS '''
@@ -911,7 +1157,6 @@ def note_edit(request,id):
         pass
     return HttpResponseRedirect("/english/revise")
 
-
 def edit(request):
     data = request.GET
     word_id = data.get('word_id')
@@ -963,7 +1208,6 @@ def edit(request):
         "edit":True
     }
     return render(request, "english/flashcards/add_card.html", vars)
-
 
 def data(request):
     user = request.user
@@ -1018,8 +1262,6 @@ def data(request):
         else:
             messages.warning(request, "the word already exists")
             return HttpResponseRedirect('/english/words')
-        print(uwords)
-
 
     # file_path = f"languages/english/flashcards/data/users/{request.user.username}.txt"
 
@@ -1062,3 +1304,205 @@ def ex_action(request):
                 user_obj.profile.reputation += 1
                 user_obj.save()
     return JsonResponse(["successful"], safe=False)
+
+''' Dictionary '''
+from django.db.models import Q
+def dictionary(request):
+    get = request.GET
+    search_query = get.get("q","").strip()
+    search_in = get.get("in","").strip()
+
+    if search_query:
+        words = Dictionary.objects.filter(Q(word__startswith=search_query) | Q(word__contains=search_query))
+    else:
+        words = Dictionary.objects.all()
+
+    fav = Fav.objects.filter(user=request.user).values_list('word_id',flat=True)
+
+    paginator = Paginator(words, 10)  # 10 contacts per page.
+    page_number = get.get("page") if get.get("page") else 1
+    page_navi = int(page_number)-1
+    page_obj = paginator.get_page(page_number)
+
+    vars = {
+        "wordscount":words.count(),
+        "wordsp":page_obj,
+        "pagen":page_navi,
+        "fav":fav
+    }
+    return render(request, "english/dictionary_2.html", vars)
+
+''' Word Page'''
+def word_main(request,word):
+    word = Dictionary.objects.get(pk=word)
+    nw = Dictionary.objects.all()[word.pk-4 if word.pk > 3 else 0:word.pk+3]
+
+    # collocation = Collocation.objects.filter(word=word.word, pos=word.pos).first()
+    
+    vars = {
+        "word":word,
+        "nw":nw,
+        # "collocation":collocation,
+    }
+    return render(request, "english/word_main.html", vars)
+
+'''Revise'''
+def revise_main(request):
+    datag = request.GET
+    user = request.user
+    rv_obj = Fav.objects.filter(user=user)
+
+    if not rv_obj.exists():
+        messages.warning(request, "You have not added any words yet!")
+        return redirect("words")
+
+    today = datetime.datetime.today()
+    # today = today.strftime("%Y-%m-%d")
+
+    rvp_obj = []
+    rvp_obj_count = 0
+    for x in rv_obj:
+        for yn, y in enumerate(x.data["dates"]):
+            ydate = datetime.datetime.strptime(y,"%Y-%m-%d")
+            if ydate <= today:
+                rvp_obj.append([{
+                    "pk":x.pk,
+                    "rvsense":yn,
+                    "wpk":x.pk,
+                    "word":x.word.word,
+                    "pos":x.word.pos,
+                    "cefr":x.word.cefr,
+                    "forms":x.word.forms,
+                    "pronounciation":x.word.pronounciation
+                },
+                x.word.senses[yn]
+                ])
+            rvp_obj_count += 1
+
+        if len(rvp_obj) == 10:
+            break
+    
+    if not rvp_obj:
+        messages.warning(request, "You do not have any words due for revision!")
+        return HttpResponseRedirect(datag.get("back","/"))
+        # return redirect("words")
+
+
+    # randnums = random.sample(items, 3) #for more than one item, it contains 3 random objects from the model
+    vars = {
+        "objs":json.dumps(rvp_obj),
+        "rv_total_count":rvp_obj_count, #rv_obj.count()+
+        "rv_count":len(rvp_obj),
+        # "revise":revise
+    }
+    return render(request, "english/revise_main.html", vars)
+
+'''Revise Actions'''
+def data_main(request):
+    user = request.user
+    data = request.GET
+    word = data.get('word')
+    sense = int(data.get('sense'))
+    word_obj = get_object_or_404(Dictionary, id=word)
+
+    today = datetime.date.today()
+    todaystr = today.strftime("%Y-%m-%d")
+
+    if data.get('data') == "mastered":
+        entry = Fav.objects.get(id=word, user=user)
+        rvcount = entry.data["rvcounts"][sense]
+        td = datetime.timedelta(days=30)
+        entry.data["dates"][sense] = (today+td).strftime("%Y-%m-%d")
+        entry.data["rvcounts"][sense] += 1
+        entry.save()
+        messages.success(request, f"Great! the word will show up after {rvcount+30} days")
+        return HttpResponse(f"Great! the word will show up after {rvcount+30} days")
+    
+    if data.get('data') == "easy":
+        entry = Fav.objects.get(id=word, user=user)
+        rvcount = entry.data["rvcounts"][sense]
+        td = datetime.timedelta(days=2+rvcount)
+        entry.data["dates"][sense] = (today+td).strftime("%Y-%m-%d")
+        entry.data["rvcounts"][sense] += 2
+        entry.save()
+        #messages.success(request, f"Great! the word will show up after {rvcount+2} days")
+        return HttpResponseRedirect('/english/revise')
+    
+    elif data.get('data') == "hard":
+        entry = Fav.objects.get(id=word, user=user)
+        rvcount = entry.data["rvcounts"][sense]
+        td = datetime.timedelta(days=1)
+        entry.data["dates"][sense] = (today+td).strftime("%Y-%m-%d")
+        entry.data["rvcounts"][sense] -= 1 if rvcount >= 1 else 0
+        entry.save()
+        #messages.success(request, f"Great! the word will show up after {rvcount+1} days")
+        return HttpResponseRedirect('/english/revise')
+    
+    elif data.get('data') == "remove":
+        entry = Fav.objects.get(word=word_obj, user=user)
+        entry.delete()
+        messages.warning(request, f'The word "{word_obj}" was removed!')
+        return HttpResponseRedirect('/english/dictionary')
+    
+    if data.get('data') == "fav":
+        uwords = Fav.objects.filter(user=user, word=word_obj)
+
+        if not uwords.exists():
+            if sense == 0:
+                dat = {
+                    "rvcounts":[],
+                    "senses":[],
+                    "dates":[],
+                    "notes":[]
+                }
+                for x in range(len(word_obj.senses)):
+                    dat["rvcounts"].append(0)
+                    dat["senses"].append(x+1)
+                    dat["dates"].append(todaystr)
+                    dat["notes"].append("")
+
+                Fav.objects.create(user=user, word=word_obj, data=dat)
+                messages.success(request, f"the word '{word_obj.word}' was added successfully")
+                return HttpResponseRedirect('/english/worddetails/'+word)
+            else:
+                dat = {
+                    "rvcounts":[0],
+                    "senses":[sense],
+                    "dates":[todaystr],
+                    "notes":[""]
+                }
+                Fav.objects.create(user=user, word=word_obj, data=dat)
+                messages.success(request, f"the word '{word_obj.word}' was added successfully")
+                return HttpResponseRedirect('/english/worddetails/'+word)
+        else:
+            rv = uwords.first()
+            if sense == 0:
+                dat = {
+                    "rvcounts":[],
+                    "senses":[],
+                    "dates":[],
+                    "notes":[]
+                }
+                for x in len(word_obj.senses):
+                    if x+1 in rv.data["senses"]:
+                        continue
+                    else:
+                        dat["rvcounts"].append(0)
+                        dat["senses"].append(x+1)
+                        dat["dates"].append(todaystr)
+                        dat["notes"].append("")
+                messages.success(request, f"sense '{sense}' of word '{word_obj.word}' was added!")
+                return HttpResponseRedirect('/english/worddetails/'+word)
+
+            else:
+                if sense in rv.data["senses"]:
+                    messages.warning(request, "the word already exists!")
+                    return HttpResponseRedirect('/english/worddetails/'+word)
+                else:
+                    rv.data["rvcounts"].append(0)
+                    rv.data["senses"].append(sense)
+                    rv.data["dates"].append(todaystr)
+                    rv.data["notes"].append("")
+                    rv.save()
+                    messages.success(request, f"sense '{sense}' of word '{word_obj.word}' was added!")
+                    return HttpResponseRedirect('/english/worddetails/'+word)

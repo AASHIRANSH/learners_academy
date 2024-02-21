@@ -528,8 +528,7 @@ len = [];//used for current page if there are more than one card
                 if (x==card){
                     continue
                 }
-                var xx = x.split(':');
-                cards_arr.push(xx[0]);
+                cards_arr.push(x[0]);
                 
                 if (cards_arr.length == 4) {
                     break;

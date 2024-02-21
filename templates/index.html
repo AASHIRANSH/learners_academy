@@ -31,7 +31,7 @@
       </div>
     </div>
   </theader>
-  <div class="h-100 d-flex justify-content-center align-items-center flex-column">
+  <div class="h-100 d-flex justify-content-center align-items-center flex-column text-center">
     <div class="fs-1"><i>Oops!</i></div>
     <div class="fs-1"><i>The app is under deveplopment state.</i></div>
     <div class="fs-1"><i>Thank you for visiting us!</i></div>
@@ -61,11 +61,12 @@
 
 <!--div class="b-example-divider"></div-->
 
+<!-- WOD -->
 <div class="d-flex justify-content-center w-100">
   <div class="bg-light col-sm-12 col-md-8 my-5">
     <div class="d-flex justify-content-between bg-primary bg-opacity-50 p-3 rounded-3">
       <span class="col-auto bg-primary text-white py-1 px-3 rounded-2">Word of the Day</span>
-      <span class="col-auto text-end bg-secondary text-light py-1 px-3 rounded-2">{% now "D, d M, Y" %}</span>
+      <span class="col-auto text-end bg-primary text-light py-1 px-3 rounded-2">{% now "D, d M, Y" %}</span>
     </div>
     
     <div class="text-center text-secondary px-2 py-4 cursor-pointer" onclick="window.location.assign('{% url 'word' word.word.id %}')">
@@ -78,6 +79,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="m-5">
   <div class="d-flex justify-content-between mb-2">
@@ -94,30 +96,30 @@
   <hr class="mt-0">
   {% for post in posts %}
     <div class="d-flex flex-wrap col-md-8 bg-gray rounded">
-        <div id="lesson_cont" class="position-relative col-sm-12 col-md-5 rounded-3 border border-2 border-secondary m-2" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
-          <div class="position-absolute top-0 start-0 bg-secondary bg-opacity-75 py-1 px-2 fst-italic rounded text-light">
-            {{post.created_at|date:"j-m-y"}}
-          </div>
-          <div id="lesson_title" class="d-flex justify-content-center align-items-center">
-            <div class="">
-              <div class="fs-2">. . .</div>
-              <div class="fs-2 fst-italic" style="font-family:Poppins;">{{post.topic.name|title}}</div>
-              <div class="fs-2">. . .</div>
-            </div>
-          </div>
-          {% if post.like_set.count %}
-            <div class="position-absolute bottom-0 end-0 bg-secondary bg-opacity-75 py-1 px-2 rounded-4 text-light">
-              <i class="fa fa-thumbs-up fs-5"></i> <span class="badge text-light">{{post.like_set.count}}</span>
-            </div>
-          {% endif %}
+      <div id="lesson_cont" class="position-relative col-sm-12 col-md-5 rounded-3 border border-3 border-secondary m-2" onclick="window.location.assign('{% url 'post_detail' post.pk %}')">
+        <div class="position-absolute top-0 start-0 bg-secondary bg-opacity-75 py-1 px-2 fst-italic rounded text-light">
+          {{post.created_at|date:"j-m-y"}}
         </div>
-        <div class="col-sm-12 col-md-6 m-2">
+        <div id="lesson_title" class="d-flex justify-content-center align-items-center">
           <div class="">
-            <a class="text-secondary" href="{% url 'post_detail' post.pk %}">
-              <div class="fs-4">{{ post.title }}</div>
-            </a>
+            <div class="fs-2">. . .</div>
+            <div class="fs-2 fst-italic" style="font-family:Poppins;">{{post.topic.name|title}}</div>
+            <div class="fs-2">. . .</div>
           </div>
         </div>
+        {% if post.like_set.count %}
+          <div class="position-absolute bottom-0 end-0 bg-secondary bg-opacity-75 py-1 px-2 rounded-4 text-light">
+            <i class="fa fa-thumbs-up fs-5"></i> <span class="badge text-light">{{post.like_set.count}}</span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="col-sm-12 col-md-6 m-2">
+        <div class="">
+          <a class="text-secondary" href="{% url 'post_detail' post.pk %}">
+            <div class="fs-4">{{ post.title }}</div>
+          </a>
+        </div>
+      </div>
     </div>
     <hr>
   {% endfor %}

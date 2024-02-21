@@ -3,7 +3,7 @@
 {% include 'english/static/learn.html' %}
 {% include 'english/sidebar.html' %}
 
-<div id="demo"></div>
+<div class="fs-1 text-center" style="z-index:100;" id="demo"></div>
 <div id="body"></div>
 
 <div id="navigation_b"></div>
@@ -28,6 +28,8 @@
 
 <script>
     ydata = JSON.parse("{{data|escapejs}}");
+    jsdb = JSON.parse("{{db|escapejs}}");
+    //document.getElementById("demo").innerHTML = jsdb[0].content[0];//JSON.stringify(jsdb);
 </script>
 <script src="/static/js/courses/hi_en/globall.js" defer></script>
 <script src="/static/js/courses/hi_en/en_dbd.js" defer></script>

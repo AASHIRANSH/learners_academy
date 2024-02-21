@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container my-2">
+
+        <div id="done"></div>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="?t={{request.GET.t|add:-1}}" class="btn btn-success" role="button">Prev</a>
+            <a href="?t={{request.GET.t}}&action=aud" class="btn btn-warning" role="button">Aud</a>
+            <a href="?t={{request.GET.t}}&action=trim" class="btn btn-warning" role="button">Trim Templates</a>
+            <a href="?t={{request.GET.t|add:1}}" class="btn btn-success" role="button">Next</a>
+        </div>
+
+        <div style="display:none;">
+            {% include "english/dictionary/oxtems/form.html" %}
+        </div>
+        
+        <div id="getter">Oops something has gone wrong!</div>
+
+        <div class="text-end">
+            <button class="btn btn-primary" onclick="makeEntry()">Add this entry</button>
+        </div>
+        
+        <div style="display:block;">
+        {% include link %}
+        </div>
+        
+    </div>
+
+
+    <script>
+        const content = document.getElementByClassName("di-body")[0];
+        const word = content.getElementsByClassName("headword")[0].innerText;
+        var pos = content.getElementsByClassName("pos")[0]; pos = pos ? pos.innerText : "";
+        let w_cefr = content.getElementsByClassName("symbols")[0];
+        w_cefr = w_cefr ? w_cefr.getElementsByTagName("span")[0] :"";
+        w_cefr = w_cefr ? w_cefr.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("class")=="entry"? w_cefr.getAttribute("class").split("_")[1]:"":"";
+        var pruk = content.getElementsByClassName("phons_br")[0] ?? "";
+        var prus = content.getElementsByClassName("phons_n_am")[0] ?? "";
+        var gra = content.getElementsByClassName("grammar")[0]; gra = gra ? parent(content.getElementsByClassName("grammar")[0],"entry") ? gra.innerText :"": "";
+        let help = content.getElementsByClassName("un")[0] ?? ""; help = help ? parent(help,"entry") ? help : "" :"";
+        var variants = content.getElementsByClassName("variants")[0] ?? ""; variants = variants ? parent(variants,"entry") ? variants : "":"";
+        var inflections = content.getElementsByClassName("inflections")[0] ?? ""; inflections = inflections ? parent(inflections,"entry") ? inflections : "":"";
+        const idioms_container = content.getElementsByClassName("idioms")[0] ?? "";
+
+        {// audi                                                                                                            os
+            {//main
+                if (pruk){
+                    var prukAudios = pruk.getElementsByClassName("sound");
+                    var prukTexts = pruk.getElementsByClassName("phon");
+                    var prusAudios = prus.getElementsByClassName("sound");
+                    var prusTexts = prus.getElementsByClassName("phon");
+
+                    var pronounciation = {
+                        uk:{
+                            texts:[],
+                            audios:{
+                                mp3:[],
+                                ogg:[]
+                            }
+                        },
+                        us:{
+                            texts:[],
+                            audios:{
+                                mp3:[],
+                                ogg:[]
+                            }
+                        }
+                    }
+                    
+                    var is_prefix = [];
+                    let prn = 0;
+                    for (let x of pruk.childNodes){
+                        if(x.nodeName=="SPAN"){
+                            if(x.getAttribute("class")=="prefix"){
+                                is_prefix.push(x.innerText)
+                            }
+                            if (x.getAttribute("class")!="prefix" && x.innerText!=","){
+                                pronounciation.uk.texts.push(x.innerText)
+                            }
+                        }
+                    };
+
+                    for (let x = 0; x<prukAudios.length; x++){
+                        pronounciation.uk.audios.mp3.push(prukAudios[x].getAttribute("data-src-mp3"));
+                        pronounciation.uk.audios.ogg.push(prukAudios[x].getAttribute("data-src-ogg"));
+                    }
+                    for (let x = 0; x<prusAudios.length; x++){
+                        pronounciation.us.texts.push(prusTexts[x].innerText);
+                        pronounciation.us.audios.mp3.push(prusAudios[x].getAttribute("data-src-mp3"));
+                        pronounciation.us.audios.ogg.push(prusAudios[x].getAttribute("data-src-ogg"));
+                    }
+                }
+            }
+
+            var is_variants = variants ? true : false;
+            if (is_variants && parent(variants,"entry")){// variants pronounciation
+                if (variants.getElementsByClassName("phons_br")){
+                    let vpruk = variants.getElementsByClassName("phons_br")[0];
+                    let vprus = variants.getElementsByClassName("phons_n_am")[0];
+                    var vprukAudios = vpruk ? vpruk.getElementsByClassName("sound"):"";
+                    var vprukTexts = vpruk ? vpruk.getElementsByClassName("phon"):"";
+                    var vprusAudios = vprus ? vprus.getElementsByClassName("sound"):"";
+                    var vprusTexts = vprus ? vprus.getElementsByClassName("phon"):"";
+
+                    var variants_pron = {
+                        uk:{
+                            texts:[],
+                            audios:{
+                                mp3:[],
+                                ogg:[]
+                            }
+                        },
+                        us:{
+                            texts:[],
+                            audios:{
+                                mp3:[],
+                                ogg:[]
+                            }
+                        }
+                    }
+
+                    if (vpruk){
+                        var vis_prefix = [];
+                        for (let x of vpruk.childNodes){
+                            if(x.nodeName=="SPAN"){
+                                if (x.innerText!=","){
+                                    vis_prefix.push(x.innerText)
+                                }
+                            }
+                        };
+                    };
+                    for (let x = 0; x<vprukAudios.length; x++){
+                        let ppr = (vis_prefix && x == 1) ? vis_prefix[2] :"";
+                        variants_pron.uk.texts.push(ppr+" "+vprukTexts[x].innerText);
+                        variants_pron.uk.audios.mp3.push(vprukAudios[x].getAttribute("data-src-mp3"));
+                        variants_pron.uk.audios.ogg.push(vprukAudios[x].getAttribute("data-src-ogg"));
+                    }
+                    for (let x = 0; x<vprusAudios.length; x++){
+                        variants_pron.us.texts.push(vprusTexts[x].innerText);
+                        variants_pron.us.audios.mp3.push(vprusAudios[x].getAttribute("data-src-mp3"));
+                        variants_pron.us.audios.ogg.push(vprusAudios[x].getAttribute("data-src-ogg"));
+                    }
+                }
+            }
+        }
+
+        let idioms = idioms_container ? idioms_container.getElementsByClassName("idm-g") : "";
+        var idioms_all = []; // idioms
+        var idm_var_all = []; // idioms variants
+        for (let x of idioms){
+            let idm = x.getElementsByClassName("idm")[0];
+            let vidm = x.getElementsByClassName("variants")[0];
+            idioms_all.push(idm.innerText);
+            idm_var_all.push(vidm ? vidm.innerText : "");
+        }
+
+        var def_head_all = [];
+        let def_heads = content.getElementsByClassName("shcut");
+        for (let x of def_heads){
+            def_head_all.push([x.innerText,x.id]);
+        }
+
+        {// Senses
+            var senses_all = content.getElementsByClassName("pr dsense");
+            var guidewords_all = [];
+            var cefr_all = [];
+            var def_inf_all = [];
+            var dtxt_all = [];
+            var labels_all = [];
+            var context_all = [];
+            var definitions_all = [];
+            var examples_all = [];
+            var extra_examples_all = [];
+            var synonyms_all = [];
+            var antonyms_all = [];
+            var compares_all = [];
+            var topic_names_all = [];
+            var topic_cefrs_all = [];
+
+            for (let sense of senses_all){
+                let guideword = sense.getElementsByClassName("guideword")[0]; guideword = guideword?guideword.getElementsByTagName("span")[0].innerText:"";
+                let cefr = sense.getElementsByClassName("epp-xref")[0];
+                let def_inf = sense.getElementsByClassName("gram")[0];
+                let label = sense.getElementsByClassName("labels")[0];
+                let context = sense.getElementsByClassName("cf")[0];
+                let def = sense.getElementsByClassName("def")[0];
+                let dtxt = sense.getElementsByClassName("dtxt")[0];
+                let examples = sense.getElementsByClassName("examp");
+                let extra_example = sense.getElementsByClassName("examples")[1]; // extra examples
+                let xrefs = sense.getElementsByClassName("xrefs");
+                let topic_name = sense.getElementsByClassName("topic_name")[0];
+                let topic_cefr = sense.getElementsByClassName("topic_cefr")[0];
+
+                guidewords_all.push(guideword);
+                cefr_all.push(cefr);
+                def_inf_all.push(def_inf);
+                labels_all.push(label);
+                context_all.push(context);
+                dtxt_all.push(dtxt);
+                definitions_all.push(def);
+                examples_all.push(examples);
+                extra_examples_all.push(extra_example);
+                topic_names_all.push(topic_name);
+                topic_cefrs_all.push(topic_cefr);
+
+                if (xrefs){// synonyms, antonyms, compares
+                    for (let x of xrefs){
+                        if (x.getAttribute("xt")=="cp"){
+                            let cps = x.getElementsByClassName("xh");
+                            for (let cp of cps){
+                                compares_all.push(cp.innerText);
+                            };
+                        } else if (x.getAttribute("xt")=="syn"){
+                            let syns = x.getElementsByClassName("xh");
+                            for (let syn of syns){
+                                synonyms_all.push(syn.innerText);
+                            };
+                        } else if (x.getAttribute("xt")=="opp"){
+                            let opps = x.getElementsByClassName("xh");
+                            for (let opp of opps){
+                                antonyms_all.push(opp.innerText);
+                            };
+                        };;
+                    };
+                };
+            }
+        }
+        {// Examples
+            var examples = [];
+            var usages = [];
+            for (let x of examples_all){
+                let ex = x ? x.getElementsByClassName("x") : "";
+                let cx = x ? x.getElementsByClassName("cf") : "";
+                let exs = []; // example
+                let cxs = []; // usage
+
+                for (let y of ex){
+                    let cl = y.getElementsByClassName("cl")[0];
+                    exs.push(cl ? y.innerText.replace(cl.innerText,"*"+cl.innerText+"*"):y.innerText);
+                }
+                examples.push(exs);
+
+                for (let y of cx){
+                    cxs.push(y.innerText);
+                }
+                usages.push(cxs);
+            }
+        }
+        {// Extra Examples
+            var extra_examples = [];
+            for (let x of extra_examples_all){
+                let ex = x ? x.getElementsByClassName("unx") : "";
+                let exs = []; // example
+
+                for (let y of ex){
+                    exs.push(y.innerText);
+                }
+                extra_examples.push(exs);
+            }
+        }
+        {// Idioms
+            const idioms_all = content.getElementsByClassName("idioms");
+            var id_def_inf_all = [];
+            var id_definitions_all = [];
+            var id_examples_all = [];
+
+            for (let sense of idioms_all){
+                let id_def_inf = sense.getElementsByClassName("grammar")[0];
+                let id_def = sense.getElementsByClassName("def")[0];
+                let id_example = sense.getElementsByClassName("examples")[0];
+
+                id_def_inf_all.push(id_def_inf);
+                id_definitions_all.push(id_def);
+                id_examples_all.push(id_example);
+            }
+        }
+
+        let html = `
+            <div class="mb-2"><span class="text-primary fs-1 fw-bold">${word}</span> ${pos} ${w_cefr}</div>
+            ${pruk ? `<div id="ukpron" class="mb-2">UK `+pronounciation.uk.texts.join("")+`</div>`:""}
+            ${prus ? `<div id="uspron" class="mb-2">UK `+pronounciation.us.texts+`</div>`:""}
+            <div>${variants ? variants.innerText : ""}</div>
+            <div>${inflections ? inflections.innerText : ""}</div>
+            ${help ? `<div class="bg-warning p-2 mb-2">${help.innerText}</div>`:''}
+        `;
+        if (pos == "verb"){//forms
+            let forms_ele = content.getElementsByClassName("verb_forms_table")[0];
+            let form_ele = forms_ele ? forms_ele.getElementsByTagName("tr") : "";
+            var forms = [];
+            for (let x of form_ele){
+                let vphons = x.getElementsByClassName("verb_phons")[0];
+                forms.push([
+                x.getAttribute("form"),
+                x.getElementsByClassName("verb_form")[0].innerText,
+                [vphons.getElementsByClassName("phons_br")[0].innerText, vphons.getElementsByClassName("phons_n_am")[0].innerText],
+                [[vphons.getElementsByClassName("phons_br")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3"),vphons.getElementsByClassName("phons_br")[0].getElementsByClassName("sound")[0].getAttribute("data-src-ogg")],
+                [vphons.getElementsByClassName("phons_n_am")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3"),vphons.getElementsByClassName("phons_n_am")[0].getElementsByClassName("sound")[0].getAttribute("data-src-ogg")]],
+                ]);
+            }
+            var forms_html = ``;
+
+            for (let x of forms){
+                forms_html += `
+                <div class="mb-2">${x[0]}</div>
+                <div class="mb-2">${x[1]}</div>
+                <div class="mb-2">${x[2][0]} ${x[3][0][1]}</div>
+                <div class="mb-2">${x[2][1]} ${x[3][1][1]}</div>
+                `;
+            }
+
+            html += forms_html;
+        }
+
+        let senses_all_counter = 0;
+        let is_idiom = false;
+        let is_num = 0;
+        for (let x = 0; x<definitions_all.length; x++){
+            if (senses_all_counter >= (senses_all.length-idioms_all.length)){is_idiom=true;}
+            html+=`
+                <!-- SENSES / Definition -->
+                <div class="fs-4">${def_head_all[x] ?? ""}</div>
+
+                <hr class="mt-0">
+                <div class="bg-primary bg-opacity-50 p-2 mb-2">
+                    <span class="bg-secondary text-light p-3 rounded">${x+1}</span>
+                    ${cefr_all[x] ? cefr_all[x] : ""}
+                    ${def_inf_all[x] ? def_inf_all[x].innerText : ""} 
+                    ${dtxt_all[x] ? dtxt_all[x].innerText : ""} 
+                    <span class="fw-bold">${context_all[x] ? context_all[x].innerText : ""}</span>
+                    
+                    ${is_idiom ? idioms_all[is_num] : ""}
+                    ${is_idiom ? idm_var_all[is_num] : ""}
+                </div>
+
+                <div class="mb-2">
+                    ${labels_all[x] ? labels_all[x].innerText : ""} 
+                    ${definitions_all[x]? definitions_all[x].innerText :""}
+                </div>
+
+                <div class="mb-2">${usages[x].map((cx)=>{return cx = `<div>${cx}</div>`}).join('')}</div>
+
+                <div class="mb-2">${examples[x].map((ex)=>{return ex = `<div>${ex}</div>`}).join('')}</div>
+                
+                ${extra_examples[x].length ? '<div class="fw-bold">Extra Examples</div>':""}
+                <div class="mb-2">${extra_examples[x].map((ex)=>{return ex = `<div>${ex}</div>`}).join('')}</div>
+
+                <div class="mb-2">${synonyms_all[x] ? "SYNONYMS "+synonyms_all[x].innerText : ""}</div>
+                <div class="mb-2">${antonyms_all[x] ? "ANTONYMS "+antonyms_all[x].innerText : ""}</div>
+                <div class="mb-2">${compares_all[x] ? "COMPARE "+compares_all[x].innerText : ""}</div>
+
+                <div class="mb-5">
+                    ${topic_names_all[x] ? "Topic "+ topic_names_all[x].innerText : ""}
+                    ${topic_cefrs_all[x] ? topic_cefrs_all[x].innerText : ""}
+                </div>
+            `;
+            if (is_idiom){is_num++;}
+            senses_all_counter++;
+        }
+
+        document.getElementById("getter").innerHTML = html;
+
+        {//pronounce
+            if (pruk){
+                const audukmp3 = pruk.getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+                const audukogg = pruk.getElementsByClassName("sound")[0].getAttribute("data-src-ogg");
+                const audusmp3 = prus.getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+                const audusogg = prus.getElementsByClassName("sound")[0].getAttribute("data-src-ogg");
+                let ukp = document.getElementById("ukpron");
+                let usp = document.getElementById("uspron");
+
+                ukp.addEventListener('click', function() {
+                    let audio1 = new Audio(auduk);
+                    audio1.play();
+                    //textToSpeech(r_obj.word,"UK")
+                });
+                usp.addEventListener('click', function() {
+                    let audio2 = new Audio(audus);
+                    audio2.play();
+                    //textToSpeech(r_obj.word,"US")
+                });
+            }
+        }
+
+        {// html form
+            document.getElementById("id_word").value = word;
+            document.getElementById("id_pos").value = pos;
+            document.getElementById("id_cefr").value = w_cefr;
+        }
+
+        function makeEntry(){
+            let entry = {
+                "word":word,
+                "pos":pos ?? "",
+                "cefr":w_cefr ?? "",
+                "forms":forms?forms:"",
+                "grammar":gra,
+                "variants":variants ? variants.innerText :"",
+                "inflections":inflections,
+                "senses":[],
+                "idioms":[],
+                "phrasal_verbs":[]
+            }
+
+            for (let x = 0; x<definitions_all.length-idioms_all.length; x++){
+                entry.senses.push({
+                    "sensenum":x+1,
+                    "cefr":cefr_all[x]??"",
+                    "def_inf":def_inf_all[x] ? def_inf_all[x].innerText : "",
+                    "definition":definitions_all[x] ? definitions_all[x].innerText : "",
+                    "examples":examples[x] ? examples[x].concat(extra_examples[x]) :"",
+                    "usages":usages[x],
+                    "synonyms":synonyms_all[x] ? synonyms_all[x].innerText : "",
+                    "antonyms":antonyms_all[x] ? antonyms_all[x].innerText : "",
+                    "compares":compares_all[x] ? compares_all[x].innerText : "",
+                    "topic":topic_names_all[x]?topic_names_all[x].innerText:"",
+                    "topic_cefr":topic_cefrs_all[x]?topic_cefrs_all[x].innerText:""
+                });
+            }
+
+            for (let x = 0; x<idioms_all.length; x++){
+                let y = x+(definitions_all.length-idioms_all.length);
+                entry.idioms.push({
+                    "labels":labels_all[y] ? labels_all[y].innerText : "",
+                    "definition":idioms_all[x],
+                    "variants":idm_var_all[x],
+                    "examples":examples[y] ? examples[y].concat(extra_examples[y]) :"",
+                    "synonyms":synonyms_all[y] ? synonyms_all[y].innerText : "",
+                    "antonyms":antonyms_all[y] ? antonyms_all[y].innerText : "",
+                    "compares":compares_all[y] ? compares_all[y].innerText : "",
+                });
+            }
+
+            addEntry(entry);
+        }
+
+        function addEntry(entry){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = ()=>{
+                document.getElementById("done").innerHTML = "Done!";
+            }
+            xhttp.open("POST","{% url 'oxtems' %}", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`csrfmiddlewaretoken={{csrf_token}}&data=${JSON.stringify(entry)}`);
+        }
+
+        function parent(ele,pele){
+            return ele.parentElement.parentElement.parentElement.parentElement.getAttribute("class")==pele
+        }
+
+        makeEntry();
+        
+        myTimeOut = setTimeout(()=>{window.location.assign('?t={{request.GET.t|add:1}}')}, 5000);
+    </script>
+{% endblock body %}

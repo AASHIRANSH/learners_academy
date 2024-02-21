@@ -1,0 +1,754 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="/static/css/animate.min.css"/>
+<style>
+    .bg-navy {
+        background-color: #000080;
+    }
+    .hover-grey:hover {
+        background-color: #ccc;
+    }
+</style>
+{% endblock head %}
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+{% comment %} {% include "header.html" %} {% endcomment %}
+{% include 'messages.html' %}
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+</svg>
+<div id="message">
+</div>
+
+{% include "english/rv_settings.html" %}
+
+<div class="d-flex justify-content-between gap-2 bg-secondary p-1" id="cards"></div>
+<div id="cont" class="my-2">
+    <!--content-->
+</div>
+
+
+<script>
+    const objs = JSON.parse("{{objs|escapejs}}");
+    const len = [];//used for current page if there are more than one card
+    const easy_arr = [];
+    const hard_arr = [];
+
+    {//inf
+        let inff = `<div class="text-light">{{rv_count}}/{{rv_total_count}}</div>
+            <div class=""></div>
+            <div class=""><select class="form-control py-0 px-2">
+        `;
+        for (let x of objs){
+            inff += `<option>${x[0].word}</option>`;
+        }
+        inff += `</select></div>`
+        document.getElementById("cards").innerHTML = inff;
+    }
+
+    function master(){
+        r_num = Math.floor(Math.random() * (objs.length - 0)) + 0;
+
+        while (len.includes(r_num)) {
+            r_num = Math.floor(Math.random() * (objs.length - 0)) + 0;
+        }
+
+        r_obj = objs[r_num];
+
+        {//generating 4 choices
+            var choices_arr = [[r_obj[1].definition.en.main,"easy"]];
+            for (let x in objs) {
+                if (x == r_num){continue;}else{choices_arr.push([objs[x][1].definition.en.main,"hard"]);}
+                
+                if (choices_arr.length == 4){break;}
+            }
+        }
+        choices_arr.sort(function () { return 0.5 - Math.random() }); // Orders randomly an array
+
+        let ms = `
+        <!--div id="animator" class="w-100 animate__animated animate__fadeInRight"-->
+        <div class="container">
+            <div class="row align-items-baseline bg-light rounded p-2 m-0">
+                <div id="word" class="col-auto fw-bold text-primary d-inline" style="font-size:${r_obj[0].word.length > 25 ? (r_obj[0].word.length > 35 ? 1.5 : 2) : 2.5}rem;font-weight:700;" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id=${r_obj[0].pk}')"{% endif %}>
+                    ${r_obj[0].word}
+                </div>
+
+                <div id="pos" class="col-auto fs-4 d-inline text-secondary">
+                    ${r_obj[0].pos}
+                </div>
+
+                <div class="col-12">
+                    ${r_obj[0].cefr ?
+                        '<div class="col-12 mb-2"><div id="grade" class="col-12 d-inline fs-5 text-uppercase px-1">'
+                            +r_obj[0].cefr+
+                        '</div></div>':''
+                    }
+                    <div class="row col-12 mb-3">
+                        ${r_obj[0].pronounciation?
+                            `<div class="col-auto" style="font-family:Arial;">
+                                <div id="ukpron" class="text-primary fs-5" style=""> UK <span id="pruk">${r_obj[0].pronounciation.uk.texts}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                                <div id="uspron" class="text-danger fs-5" style=""> US <span id="prus">${r_obj[0].pronounciation.us.texts}</span> <i class="fa-solid fa-volume-high cursor-pointer"></i></div>
+                            </div>`:""}
+
+                        ${r_obj[1].pic_url?
+                            '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
+                            '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
+                            '</div>':''
+                        }
+                        ${r_obj[1].pic_url_url?
+                            '<div id="wpic" class="cursor-pointer col-auto" data-bs-toggle="modal" data-bs-target="#fullImage">'+
+                            '<div class="text-primary fs-2"><i class="fa-solid fa-image"></i></div>'+
+                            '</div>':''
+                        }
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-baseline gap-1">
+
+                    <div class="col-3">
+                        <div id="forms-cont">
+                        </div>
+                    </div>
+    
+                    <div class="col-9 text-end">
+    
+                        <div class="d-none text-center text-light bg-secondary col-auto fs-5 p-1 rounded">{{rv_count}} / {{rv_total_count}}</div>
+    
+                        <button id="msb" title="mastered" class="btn btn-outline-success col-auto fs-4" data-bs-toggle="modal" data-bs-target="#masteredRevise" accesskey="m"><i class="fa-solid fa-dumbbell"></i></button>
+    
+                        <button id="easy" title="Easy" class="btn btn-outline-success col-auto fs-4" accesskey="s"><i class="fa-regular fa-face-smile"></i></button>
+    
+                        <button id="hard" title="Hard" class="btn btn-outline-secondary col-auto fs-4" accesskey="h"><i class="fa-regular fa-face-meh"></i></button>
+
+                        <button id="reload" data-action="reload" class="btn btn-outline-primary col-auto fs-4" type="button" accesskey="r">
+                            <i class="fa-solid fa-rotate-right fs-5"></i>
+                        </button>
+
+                        <button type="button" title="Find Words" class="btn btn-outline-primary col-auto fs-4" onclick="window.location.assign('{% url 'dictionary' %}')"><i class="fa-solid fa-book"></i></button>
+    
+                        <button id="" type="button" title="Remove" class="btn btn-danger col-auto fs-4" data-bs-toggle="modal" data-bs-target="#deleteRevise"><i class="fa-sharp fa-solid fa-trash"></i></button>
+    
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // def_inf
+        ms += `
+            <div class="bg-primary rounded my-3 shadow">
+                <span class="text-white ps-2 mb-1">Definition</span>
+
+                <div id="def-container" class="bg-gray position-relative rounded p-1">
+                    <div id="def" class="bg-primary bg-opacity-25 fs-4 p-2 rounded" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <div class="fs-6 mb-1">
+                            <div>{{word.category.name}}</div>
+                            ${r_obj[1].def_inf ? '<span class="d-inline-block bg-light bg-opacity-25 border border-light px-2 py-1 rounded">'+r_obj[1].def_inf+'</span>':''}
+                        </div>
+
+                        <div id="carouselExampleControls" class="carousel slide">
+                            <div class="carousel-inner">
+
+                                <div class="carousel-item active">
+                                    <div id="definition" class="">${r_obj[1].definition.en.main}</div>
+                                </div>
+                                <div class="carousel-item">
+                                    ${r_obj.definition_hindi ? r_obj.definition_hindi : '<span class="fs-5 text-danger">Hindi definition not available for this word</span>'}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <i class="fa-solid fa-language fs-3 text-primary cursor-pointer"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // example
+        ms += `
+            <div class="bg-secondary m-0 my-3 rounded shadow">
+                <span class="text-white ps-2 mb-1">Example Sentences</span>
+                <div class="bg-white rounded p-1">
+                    <div id="example" class="fs-4 fst-italic bg-gray bg-opacity-10 rounded pt-1">
+                        <ul>
+                            <hr class="my-1">
+        `;
+        
+        const examples = [];
+        for (let x of r_obj[1].examples){
+            examples.push(`<li class="example p-0"><!--&#x2022; bullet -->${x} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i></li><hr class="my-1">`);
+        }
+
+        ms += examples.join('');
+
+        ms += `
+            </ul>
+            </div>
+            </div>
+            </div>
+        `;
+
+        if (r_obj[1].usages){
+            ms+= `
+            <div class="my-3 p-0">
+                <div class="bg-primary text-white py-1 rounded px-2 mb-2">
+                    sentence usage
+                </div>
+                <div class="mx-2">
+                    <div id="context"></div><!--this is being modified by Script-->
+                </div>
+            </div>`;
+        }
+
+        if (r_obj[1].synonyms){
+            if (r_obj[1].antonyms){
+                ms += `<div class="d-flex">
+                        <div class="col p-0 my-3">
+                            <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                                synonyms
+                            </div>
+                            <div id="synonyms" class="mx-2">
+
+                            </div>
+                        </div>
+
+                        <div class="col p-0 my-3">
+                            <div class="col bg-danger text-white rounded py-1 px-2 mb-2">
+                                antonyms
+                            </div>
+                            <div id="antonyms" class="mx-2">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }else{
+                ms += `
+                    <div class="p-0 my-3">
+                        <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                            synonyms
+                        </div>
+                        <div id="synonyms" class="mx-2">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        if (r_obj[1].antonyms){
+            if (r_obj[1].synonyms){
+                ms += ``;
+            }else{
+                ms += `
+                    <div class="col p-0 my-3">
+                        <div class="col bg-danger text-white rounded py-1 px-2 mb-2">
+                            antonyms
+                        </div>
+                        <div id="antonyms" class="mx-2">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        if (r_obj[1].compares){
+            ms+= `<div class="my-3 p-0">
+                <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                    related words
+                </div>
+                <div id="related" class="mx-2">
+                </div>
+            </div>`;
+        }
+
+        if (r_obj[1].hindi_usage){
+            ms+= `
+            <div class="my-3 p-0">
+                <div id="hindi_usage" class="bg-secondary text-white rounded py-1 px-2 mb-2">
+                    Hindi Usage
+                </div>
+                <div class="mx-2">
+                    {{word.hindi_usage}}
+                </div>
+            </div>`;
+        }
+        if (r_obj[1].related_post){
+            ms+= `
+            <div class="my-3 p-0">
+                <div class="bg-secondary text-white rounded py-1 px-2 mb-2">
+                    Related Post
+                </div>
+                <div id="related_post" class="mx-2">
+                    {% for post in word.related_post.all %}
+                        <button class="btn btn-outline-secondary" onclick="window.location.assign(`{% url 'post_detail' post.pk %}`)">
+                            {{post.title}}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>`;
+        }
+        if (r_obj[1].collocation){
+            ms+= `
+            <div class="my-3 p-0">
+                <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                    collocation
+                </div>
+                <div class="mx-2">
+                    <a class="btn btn-secondary" href="/english/collocation/${r_obj[1].collocation.pk}">${r_obj[1].collocation.collocation}</a>
+                </div>
+            </div>`;
+        }
+
+        document.getElementById("cont").innerHTML = ms+`
+            <div class="bg-gray rounded-3 my-3">
+                <div class="d-flex justify-content-between bg-danger bg-opacity-50 text-white rounded-3 py-1 px-2">
+                    <div>my note</div>
+                    <div class="bg-danger text-white cursor-pointer px-3 rounded" data-bs-toggle="modal" data-bs-target="#myNote"><i class="fa-regular fa-pen-to-square"></i></div>
+                </div>
+                <div id="note" class="p-2">
+                    {{revise.note|default:"you have no notes for this word."}}
+                </div>
+            </div>
+
+            <div class="mb-5"></div>
+            
+            <!--div class="accordion" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                        Context
+                    </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                    <div class="accordion-body">
+                        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                        Synonyms
+                    </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                    <div class="accordion-body">
+                        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                        Hindi Usage
+                    </button>
+                    </h2>
+                    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                    <div class="accordion-body">
+                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                    </div>
+                </div>
+            </div-->
+            </div>
+            <!--/div--><!--this is animator's div-->
+
+            ${objs.length > 4 ? `
+                <div id="vocab" class="bg-navy position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center" style="z-index:1;">
+                    <div class="position-absolute top-0 start-0 m-4">
+                        <a href="{{request.GET.back}}" class="text-light"><i class="fa-solid fa-arrow-left"></i></a>
+                    </div>
+
+                    <div id="vocabc" class="bg-light col-10 col-md-8 p-4 rounded animate__animated animate__fadeInRight" style="max-height:80%;overflow-y:auto;">
+                        <div>
+                            <span class="text-dark fw-bold fs-5 pe-2">${r_obj[0].word} (${r_obj[0].pos})</span>
+                            <span class="text-secondary">means:</span>
+                        </div>
+                        <hr class="my-2">
+                        ${examples.join('')}
+
+                        <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="1">
+                            <input class="form-check-input" data-action="${choices_arr[0][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            A. ${choices_arr[0][0]}
+                            </label>
+                        </div>
+                        <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="2">
+                            <input class="form-check-input" data-action="${choices_arr[1][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                            B. ${choices_arr[1][0]}
+                            </label>
+                        </div>
+                        <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="3">
+                            <input class="form-check-input" data-action="${choices_arr[2][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                            C. ${choices_arr[2][0]}
+                            </label>
+                        </div>
+                        <div class="form-check my-3 hover-grey rounded" data-action="exbtn" accesskey="4">
+                            <input class="form-check-input" data-action="${choices_arr[3][1]}" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+                            <label class="form-check-label" for="flexRadioDefault4">
+                            D. ${choices_arr[3][0]}
+                            </label>
+                        </div>
+
+
+                        <div id="exmenu" class="">
+                            <div class="d-flex justify-content-between bg-gray p-2">
+                                <button class="btn btn-primary py-1" data-action="defpage">word page</button>
+                                <button class="btn btn-primary py-1" data-action="reload">next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`:""}
+
+            <!-- Modal Mastered Confirm -->
+            <div class="modal fade" id="masteredRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <!--div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div-->
+                    <div class="modal-body">
+                    Have you really mastered this word?
+                    </div>
+                    <!--div class="modal-footer"-->
+                    <div class="text-center">
+                        <button type="button" data-action="reload" class="btn btn-secondary" data-bs-dismiss="modal">Not yet</button>
+                        <button id="mastered" type="button" class="btn btn-success">Certainly!</button>
+                    </div>
+                    <!--/div-->
+                </div>
+                </div>
+            </div>
+            <!-- Modal Delete Confirm -->
+            <div class="modal fade" id="deleteRevise" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!--div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div-->
+                    <div class="modal-body">
+                    Do you want to remove the word from revise?
+                    </div>
+                    <!--div class="modal-footer"-->
+                    <div class="text-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button id="delete" type="button" class="btn btn-danger" onclick="window.location.assign('/english/data?data=remove&word={{word.id}}')">Yes, remove!</button>
+                    </div>
+                    <!--/div-->
+                </div>
+                </div>
+            </div>
+            <!-- Image -->
+            <div class="modal fade" id="fullImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content p-1">
+                    <div class="">
+                        <img id="pic_url" class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="${r_obj.pic_url ? r_obj.pic_url : r_obj.pic_url_url}"/>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <!-- My Note -->
+            <div class="modal fade" id="myNote" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title bg-danger bg-opacity-75 text-white p-2 rounded fs-5" id="exampleModalLabel">My Note - Edit</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="">
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <textarea id="textarea_note" class="form-control" name="note" rows="4" placeholder="Type here to make your note....">{% if word.note %}{{word.note}}{% endif %}</textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        if (r_obj[0].pos == "verb"){//forms
+            document.getElementById("forms-cont").innerHTML = `
+                <div class="col-auto">
+                    <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Other Forms
+                    </button>
+                </div>
+                <div class="card col-auto" style="position:absolute;left:16%;translate:0 -35%;z-index:1;">
+                    <div class="collapse" id="collapseExample">
+                        <div id="forms" class="card-body">
+                            <div>${r_obj[0].forms[0][1]}</div>
+                            <div>${r_obj[0].forms[0][2][0]}</div>
+                            <div>${r_obj[0].forms[0][2][1]}</div>
+                            
+                            <div>${r_obj[0].forms[1][1]}</div>
+                            <div>${r_obj[0].forms[1][2][0]}</div>
+                            <div>${r_obj[0].forms[1][2][1]}</div>
+                            
+                            <div>${r_obj[0].forms[2][1]}</div>
+                            <div>${r_obj[0].forms[2][2][0]}</div>
+                            <div>${r_obj[0].forms[2][2][1]}</div>
+                            
+                            <div>${r_obj[0].forms[3][1]}</div>
+                            <div>${r_obj[0].forms[3][2][0]}</div>
+                            <div>${r_obj[0].forms[3][2][1]}</div>
+                            
+                            <div>${r_obj[0].forms[4][1]}</div>
+                            <div>${r_obj[0].forms[4][2][0]}</div>
+                            <div>${r_obj[0].forms[4][2][1]}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        //Generating HTML content of Sentence Usage
+
+        // Sentence Usage
+        if (r_obj[1].usages){
+            let contextSt = r_obj[1].usages;
+            var contextDoc = ``;
+
+            for ( let x of contextSt ){
+                contextDoc += `<div class="mb-2">`;
+                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-10 px-2 py-1 rounded-3">${x}</span>`;
+                contextDoc += `</div>`;
+            } // generating HTML content from context list
+
+            document.getElementById("context").innerHTML = contextDoc;
+        }
+
+        // Generating content
+        let synonymsSt = r_obj[1].synonyms; // context converted into list
+        var synonymsDoc = ``;
+
+        if (r_obj[1].synonyms){
+            for ( let x of synonymsSt ){
+                x = x.trim()
+                synonymsDoc += `<span class="d-inline-block border-bottom border-3 border-primary pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+            } // generating HTML content from context list
+
+            document.getElementById("synonyms").innerHTML = synonymsDoc;
+        }
+
+
+        let relatedSt = `${r_obj[1].compares}`.split(","); // context converted into list
+        var relatedDoc = ``;
+
+        if (r_obj[1].compares){
+            for ( let x of relatedSt ){
+                x = x.trim()
+                relatedDoc += `<span class="d-inline-block border-bottom border-3 border-info pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
+            } // generating HTML content from context list
+
+            document.getElementById("related").innerHTML = relatedDoc;
+        }
+
+        let antonymsSt = `${r_obj[1].antonyms}`.split(","); // context converted into list
+        var antonymsDoc = ``;
+
+        if (r_obj[1].antonyms){
+            for ( let x of antonymsSt ){
+                x = x.trim()
+                antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
+            } // generating HTML content from context list
+
+            document.getElementById("antonyms").innerHTML = antonymsDoc;
+        }
+
+        if (r_obj[1].pronounciation){
+            let ukp = document.getElementById("ukpron");
+            let usp = document.getElementById("uspron");
+
+            ukp.addEventListener('click', function() {
+                //let audio1 = new Audio('/media/dictionary/audio/{{word.word}}_gb_1.mp3');
+                //audio1.play();
+                textToSpeech(r_obj[0].word,"UK")
+            });
+            usp.addEventListener('click', function() {
+                //let audio2 = new Audio('/media/dictionary/audio/{{word.word}}_us_1.mp3');
+                //audio2.play();
+                textToSpeech(r_obj[0].word,"US")
+            });
+        }
+
+        myTimeout = setTimeout(navigate, 60000);
+
+        colors();
+        
+        $('button').on('click', function () {
+            if (this.getAttribute("data-action")=="reload"){
+                navigate();
+            }
+            if (this.getAttribute("data-action")=="next"){
+                if (hard_arr.includes(r_obj[0].pk)){
+                    exAction("hard");
+                } else {
+                    exAction("easy");
+                }
+            }
+            if (this.getAttribute("data-action")=="defpage"){
+                $("#vocab").addClass("d-none");
+            }
+            if (this.id=="easy"){
+                easy_arr.push(r_obj[0].pk);
+                exAction("easy");
+            }
+            if (this.id=="hard"){
+                hard_arr.push(r_obj[0].pk);
+                exAction("hard");
+            }
+
+            //mastered
+            if (this.id=="msb"){
+                //mastered_arr.push(r_obj.pk);
+                clearTimeout(myTimeout);
+            }
+            if (this.id=="mastered"){
+                //mastered_arr.push(r_obj.pk);
+                exAction("mastered");
+            }
+
+            
+            if (this.id=="delete"){
+                //mastered_arr.push(r_obj.pk);
+                exAction("delete");
+            }
+        })
+
+        $('#vocab div').on('click', function () {
+            if (this.getAttribute("data-action")=="exbtn"){
+                let inpp = this.getElementsByTagName("input")[0];
+
+                if (inpp.getAttribute("data-action")=="hard"){
+                    $(this).addClass('text-danger animate__animated animate__shakeX');
+                    inpp.classList.add('bg-danger');
+                    hard_arr.push(r_obj[0].pk);
+                }
+
+                if (inpp.getAttribute("data-action")=="easy"){
+                    easy_arr.push(r_obj[0].pk);
+                }
+            }
+        });
+    }
+
+    function exAction(action){
+        //let act = action == "easy" ? "easy" : action == "hard" ? "hard" : "";
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("GET","{% url 'data_main' %}?data="+action+"&word="+r_obj[0].pk+"&sense="+r_obj[0].rvsense, true);
+        xhttp.send();
+        navigate();
+    }
+
+    function colors(){
+        let def = document.getElementById("definition");
+        def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
+
+        var example = document.getElementById("example");
+        var examples = example.getElementsByTagName("li");
+
+        for (let x of examples) {
+            let tag_start = false;
+
+            if (tag_start == false){
+                x.innerHTML = x.innerHTML.replace("**", "<span style='font-style:normal;'>[");
+                tag_start = true;
+            }
+
+            if (tag_start == true){
+                x.innerHTML = x.innerHTML.replace("**", "]</span>");
+                tag_start = false;
+            }
+
+            if (tag_start == false){
+                x.innerHTML = x.innerHTML.replace("*", "<span class='fw-bold'>");
+                tag_start = true;
+            }
+
+            if (tag_start == true){
+                x.innerHTML = x.innerHTML.replace("*", "</span>");
+                tag_start = false;
+            }
+        }
+
+        //reg = new RegExp(r_obj.word,"gi");
+        //example.innerHTML = example.innerHTML.replace(reg, `<span style='color:#0d6efd;'>${r_obj.word}</span>`);
+
+        // Example Shadows
+        let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
+        if ( exampleHeight > 300 ){
+            example.classList.add("shadow-b");
+        }
+        example.addEventListener("scroll", function(){
+            if (example.scrollTop > 40){
+                example.classList.remove("shadow-b");
+                example.classList.add("shadow-y");
+            }
+            if (example.scrollTop > (exampleHeight-example.offsetHeight-2)){
+                example.classList.remove("shadow-y");
+                example.classList.add("shadow-t");
+            }
+            if (example.scrollTop < 10){
+                example.classList.remove("shadow-y");
+                example.classList.add("shadow-b");
+            }
+            //console.log(example.classList);
+        });
+    }
+
+    function navigate(){
+        //let ani = document.getElementById("animator");
+        //ani.classList.add("animate__fadeOutLeft");
+        let vocabc = document.getElementById("vocabc");
+        if (vocabc){
+            vocabc.classList.add("animate__fadeOutLeft");
+        }
+        setTimeout(function(){
+            if (len.length == objs.length-1) {
+                window.location.reload();
+            } else {
+                len.push(r_num);
+                clearTimeout(myTimeout);//clear timeout so that there would be no other timeouts
+                master();
+            }
+        },1000)
+    }
+
+    master();
+
+
+    //const btnAct = {
+    //    easy: function(){},
+    //    hard: function(){},
+    //    mastered: function(){}
+    //}
+    //btnAct.easy()
+</script>
+
+{% include "tts_2.html" %}
+{% endblock body %}
+{% comment %} for x in model:
+    if "/" in x.pronounce:
+        x.ref_id = x.word+"_"+("1" if x.pos == "verb" else "2" if x.pos == "noun" else "3" if x.pos == "adjective" else "4")
+    else:
+        x.ref_id = ""
+    x.save() {% endcomment %}

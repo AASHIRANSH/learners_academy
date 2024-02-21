@@ -781,7 +781,7 @@ english = {
         },
         w_2: {//boy
             word: [
-                ["boy:लड़का", "", ["man:आदमी", "child:बच्चा", "girl:लड़की"]],
+                ["boy:लड़का", "boys:लड़के", ["man:आदमी", "child:बच्चा", "girl:लड़की"]],
             ],
             sentences: {
                 affirmative: [

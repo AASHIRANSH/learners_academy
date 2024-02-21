@@ -22,7 +22,7 @@ function masters() {
             var x = english.words.w_1.word;
             var y = [0, 0];
             var z = ["school"];
-            wbutton_prompt_reverse(x, y, 0, 2, 0);
+            wbutton_prompt_reverse(x, y, z, 2, 0);
         },
         function (){//3.  I Card_prompt
             var x = english.pronouns.i.word;

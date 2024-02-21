@@ -1,115 +1,197 @@
 {% extends 'base.html' %}
-
-{% block head %}
-    <!-- DATATABLES -->
-    <link rel="stylesheet" href="/static/dt/dataTables.bootstrap5.min.css"/>
-    <link rel="stylesheet" href="/static/dt/cmb_datatables.min.css"/>
-    <link rel="stylesheet" href="/static/bootstrap-5.2.3-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/fonts/fontawesome/css/all.min.css"/>
-    <style>
-        .page-item.active .page-link {
-            columns: #fff;
-            background-color: #6c757d;
-            border: 1px solid #6c757d;
-        }
-
-        /*.pagination > li > a {
-            background-color: #fff;
-            color: #6c757d;
-        }
-        .pagination > li > a:focus,
-        .pagination > li > a:hover,
-        .pagination > span > a:focus,
-        .pagination > span > a:hover {
-            color: #111;
-            background-color: #d3d3d3;
-            border: 1px solid #6c757d;
-            box-shadow: none;
-        }*/
-
-        .dataTables_paginate {
-            margin-top: 20px !important;
-        }
-        /* .dataTables_info {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-        } */
-        /* ENTRY BAR */
-        .dataTables_length {
-            position: -webkit-sticky !important;
-            position: sticky !important;
-            left: 10px !important;
-            width: 300px;
-        }
-        .dt-buttons {
-            position: -webkit-sticky !important;
-            position: sticky !important;
-            left: 5px !important;
-            margin-bottom: 0;
-            bottom: 20px;
-            left: 20px;
-        }
-
-        /* input search */
-        /*.dataTables_filter {
-            position: -webkit-fixed !important;
-            position: fixed !important;
-            bottom: 20px;
-            left: 50% !important;
-            transform: translate(-50%,0);
-        }*/
-
-        thead input {
-            width: 100%;
-            text-align: center;
-        }
-    </style>
-{% endblock head %}
-
 {% block body %}
 {% include 'header.html' %}
-{% include 'messages.html' %}
 
-<div class="container my-5">
-    <button class="btn btn-primary" onclick="window.location.assign('{%url 'fexercise' %}')">Exercise</button>
-    <hr>
-<table id="example" class="table table-hover" style="width:100%">
-  <thead>
-    <tr class="bg-secondary text-light">
-        <th style="width:5%;">#</th>
-        <th style="width:35%;">Word</th>
-        <th style="width:60%;">Definition</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for word in words %}
-      <tr onclick="window.location.assign(`{% url 'word' word.word.id %}`)">
-        <td>{{forloop.counter}}</td>
-        <td>{{word.word}}</td>
-        <td>{{word.word.definition}}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-  <tfoot>
-      <tr>
-        <th>Freq.</th>
-        <th>Word</th>
-        <th>Definition</th>
-      </tr>
-  </tfoot>
-</table>
+<!-- LOADING ANIMATION -->
+<div class="loader-wrapper">
+    <span class="loader"><span class="loader-inner"></span></span>
 </div>
 
+<!-- LOADING ANIMATION STOP -->
+<script>
+    $(window).on("load", function() {
+        $(".loader-wrapper").fadeOut("slow");
+    });
+</script>
+
+
+<div class="container-fluid bg-gray text-primary text-center p-4">
+    <span class="display-5 fw-bold learner" style="font-family:Majalla;">My Words</span>
+</div>
+<div class="rule"></div>
+
+<!-- search -->
+<div class="container my-4">
+    <div class="wrapper col-sm-10 col-md-8">
+        <div class="search-input">
+            <input type="search" name="q" class="form-control" placeholder="Type to search..." value="{{request.GET.q}}" autocomplete="off"/>
+            <div id="subox" class="autocom-box mt-1 rounded-bottom shadow">
+                <!-- here list is inserted from javascript -->
+            </div>
+            <a><div class="icon"><i class="fas fa-search"></i></div></a>
+        </div>
+
+        <div class="card bg-gray bg-opacity-25 my-1">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">Search in:</div>
+                    <div class="col">
+                        <select name="pos" class="form-select" aria-label="Default select example">
+                            <option value="" selected>---------</option>
+                            <option value="noun"{%if request.GET.in == "noun" %} selected{% endif %}>noun</option>
+                            <option value="verb"{%if request.GET.in == "verb" %} selected{% endif %}>verb</option>
+                            <option value="adjective"{%if request.GET.in == "adjective" %} selected{% endif %}>adjective</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select name="in" class="form-select" aria-label="Default select example">
+                            <option value="" selected>---------</option>
+                            <option value="definition"{%if request.GET.in == "definition" %} selected{% endif %}>definitions</option>
+                            <option value="example"{%if request.GET.in == "example" %} selected{% endif %}>examples</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- advanced search options here -->
+
+{% if request.GET.q %}
+    <div class="text-center mb-3">
+        Showing results for <span class="text-primary">&quot;{{request.GET.q}}&quot;</span> ({{wordscount}} entries found)
+    </div>
+{% endif %}
+
+<!-- table -->
+<div class="container mb-5">
+    <table id="" class="table table-hover" style="width:100%;">
+        <thead>
+            <tr class="bg-gray text-primary border-primary">
+                <th style="width:5%;">#</th>
+                <th style="width:20%;">Word</th>
+                <th style="width:10%;">PoS</th>
+                <th style="width:50%;">Definition</th>
+                <th style="width:10%;">Fav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word in wordsp %}
+            <tr>
+                <td>{% if forloop.last %}{{request.GET.page|default:1}}0{% else %}{{pagen}}{{forloop.counter}}{% endif %}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
+                <td>{{word.pos}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
+                <td class="text-center">
+                    <button title="Already dded" class="btn btn-outline-danger fs-6" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Word</th>
+                <th>PoS</th>
+                <th>Definition</th>
+                <th>Fav</th>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text-center mb-3">Page {{request.GET.page|default:"1"}} of {{wordsp.paginator.num_pages}}</div>
+
+    <div id="pagination" class="d-flex justify-content-center"></div>
+
+
+    <!--table id="example" class="table table-hover" style="width:100%">
+        <thead>
+            <tr class="bg-gray text-primary">
+                <th style="width:5%;">#</th>
+                <th style="width:20%;">Word</th>
+                <th style="width:10%;">PoS</th>
+                <th style="width:50%;">Definition</th>
+                <th style="width:10%;">Fav</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for word in wds %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.word}}</td>
+                <td>{{word.pos}}</td>
+                <td onclick="window.location.assign(`{% url 'word' word.id %}`)">{{word.definition}}</td>
+                <td class="text-center"><button title="Add it" class="btn btn-outline-primary fs-4" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-regular fa-heart"></i></button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Word</th>
+                <th>PoS</th>
+                <th>Definition</th>
+            </tr>
+        </tfoot>
+    </table-->
+</div>
+
+<div class="mb-5"></div>
+
+<script>// Page Numbers
+    let pageEle = document.getElementById("pagination");
+    let totalPages = {{wordsp.paginator.num_pages}};
+    let currentPage = {{request.GET.page|default:"1"}};
+    let pages = ``;
+    pages += `<nav aria-label="..."><ul class="pagination">`;
+    {//if has Previous
+        `{% if wordsp.has_previous %}
+            ${pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page={{ wordsp.previous_page_number }}">Previous</a></li>'}
+        {% else %}
+            ${pages += '<li class="page-item disabled"><span class="page-link">Previous</span></li>'}
+        {% endif %}`;
+    }
+    {//first page
+        if (currentPage>3){
+            pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page=1">&laquo;</a></li>';
+        }
+    }
+    // middle pages
+    for (let x = currentPage-2; x < currentPage+3; x++){
+        if (x<1 || x>totalPages){continue;}
+        if (x==currentPage){
+            pages += `<li class="page-item active"><a class="page-link" href="?q={{request.GET.q}}&page=${x}">${x}</a></li>`;
+        }else{
+            pages += `<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page=${x}">${x}</a></li>`;
+        }
+    }
+    //last page
+    if (currentPage<totalPages-2){
+        pages += '<li class="page-item"><a class="page-link" href="?q={{request.GET.q}}&page={{ wordsp.paginator.num_pages }}">&raquo;</a></li>';
+    }
+    {//if has Next
+        `{% if wordsp.has_next %}
+            ${pages += '<li class="page-item"><a class="page-link" href="?page={{ wordsp.next_page_number }}&q={{request.GET.q}}">Next</a></li>'}
+        {% else %}
+            ${pages += '<li class="page-item disabled"><span class="page-link">Next</span></li>'}
+        {% endif %}`;
+    }
+    pages += `</ul></nav>`;
+    pageEle.innerHTML = pages;
+</script>
+
+<!-- Dict Table Files
 <script defer src="/static/js/web/jquery-3.6.3.min.js"></script>
 <script src="/static/js/web/popper_2_11_6_min.js"></script>
 <script src="/static/js/web/popper.bootstrap.min.js"></script>
-
-<!-- DATATABLES -->
+-->
+<!-- DATATABLES
 <script defer src="/static/dt/pdfmake.min.js"></script>
 <script defer src="/static/dt/vfs_fonts.js"></script>
 <script defer src="/static/dt/datatables.min.js"></script>
-
+-->
+<!--
 <script>//DataTables
     $(document).ready(function() {
         $('#example #columnFilters tr')//initially     $('#example thead tr')
@@ -263,5 +345,177 @@
     //var tbr = tableExample.rows[0].cells.length*15;
     //tableExample.style.width = tbr+"rem";
 </script>
+-->
 
+{% if perms.languages.add_word %}
+    <div class="position-fixed bottom-0 right-0 m-3" style="z-index:1;">
+        <a href="{% url 'add_card' %}" class="btn btn-secondary text-white">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
+{% endif %}
+
+
+<script>
+    let pos = {% include "english/dictionary/pos.json" %};
+    let suggestions_comma = {% include "english/dictionary/headwords_comma.json" %};
+    let suggestions = {% include "english/dictionary/headwords.json" %};
+
+    function loadDoc() {
+        var data = document.getElementById("id_company").value;
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText)
+                var fields = JSON.parse(this.responseText)[0]["fields"]
+                id_name.value = fields["name"];
+            } else {
+                id_name.value = "";
+            }
+        };
+        xhttp.open("GET", "?action=company&company="+data, true);
+        xhttp.send();
+    }
+
+    // getting all required elements
+    const searchWrapper = document.querySelector(".search-input");
+    const inputBox = searchWrapper.querySelector("input");
+    const suggBox = searchWrapper.querySelector(".autocom-box");
+    const icon = searchWrapper.querySelector(".icon");
+    var linkTag = searchWrapper.querySelector("a");
+    var webLink;
+    var currentFocus = -1;
+    var scval = 0;
+
+    // if user press any key and release
+    inputBox.onkeyup = (e)=>{
+        /*execute a function presses a key on the keyboard:*/
+        var x = document.getElementById("subox");
+        if (x) x = x.getElementsByTagName("li");
+        if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+            increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+
+            //scroll on keydown
+            if (currentFocus>4){
+                scval += 47;
+                suggBox.scrollTo(0, scval);
+            } else if (currentFocus==0){
+                scval = 0;
+                suggBox.scrollTo(0, 0);
+            }
+        } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
+            decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+            //scroll on keyup
+            if (currentFocus==x.length-1){
+                scval = suggBox.scrollHeight;
+                suggBox.scrollTo(0, scval);
+            } else if (currentFocus<x.length) {
+                scval -= 47;
+                suggBox.scrollTo(0, scval);
+            }
+        } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            } else {
+                window.location.assign("?q="+userData);
+            }
+        } else {
+            let userData = e.target.value; //user enetered data
+            let emptyArray = [];
+            if(userData){
+                icon.onclick = ()=>{
+                    webLink = `?q=${userData}`;
+                    linkTag.setAttribute("href", webLink);
+                    linkTag.click();
+                    $(".loader-wrapper").fadeIn("slow");
+                }
+
+                emptyArray = suggestions.filter((data)=>{
+                    //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+                    return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase());
+                });
+
+                emptyArray2 = suggestions.filter((data)=>{
+                    return data.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
+                });
+
+                emptyArray = emptyArray.concat(emptyArray2);
+                emptyArray = emptyArray.slice(0,20).map((data)=>{ //remove slice method to return all matches
+                    // passing return data inside li tag
+                    return data = `<li onclick="window.location.assign('?q=${suggestions_comma[suggestions.indexOf(data)]}')">${suggestions_comma[suggestions.indexOf(data)]} <span class="fst-italic" style="font-size:0.8rem">(${pos[suggestions.indexOf(data)]})</span></li>`;
+                });
+
+                searchWrapper.classList.add("active"); //show autocomplete box
+                showSuggestions(emptyArray);
+                
+                // NOTE: use the below code to edit or overwrite the results "li tag"
+                //let allList = suggBox.querySelectorAll("li");
+                //for (let i = 0; i < allList.length; i++) {
+                //    //adding onclick attribute in all li tag
+                //    allList[i].setAttribute("onclick", "window.location.assign('?q='+this.textContent)");//setAttribute("onclick", "select(this)");
+                //}
+            }else{
+                searchWrapper.classList.remove("active"); //hide autocomplete box
+            }
+            currentFocus = -1; // reset currentFocus
+        }
+    }
+
+    window.onclick = (e)=>{
+        searchWrapper.classList.remove("active");
+    }
+    
+    function select(element){
+        let selectData = element.textContent;
+        inputBox.value = selectData;
+        icon.onclick = ()=>{
+            webLink = `?q=${selectData}`;
+            linkTag.setAttribute("href", webLink);
+            linkTag.click();
+        }
+        searchWrapper.classList.remove("active");
+    }
+
+    function showSuggestions(list){
+        let listData;
+        if(!list.length){
+            userValue = inputBox.value;
+            listData = `<li>${userValue}</li>`;
+        }else{
+        listData = list.join('');
+        }
+        suggBox.innerHTML = listData;
+    }
+    
+    function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocom-box-active");
+    }
+    function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocom-box-active");
+        }
+    }
+</script>
+
+{% include "footer.html" %}
 {% endblock body %}

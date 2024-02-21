@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block body %}
+{% include 'english/static/learn.html' %}
+{% include 'english/sidebar.html' %}
+
+<div id="body"></div>
+
+<div id="navigation_b"></div>
+
+<div id="prompt">
+    <div id="prm"></div>
+    <div id="prm2"></div>
+</div>
+
+
+<!--MODAL WINDOW-->
+<div class="modall">
+    <div class="modal-content">
+        <div id="modall-content">Hello, I am a modal!</div>
+        <span class="close-button">×</span>
+    </div>
+</div>
+<!--End MODAL WINDOW-->
+{% include 'tts_2.html' %}
+
+<script src="/static/js/courses/hi_en/globall.js"></script>
+<script src="/static/js/courses/hi_en/prompt_main.js"></script>
+<script>
+    var objs = JSON.parse("{{db|escapejs}}");
+    var maxNum = objs.length - 1;
+    var unit = 1;
+    function masters() {
+        var vars = arguments;
+        let obj = objs[vars[0]];
+        let oi = obj.interface;
+        if (oi == "wcard"){
+            let x = obj.content[0];
+            let y = [0,0];
+            let z = obj.content[1]
+            wcard_prompt_beg(x, y, z, 1, 0);
+        } else if (oi == "wbutton"){
+            let x = obj.content[0];
+            let y = [0,0];
+            let z = obj.content[1]
+            wbutton_prompt_beg(x, y, z, 1, 0);
+        } else if (oi == "wbutton_r"){
+            let x = obj.content[0];
+            let y = [0,0];
+            let z = obj.content[1]
+            wbutton_prompt_reverse(x, y, z, 1, 0);
+        }
+    }
+</script>
+<script src="/static/js/courses/hi_en/navigators.js"></script>
+<script src="/static/js/courses/keyboard_shortcuts.js"></script>
+
+{% endblock body %}

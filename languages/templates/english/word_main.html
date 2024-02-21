@@ -1,0 +1,428 @@
+{% extends 'base.html' %}
+{% load to_and %}
+
+{% block body %}
+{% include 'english/flashcards/styles/flashcards.html' %}
+
+{% include "header.html" %}
+<div class="container-fluid">
+    <div class="row my-3">
+        <div class="col-12 col-sm-12 col-lg-9">
+            {% include 'messages.html' %}
+            <div class="bg-light p-3 mb-2 shadow rounded">
+                <div class="d-flex justify-content-between align-items-baseline rounded">
+                    <div class="d-flex align-items-baseline row col-11">
+                        <!-- Word Pos-->
+                        <div class="col-12 mb-1">
+                            <div id="word" class="col-auto text-primary d-inline" {% if request.user.is_superuser %}onclick="window.location.assign('/english/wordedit?word_id={{word.id}}')"{% endif %}>
+                                {{word.word}}
+                            </div>
+                            <div id="pos" class="col-auto fs-5 d-inline-block text-secondary">
+                                {{word.pos}}
+                            </div>
+                        </div>
+                        <!-- Grade Pronounce Pic-->
+                        <div class="col-12">
+                            {% if word.cefr|length > 0 %}
+                            <div class="col-12 mb-2">
+                                <div id="grade" class="col-12 d-inline fs-5 text-uppercase px-2">
+                                    {{word.cefr}}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="row col-12 mb-3">
+                                {% if word.pronounciation.uk.texts %}
+                                    <div class="col-auto ps-3" style="font-family:Arial;">
+                                        <div>
+                                            <span id="ukpron" class="text-primary fs-5" data-src-mp3="{{word.pronounciation.uk.audios.mp3.0}}"><i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{{word.pronounciation.uk.texts.0}}</span></span>
+                                            {% if word.pronounciation.uk.texts.1 %}
+                                            <span id="ukpron" class="text-primary fs-5" data-src-mp3="{{word.pronounciation.uk.audios.mp3.1}}">, <i class="fa-solid fa-volume-high cursor-pointer"></i> UK <span id="pruk">{{word.pronounciation.uk.texts.1}}</span></span>
+                                            {% endif %}
+                                        </div>
+                        
+                                        {% if word.pronounciation.us.texts %}
+                                            <div>
+                                                <span id="uspron" class="text-danger fs-5" data-src-mp3="{{word.pronounciation.us.audios.mp3.0}}"><i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{{word.pronounciation.us.texts.0}}</span></span>
+                                                {% if word.pronounciation.us.texts.1 %}
+                                                <span id="uspron" class="text-danger fs-5" data-src-mp3="{{word.pronounciation.us.audios.mp3.1}}">, <i class="fa-solid fa-volume-high cursor-pointer"></i> US <span id="prus">{{word.pronounciation.us.texts.1}}</span></span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {% if word.pic %}
+                                    <div class="col-auto">
+                                        <div class=""><img class="word-image" src="{{word.pic.url}}"/></div>
+                                    </div>
+                                {% endif %}
+
+                                {% if word.pic_url|length > 1 %}
+                                    <div class="col-auto">
+                                        <div class=""><img class="word-image" src="{{word.pic_url}}"/></div>
+                                    </div>    
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Option Buttons -->
+                    <div class="col-1">
+                        {% if visible == "disabled" %}
+                            <button title="Already Added" disabled class="btn btn-outline-danger col-12 fs-5" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                        {% else %}
+                            <button title="Add it" class="btn btn-outline-primary col-12 fs-5" onclick="window.location.assign('/english/datamain?data=fav&word={{word.id}}&sense=0')"><i class="fa-regular fa-heart"></i></button>
+                        {% endif %}
+                        <button title="Revise" class="btn btn-outline-success col-12 fs-5 mt-2" onclick="window.location.assign('/english/revisemain/?back={{request.path}}')"><i class="fa fa-history"></i></button>
+                    </div>
+                </div>
+
+                {% if word.word_details.labels %}<div id="labels" class="text-secondary">{{word.word_details.labels|join:", "|safe}}</div>{% endif %}
+                {% if word.word_details.grammar %}<div id="gra" class="text-secondary">{{word.word_details.grammar}}</div>{% endif %}
+                {% if word.word_details.variants %}<div id="vars" class="text-secondary">{{word.word_details.variants|safe}}</div>{% endif %}
+                {% if word.word_details.inflections %}<div id="infl" class="text-secondary">{{word.word_details.inflections}}</div>{% endif %}
+                {% if word.word_details.use %}<div class="text-secondary">{{word.word_details.use}}</div>{% endif %}
+
+                {% if word.forms %}
+                    <div id="forms-cont">
+                        <div class="col-auto">
+                            <button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Other Forms
+                            </button>
+                        </div>
+                        <div class="card col-auto" style="position:absolute;left:16%;translate:0 -35%;z-index:1;">
+                            <div class="collapse" id="collapseExample">
+                                <div id="forms" class="card-body">
+                                    {% for form in word.forms %}
+                                        <div>{{form.1}}</div>
+                                        <div>{{form.2.0}}</div>
+                                        <div>{{form.2.1}}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="px-1 py-3 mb-5 rounded shadow">
+                {% for sense in word.senses %}
+                    <div class="p-1 {% if not forloop.last %}mb-3{% endif %} rounded shadow">
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>
+                                <span class="badge text-uppercase text-bg-primary bg-opacity-100">sense {{sense.sensenum}}</span>
+                                <span class="badge text-uppercase text-bg-secondary bg-opacity-100">{{sense.cefr}}</span>
+                            </div>
+                            <div>
+                                {% if word.fav_set.all %}
+                                    {% for s in word.fav_set.all %}
+                                        {% if sense.sensenum in s.data.senses %}
+                                            <button title="Already added" class="btn btn-outline-danger fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                                            {% else %}
+                                            <button title="Add it" class="btn btn-outline-primary fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/datamain?data=fav&word={{word.id}}&sense={{sense.sensenum}}')"><i class="fa-regular fa-heart"></i></button>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                <button title="Add it" class="btn btn-outline-primary fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/datamain?data=fav&word={{word.id}}&sense={{sense.sensenum}}')"><i class="fa-regular fa-heart"></i></button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div id="def-container" class="bg-white rounded p-1 mb-1 shadow-sm">
+                            <div id="def" class="bg-primary position-relative bg-opacity-25 fs-4 p-2 rounded">
+
+                                <div class="fs-6 mb-1">
+                                    {% if sense.def_head %}{{sense.def_head}}{% endif %}
+                                    {% if sense.grammar %}<span class="d-inline-block bg-light bg-opacity-25 border border-light px-2 py-1 rounded">{{sense.grammar}}</span>{% endif %}
+                                </div>
+
+                                <div id="carouselExampleControls{{sense.sensenum}}" class="carousel slide">
+                                    <div class="carousel-inner">
+
+                                        <div class="carousel-item active">
+                                            <div id="definition" class="">
+                                                {% if sense.labels %}<div class="fs-6 text-secondary">{{sense.labels}}</div>{% endif %}
+                                                {{sense.definition.en.main}}
+                                            </div>
+                                        </div>
+                                        <div class="carousel-item">
+                                            {% if sense.definition_hindi %}{{sense.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div>
+                                    {% if sense.topics.0 %}
+                                        <button class="btn btn-primary p-0 px-1" style="font-size: 0.7rem;">
+                                            TOPIC
+                                            <span class="badge text-light text-uppercase text-bg-light bg-opacity-10">
+                                                {{sense.topics.0.0}} {{sense.topics.1.0}}
+                                            </span>
+                                        </button>
+                                    {% endif %}
+                                    {% if sense.topics.0.1 %}
+                                        <button class="btn btn-primary p-0 px-1" style="font-size: 0.7rem;">
+                                            TOPIC
+                                            <span class="badge text-light text-uppercase text-bg-light bg-opacity-25">
+                                                {{sense.topics.0.1}} {{sense.topics.1.1}}
+                                            </span>
+                                        </button>
+                                    {% endif %}
+                                </div>
+
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls{{sense.sensenum}}" data-bs-slide="next"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if sense.examples %}
+                            <div class="bg-white rounded p-1 shadow-sm">
+                                <div id="example" class="example fs-4 fst-italic bg-gray bg-opacity-10 rounded pt-1 overflow-auto">
+                                    <ul>
+                                        <hr class="my-1">
+                                        {% for example in sense.examples %}
+                                            <li class="example p-0">
+                                                <!--&#x2022; bullet -->{{example}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                                            </li>
+                                            <hr class="my-1">
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sense.usages %}
+                            <div class="my-3 p-0">
+                                <div class="bg-primary text-white py-1 rounded px-2 mb-2">
+                                    sentence usage
+                                </div>
+                                <div class="d-flex gap-1">
+                                    {% for x in sense.usages %}
+                                        <span class="bg-gray p-1 rounded">{{x}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sense.see_also %}
+                            <div class="my-3 p-0">
+                                <div class="bg-primary text-white py-1 rounded px-2 mb-2">
+                                    see also
+                                </div>
+                                <div class="d-flex gap-1">
+                                    {% for x in sense.see_also %}
+                                        <span class="bg-gray p-1 rounded">{{x}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sense.synonyms %}
+                            <div class="{% if sense.antonyms %}col {% endif %}p-0 my-3">
+                                <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                                    synonyms
+                                </div>
+                                <div class="d-flex gap-1">
+                                    {% for x in sense.synonyms %}
+                                        <span class="bg-gray p-1 rounded">{{x}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sense.antonyms %}
+                            <div class="{% if sense.synonyms %}col {% endif %}p-0 my-3">
+                                <div class="bg-danger text-white rounded py-1 px-2 mb-2">
+                                    antonyms
+                                </div>
+                                <div class="d-flex gap-1">
+                                    {% for x in sense.antonyms %}
+                                        <span class="bg-gray p-1 rounded">{{x}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if sense.compares %}
+                            <div class="my-3 p-0">
+                                <div class="bg-primary text-white rounded py-1 px-2 mb-2">
+                                    related words
+                                </div>
+                                <div class="d-flex gap-1">
+                                    {% for x in sense.compares %}
+                                        <span class="bg-gray p-1 rounded">{{x}}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if word.related_post.count %}
+                            <div class="my-3 p-0">
+                                <div class="bg-secondary text-white rounded py-1 px-2 mb-2">
+                                    Related Post
+                                </div>
+                                <div id="related_post" class="d-flex gap-1">
+                                    {% for post in word.related_post.all %}
+                                        <button class="btn btn-outline-secondary" onclick="window.location.assign(`{% url 'post_detail' post.pk %}`)">
+                                            {{post.title}}
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if collocation %}
+                            <div class="my-3 p-0">
+                                <div class="bg-secondary text-white rounded-3 py-1 px-2 mb-2">
+                                    collocation
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <a class="btn btn-secondary" href="{% url "collocation_view" collocation.id %}">{{collocation}}</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+
+                {% for idiom in word.idioms %}
+                    <div class="bg-light px-1 py-2 mb-4 rounded shadow-sm">
+                        <div class="d-flex justify-content-between p-1">
+                            <div>
+                                <span class="badge text-uppercase text-bg-primary bg-opacity-100">idiom {{idiom.sensenum}}</span>
+                                <span class="badge text-uppercase text-bg-secondary bg-opacity-100">{{idiom.cefr}}</span>
+                            </div>
+                            <div>
+                                {% if word.fav_set.all %}
+                                    {% for s in word.fav_set.all %}
+                                        {% if idiom.sensenum in s.data.senses %}
+                                            <button title="Already added" class="btn btn-outline-danger fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/data?data=new&word={{word.id}}')"><i class="fa-solid fa-heart"></i></button>
+                                            {% else %}
+                                            <button title="Add it" class="btn btn-outline-primary fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/datamain?data=fav&word={{word.id}}&sense={{idiom.sensenum}}')"><i class="fa-regular fa-heart"></i></button>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                <button title="Add it" class="btn btn-outline-primary fs-6 p-0 px-2 rounded-pill" onclick="window.location.assign('/english/datamain?data=fav&word={{word.id}}&sense={{idiom.sensenum}}')"><i class="fa-regular fa-heart"></i></button>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div id="def-container" class="bg-gray rounded p-1">
+                            <div id="def" class="bg-primary position-relative bg-opacity-25 fs-4 p-2 rounded">
+                                <div class="fs-6">
+                                    {% if idiom.topic %}
+                                    <button class="btn btn-primary p-0 px-1">
+                                        {{idiom.topic}}
+                                        <span class="badge text-light text-uppercase text-bg-light bg-opacity-50">
+                                            {{idiom.topic_cefr}}
+                                        </span>
+                                    </button>
+                                    {% endif %}
+                                </div>
+
+                                <div class="fs-6 mb-1">
+                                    {% if idiom.grammar %}<span class="d-inline-block bg-light bg-opacity-25 border border-light px-2 py-1 rounded">{{idiom.grammar}}</span>{% endif %}
+                                </div>
+
+                                <div id="carouselExampleControls{{idiom.sensenum}}" class="carousel slide">
+                                    <div class="carousel-inner">
+
+                                        <div class="carousel-item active">
+                                            <div id="definition" class="">{{idiom.definition}}</div>
+                                        </div>
+                                        <div class="carousel-item">
+                                            {% if idiom.definition_hindi %}{{idiom.definition_hindi}}{% else %}<span class="fs-5 text-danger">Hindi definition not available for this word</span>{% endif %}
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <i class="fa-solid fa-language fs-3 text-primary cursor-pointer" data-bs-target="#carouselExampleControls{{idiom.sensenum}}" data-bs-slide="next"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if idiom.examples %}
+                            <div class="bg-white rounded p-1">
+                                <div id="example" class="fs-4 fst-italic bg-gray bg-opacity-10 rounded pt-1 overflow-auto">
+                                    <ul>
+                                        <hr class="my-1">
+                                        {% for example in idiom.examples %}
+                                            <li class="example p-0">
+                                                <!--&#x2022; bullet -->{{example}} <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-primary" onclick="textToSpeech(this.parentNode.textContent, 'UK')"></i> <i class="fa-solid fa-volume-high cursor-pointer fs-6 text-danger" onclick="textToSpeech(this.parentNode.textContent, 'US')"></i>
+                                            </li>
+                                            <hr class="my-1">
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                {% if word.word_details.word_origin %}
+                    <div class="bg-warning bg-opacity-75 p-1 rounded">
+                        {{word.word_details.word_origin.title}}
+                        <div class="bg-light bg-opacity-50 p-2 rounded">
+                            {{word.word_details.word_origin.heading}}
+                            {{word.word_details.word_origin.body|safe}}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if word.word_details.culture %}
+                    <div class="">
+                        <div class="bg-warning bg-opacity-75 p-1">
+                            {{word.word_details.culture.title}}
+                            <div class="bg-light bg-opacity-50 p-1">
+                                {{word.word_details.culture.heading}}
+                                {{word.word_details.culture.body|safe}}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-12 col-lg-3">
+            <div class="bg-light p-2 rounded">
+                <div class="d-flex justify-content-between align-items-center border-bottom border-grey">
+                    <h5 class="text-secondary">nearby words</h5>
+                    <div class="">
+                        <a href="{{word.pk|add:-1}}" class="btn btn-grey" role="button">&lt;</a>
+                        <a href="{{word.pk|add:1}}" class="btn btn-grey" role="button">&gt;</a>
+                    </div>
+                </div>
+                {% for w in nw %}
+                {% if word.pk == w.pk %}
+                <a class="d-block bg-secondary bg-opacity-50 text-light px-1 my-1 rounded">{{w.word}}</a>
+                {% else %}
+                <a href="{% url 'word_main' w.pk %}" class="d-block px-1 my-1 rounded">{{w.word}}</a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Image -->
+<div class="modal fade" id="fullImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-1">
+        <div class="">
+            {% if word.pic %}
+                <img class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic.url}}"/>
+            {% else %}
+                <img class="border border-4 border-secondary rounded" style="width:100%;height:auto;" src="{{word.pic_url}}"/>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+</div>
+
+{% include 'english/flashcards/scripts/script.html' %}
+
+{% endblock body %}

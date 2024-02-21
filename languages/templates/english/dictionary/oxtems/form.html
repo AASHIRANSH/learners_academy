@@ -1,0 +1,232 @@
+{% include 'messages.html' %}
+
+<div class="position-absolute top-0 start-0 m-3">
+<button class="btn btn-outline-secondary" onclick="window.location.assign('/')">
+    <i class="fa-solid fa-house fs-4"></i>
+</button>
+</div>
+
+<div class="container d-flex justify-content-center my-3">
+    <div class="row col-12">
+        <form action="{% if edit %}{% url 'edit_card' %}?word_id={{request.GET.word_id}}{% else %}{% url 'add_card' %}?lang={{request.GET.lang}}{% endif %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- entry -->
+            <div class="row">
+                <div class="row col-4">
+                    <!-- Word Root -->
+                    <!--div class="col-8">
+                        <label for="id_word_root" class="form-label">Root:</label>
+                        <input type="text" class="form-control" name="word_root" value="{% if edit %}{{form.word_root.value|default:''}}{% else %}{{word_root|default:''}}{% endif %}" id="id_word_root"></input>
+                        {{form.word_root.errors}}
+                    </div-->
+
+                    <!-- Root POS -->
+                    <!--div class="col-4">
+                        <label for="id_word_root_pos" class="form-label">RPOS:</label>
+                        <select class="form-select" name="root_pos">
+                        <option value="">-</option>
+                        <option value="verb">verb</option>
+                        <option value="noun">noun</option>
+                        <option value="adjective">adjective</option>
+                        <option value="adverb">adverb</option>
+                        <option value="conjunction">conjunction</option>
+                        <option value="preposition">preposition</option>
+                        </select>
+                        {{form.word_root_pos.errors}}
+                    </div-->
+                </div>
+
+                <div class="row col-8 mx-0">
+                <div class="col-4">
+                    <div class="mb-2">
+                    <label for="id_topic" class="form-label">Category:</label>
+                    <input type="text" class="form-control" name="category" value="{% if edit %}{{form.category.value|default:''}}{% else %}{{category|default:''}}{% endif %}" id="id_topic"></input-->
+                    </div>
+                </div>
+
+                <div class="col-8">
+                    <div class="mb-2">
+                    <label for="id_def_inf" class="form-label">Def Inf.:</label>
+                    <input type="text" class="form-control" name="def_inf" value="{% if edit %}{{form.def_inf.value|default:''}}{% else %}{{def_inf|default:''}}{% endif %}" id="id_def_inf"></input>
+                    </div>                  
+                </div>
+                </div>
+            </div>
+
+            <div class="row mb-3"><!-- English -->
+                <div class="row col-4">
+                <!-- word -->
+                <div class="col-12 mb-2">
+                    <label for="id_word" class="form-label">Word:</label>
+                    <input type="text" class="form-control" name="word" value="{% if edit %}{{form.word.value}}{% else %}{{word|default:''}}{% endif %}" id="id_word"></input>
+                </div>
+                <!-- pos -->
+                <div class="col-6">
+                    <label for="pos">POS:</label>
+                    <input type="text" class="form-control" name="pos" value="{% if edit %}{{form.word.value}}{% else %}{{word|default:''}}{% endif %}" id="id_pos"></input>
+                </div>
+                <!-- grade -->
+                <div class="col-6">
+                    <label for="id_cefr">CEFR:</label>
+                    <input type="text" class="form-control" name="cefr" value="{% if edit %}{{form.word.value}}{% else %}{{word|default:''}}{% endif %}" id="id_cefr"></input>
+                </div>
+                </div>
+                <div class="row col-8 mx-0">
+                <div class="col-4">
+                    {{form.pronounce.label_tag}}
+                    <textarea class="form-control" name="pronounce" id="id_pronounce" rows="4">{% if edit %}{{form.pronounce.value}}{% endif %}</textarea>
+                </div>
+                <!-- definition -->
+                <div class="col-8 px-0">
+                    <label for="definition">Definition:</label>
+                    <textarea class="form-control" name="definition" id="id_definition" rows="4">{% if edit %}{{form.definition.value}}{% endif %}</textarea>
+                    {{form.definition.errors}}
+                </div>
+                </div>
+            </div>
+            <div class="row mb-3"><!-- Hindi -->
+                <div class="row col-4">
+                <div class="col-12 mb-2">
+                    {{form.definition_urdu.label_tag}}
+                    <textarea class="form-control" name="definition_urdu" id="id_definition_urdu" rows="4">{% if edit %}{{form.definition_urdu.value}}{% endif %}</textarea>
+                    {{form.definition_urdu.errors}}
+                </div>
+                </div>
+                <div class="row col-8 mx-0">
+                <div class="col-4">
+                    {{form.pronounce_hindi.label_tag}}
+                    <textarea class="form-control" name="pronounce_hindi" id="id_pronounce_hindi" rows="4">{% if edit %}{{form.pronounce_hindi.value}}{% endif %}</textarea>
+                </div>
+                <!-- definition -->
+                <div class="col-8 px-0">
+                    <label for="id_definition_hindi">Definition Hindi:</label>
+                    <textarea class="form-control" name="definition_hindi" id="id_definition_hindi" rows="4">{% if edit %}{{form.definition_hindi.value}}{% endif %}</textarea>
+                    {{form.definition_hindi.errors}}
+                </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-4">
+                <label for="forms">Other Forms:</label>
+                <textarea class="form-control" rows="6" name="forms" id="c_2">{% if edit %}{{form.forms.value}}{% endif %}</textarea>
+                </div>
+                <div class="col-8">
+                <label for="c_2">Example Sentences:</label>
+                <textarea class="form-control" rows="6" name="example" id="c_2">{% if edit %}{{form.example.value}}{% endif %}</textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-3 mb-2">
+                {{form.synonyms.label_tag}}
+                <textarea class="form-control" name="synonyms" id="id_synonyms" rows="2">{% if edit %}{{form.synonyms.value}}{% endif %}</textarea>
+                {{form.synonyms.errors}}
+                </div>
+                    
+                <div class="col-3 mb-2">
+                {{form.antonyms.label_tag}}
+                <textarea class="form-control" name="antonyms" id="id_antonyms" rows="2">{% if edit %}{% if form.antonyms.value %}{{form.antonyms.value}}{% endif %}{% endif %}</textarea>
+                {{form.antonyms.errors}}
+                </div>
+
+                <div class="col-3">
+                <div class="mb-2">
+                    <label for="id_pic" class="form-label">Picture:</label>
+                    <input class="form-control" type="file" accept="image/*" name="pic" value="{% if edit %}{{form.pic.value}}{% endif %}" id="id_pic">
+                </div>                  
+                </div>
+
+                <div class="col-auto mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="ref_id" value="yes" id="id_ref_id" {% if edit %}{% if form.ref_id.value != "" %}{% else %}checked{% endif %}{% endif %}>
+                    <label class="form-check-label" for="id_ref_id">
+                    Ref ID:
+                    </label>
+                </div>
+                </div>
+
+                <div class="col-auto mb-2">
+                <input type="submit" value="Submit" class="btn btn-success"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-2">
+                {{form.compare.label_tag}}
+                <textarea class="form-control" name="compare" id="id_compare" rows="2">{% if edit %}{{form.compare.value}}{% endif %}</textarea>
+                {{form.compare.errors}}
+                </div>
+
+                <div class="col-6 mb-2">
+                {{form.pic_url.label_tag}}
+                <textarea class="form-control" name="pic_url" id="id_pic_url" rows="2">{% if edit %}{% if form.pic_url.value %}{{form.pic_url.value}}{% endif %}{% endif %}</textarea>
+                {{form.pic_url.errors}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-2">
+                {{form.context.label_tag}}
+                <textarea class="form-control" name="context" id="id_context" rows="2">{% if edit %}{% if form.context.value %}{{form.context.value}}{% endif %}{% endif %}</textarea>
+                {{form.context.errors}}
+                </div>
+                <div class="col-6 mb-2">
+                {{form.hindi_usage.label_tag}}
+                <textarea class="form-control" name="hindi_usage" id="id_hindi_usage" rows="2">{% if edit %}{% if form.hindi_usage.value %}{{form.hindi_usage.value}}{% endif %}{% endif %}</textarea>
+                {{form.hindi_usage.errors}}
+                </div>
+
+                
+                <div class="col-6 mb-2">
+                {{form.tip.label_tag}}
+                <textarea class="form-control" name="tip" id="id_tip" rows="2">{% if edit %}{% if form.tip.value %}{{form.tip.value}}{% endif %}{% endif %}</textarea>
+                {{form.tip.errors}}
+                </div>
+                
+                <div class="col-6 mb-2">
+                {{form.related_post.label_tag}}
+                {{form.related_post}}
+                <!--<textarea class="form-control" name="related_post" id="id_related_post" rows="2">{% if edit %}{% if form.related_post.value %}{{form.related_post.value}}{% endif %}{% endif %}</textarea>-->
+                {{form.related_post.errors}}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let input = document.getElementById("id_definition");
+    input.onchange = (e)=> {
+        translate(e.target.value,'ur');
+        translate(e.target.value,'hi');
+    }
+
+    function translate(text,lang){
+        const data = JSON.stringify([
+        {
+            Text: text
+        }
+        ]);
+
+        let toLang = lang;
+        let langid = lang == 'ur'?'urdu':'hindi';
+
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener('readystatechange', function () {
+        if (this.readyState === this.DONE) {
+            let response = JSON.parse(this.responseText);
+            document.getElementById("id_definition_"+langid).innerHTML = response[0].translations[0].text;
+        }
+        });
+
+        xhr.open('POST', 'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D='+toLang+'&api-version=3.0&profanityAction=NoAction&textType=plain');
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.setRequestHeader('X-RapidAPI-Key', '9ea8b16349msh45b993004bb2674p10f7f1jsnc7a403c6b963');
+        xhr.setRequestHeader('X-RapidAPI-Host', 'microsoft-translator-text.p.rapidapi.com');
+
+        xhr.send(data);
+    }
+</script>

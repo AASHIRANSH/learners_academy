@@ -1,0 +1,658 @@
+{% extends "base.html" %}
+{% block body %}
+<style>
+    .eb {
+        font-weight:bold;
+    }
+    .eb::before {
+        content:'‘'
+    }
+    .eb::after {
+        content:'’'
+    }
+</style>
+    <div class="container my-2">
+      
+        <div id="done"></div>
+
+        <div class="d-flex justify-content-between mb-3">
+            <a href="?t={{request.GET.t|add:-1}}" class="btn btn-success" role="button">Prev</a>
+            <a href="?t={{request.GET.t}}&action=aud" class="btn btn-warning" role="button">Aud</a>
+            <a href="?t={{request.GET.t}}&action=trim" class="btn btn-warning" role="button">Trim Templates</a>
+            <a href="?t={{request.GET.t|add:1}}" class="btn btn-success" role="button">Next</a>
+        </div>
+
+        <div style="display:none;">
+            {% include "english/dictionary/oxtems/form.html" %}
+        </div>
+        
+        <div id="getter">Oops something has gone wrong!</div>
+
+        <div class="text-end">
+            <button class="btn btn-primary" onclick="makeEntry()">Add this entry</button>
+        </div>
+
+        <div style="display:none;">
+            {% include link %}
+        </div>
+        
+    </div>
+
+    <script>
+        //var len = 0;
+        function maked(num){
+            let content = document.getElementsByClassName("entry-content")[0];
+            var tc = content.getElementsByClassName("top-container")[0];
+            var word = tc.getElementsByClassName("headword")[0].innerText;
+            var pos = tc.getElementsByClassName("pos")[0]; pos = pos ? pos.innerText : "";
+            var w_cefr = tc.getElementsByClassName("symbols")[0];
+            w_cefr = w_cefr ? w_cefr.getElementsByTagName("span")[0] :"";
+            w_cefr = w_cefr ? w_cefr.getAttribute("class").split("_")[1] :"";
+            var pruk = tc.getElementsByClassName("phons_br")[0] ?? "";
+            var prus = tc.getElementsByClassName("phons_n_am")[0] ?? "";
+            var gra = tc.getElementsByClassName("grammar")[0];
+            var help = tc.getElementsByClassName("un")[0] ?? "";
+            var use = tc.getElementsByClassName("use")[0]; use = use ? use.innerText : "";
+
+            var inflections = tc.getElementsByClassName("inflections")[0] ?? "";
+            if (inflections){// inflections pronounciation
+                var infphonetics = inflections.getElementsByClassName("phonetics")[0] ?? "";
+                if (infphonetics){
+                    var infsounds = inflections.getElementsByClassName("sound");
+                    //modifying src attributes
+                    for (let x of infsounds){
+                        let somp3 = x.getAttribute("data-src-mp3").split("/");
+                        let soogg = x.getAttribute("data-src-ogg").split("/");
+                        x.setAttribute("data-src-mp3","/media/dictionary/"+somp3[somp3.length-1]);
+                        x.setAttribute("data-src-ogg","/media/dictionary/"+soogg[soogg.length-1]);
+                    }
+
+                    let phonesbr = infphonetics.getElementsByClassName("phons_br")[0];
+                    let phonesus = infphonetics.getElementsByClassName("phons_n_am")[0];
+                    infphonetics.innerHTML = '<span class="phons_br"> (<span class="fw-bold">UK</span> '+phonesbr.innerHTML+')</span>';
+                    infphonetics.innerHTML += '<span class="phons_am"> (<span class="fw-bold">US</span> '+phonesus.innerHTML+')</span>';
+                }
+
+                //making divs to i tags
+                var inf_htm = inflections.innerHTML;
+                if (infphonetics){
+                    inf_htm = inf_htm.replaceAll('<div class="sound audio_play_button pron-uk icon-audio','<i class="fa-solid fa-volume-high cursor-pointer text-primary');
+                    inf_htm = inf_htm.replaceAll('<div class="sound audio_play_button pron-us icon-audio','<i class="fa-solid fa-volume-high cursor-pointer text-danger');
+                    inf_htm = inf_htm.replaceAll('top"></div>','top"></i>');
+                    inf_htm = inf_htm.replaceAll('top">&nbsp;</div>','top"></i>');
+                }
+            }
+
+            var variants = tc.getElementsByClassName("variants")[0] ?? "";
+            if (variants){// variants pronounciation
+                var vphonetics = variants.getElementsByClassName("phonetics")[0] ?? "";
+                var vsounds = variants.getElementsByClassName("sound");
+                if (vphonetics){
+                    //modifying src attributes
+                    for (let x of vsounds){
+                        let somp3 = x.getAttribute("data-src-mp3").split("/");
+                        let soogg = x.getAttribute("data-src-ogg").split("/");
+                        x.setAttribute("data-src-mp3","/media/dictionary/"+somp3[somp3.length-1]);
+                        x.setAttribute("data-src-ogg","/media/dictionary/"+soogg[soogg.length-1]);
+                    }
+
+                    let phonesbr = vphonetics.getElementsByClassName("phons_br")[0];
+                    let phonesus = vphonetics.getElementsByClassName("phons_n_am")[0];
+                    vphonetics.innerHTML = '<span class="phons_br"> (<span class="fw-bold">UK</span> '+phonesbr.innerHTML+')</span>';
+                    vphonetics.innerHTML += '<span class="phons_am"> (<span class="fw-bold">US</span> '+phonesus.innerHTML+')</span>';
+
+                }
+
+                //making divs to i tags
+                var variants_htm = variants.innerHTML;
+                if (vphonetics){
+                    variants_htm = variants_htm.replaceAll('<div class="sound audio_play_button pron-uk icon-audio','<i class="fa-solid fa-volume-high cursor-pointer text-primary');
+                    variants_htm = variants_htm.replaceAll('<div class="sound audio_play_button pron-us icon-audio','<i class="fa-solid fa-volume-high cursor-pointer text-danger');
+                    variants_htm = variants_htm.replaceAll('top"></div>','top"></i>');
+                    variants_htm = variants_htm.replaceAll('top">&nbsp;</div>','top"></i>');
+                }
+            }
+
+            var labels = tc.getElementsByClassName("labels");
+            var labels_main = [];
+            if (labels){
+                for (let x of labels){
+                    if (x.parentElement.getAttribute("class")=="webtop"){
+                        labels_main.push(x.innerHTML);
+                    }
+                }
+            }
+            
+            var unbox = tc.getElementsByClassName("unbox");
+            var unboxes = {};
+            if (unbox){// unboxes like word-origin, culture etc.
+                for (let x of unbox){
+                    if (x.getAttribute("unbox")=="wordorigin"){
+                        let title = x.getElementsByClassName("box_title")[0];
+                        let body = x.getElementsByClassName("body")[0];
+                        let heading = body.getElementsByClassName("unbox")[0];
+                        unboxes.word_origin = {
+                            title:title.innerText,
+                            heading:heading?heading.innerText:"",
+                            body:body.innerHTML
+                        };
+                    }
+                    if (x.getAttribute("unbox")=="cult"){
+                        let title = x.getElementsByClassName("box_title")[0];
+                        let body = x.getElementsByClassName("body")[0];
+                        let heading = body.getElementsByClassName("unbox")[0];
+                        unboxes.culture = {
+                            title:title.innerText,
+                            heading:heading?heading.innerText:"",
+                            body:body.innerHTML,
+                        };
+                    }
+                }
+            }
+
+            {// pronounciations
+                {//main
+                    if (pruk){
+                        var prukAudios = pruk.getElementsByClassName("sound");
+                        var prukTexts = pruk.getElementsByClassName("phon");
+                        var prusAudios = prus.getElementsByClassName("sound");
+                        var prusTexts = prus.getElementsByClassName("phon");
+
+                        var pronounciation = {
+                            uk:{
+                                texts:[],
+                                audios:{mp3:[],ogg:[]}
+                            },
+                            us:{
+                                texts:[],
+                                audios:{mp3:[],ogg:[]}
+                            }
+                        }
+                        
+                        var uk_prefix = [];
+                        let prn = 0;
+                        for (let x of pruk.childNodes){
+                            if(x.nodeName=="SPAN"){
+                                if(prn ==0 && x.getAttribute("class")=="prefix"){
+                                    uk_prefix.push(x.innerText);
+                                }
+                                if (x.getAttribute("class")!="prefix" && x.innerText!=","){
+                                    pronounciation.uk.texts.push(x.innerText);
+                                }
+                            }
+                            prn +=1;
+                        };
+
+                        var us_prefix = [];
+                        prn = 0;
+                        for (let x of prus.childNodes){
+                            if(x.nodeName=="SPAN"){
+                                if(prn ==0 && x.getAttribute("class")=="prefix"){
+                                    us_prefix.push(x.innerText);
+                                }
+                                if (x.getAttribute("class")!="prefix" && x.innerText!=","){
+                                    pronounciation.us.texts.push(x.innerText);
+                                }
+                            }
+                            prn +=1;
+                        };
+
+                        for (let x = 0; x<prukAudios.length; x++){
+                            let mp3 = prukAudios[x].getAttribute("data-src-mp3").split("/");
+                            let ogg = prukAudios[x].getAttribute("data-src-ogg").split("/");
+                            pronounciation.uk.audios.mp3.push(mp3[mp3.length-1]);
+                            pronounciation.uk.audios.ogg.push(ogg[ogg.length-1]);
+                        }
+                        for (let x = 0; x<prusAudios.length; x++){
+                            let mp3 = prusAudios[x].getAttribute("data-src-mp3").split("/");
+                            let ogg = prusAudios[x].getAttribute("data-src-ogg").split("/");
+                            pronounciation.us.audios.mp3.push(mp3[mp3.length-1]);
+                            pronounciation.us.audios.ogg.push(ogg[ogg.length-1]);
+                        }
+                    }
+                }
+            }
+
+            {//shcuts
+                var def_head_all = [[],[]];
+                var def_heads = content.getElementsByClassName("shcut-g");
+                if (def_heads){
+                    for (let x of def_heads){
+                        let shcut = x.getElementsByClassName("shcut")[0].innerText;
+                        let shcut_senses = x.getElementsByClassName("sense");
+                        for (let y of shcut_senses){
+                            let shcut_sense = y.getAttribute("sensenum");
+                            def_head_all[0].push(shcut_sense);
+                            def_head_all[1].push(shcut);
+                        }
+                    }
+                }
+            }
+            {// Senses
+                //let smc = content.getElementsByTagName("ol");
+                var senses_all = content.getElementsByClassName("sense");
+
+                var ptppofs = [];
+                var idioms_startfrom = 0;
+                var idcuts = [[],[],[],[]];
+                //var idioms_all = [];
+                //var idm_lables_all = [];
+                //var idm_variants_all = [];
+                var variants_all = [];
+                var imgs_all = [];
+                var cefr_all = [];
+                var def_inf_all = [];
+                var uses_all = [];
+                var dtxt_all = [];
+                var labels_all = [];
+                var context_all = [];
+                var definitions_all = [];
+                var examples_all = [];
+                var extra_examples_all = [];
+                var synonyms_all = [];
+                var antonyms_all = [];
+                var compares_all = [];
+                var topics_all = []; // each item of the list is a list with two items wherein at index 0 is "topic name" and at 1 is "cefr" e.g. [success,a1]
+                var see_also_all = [];
+
+                var scount = 0;
+                for (let sense of senses_all){
+                    let variant = sense.getElementsByClassName("variants");
+                    let img = sense.getElementsByClassName("thumb")[0];
+                    let imgox = img?img.getAttribute("src") : "";
+                    let imgname = imgox?imgox.split("/"):""; imgname = imgname?imgname[imgname.length-1]:"";
+                    let cefr = sense.getAttribute("cefr");
+                    let cefr_1 = sense.getAttribute("fkcefr");
+                    let def_inf = sense.getElementsByClassName("grammar")[0];
+                    let use = sense.getElementsByClassName("use")[0];
+                    let label = sense.getElementsByClassName("labels")[0];
+                    let context = sense.getElementsByClassName("cf")[0];
+                    let def = sense.getElementsByClassName("def")[0];
+                    let dtxt = sense.getElementsByClassName("dtxt")[0];
+                    let example = sense.getElementsByClassName("examples")[0];
+                    let extra_example = sense.getElementsByClassName("examples")[1]; // extra examples
+                    let xrefs = sense.getElementsByClassName("xrefs");
+                    let topic = sense.getElementsByClassName("topic-g");
+
+                    // catch idiom
+                    if (sense.parentElement.parentElement.getAttribute("class")=="idm-g"){
+                        let idmg = sense.parentElement.parentElement;
+                        let idmg_top = idmg.getElementsByClassName("top-container")[0];
+                        let idm = idmg.getElementsByClassName("idm")[0];
+                        let idm_label = idmg.getElementsByClassName("labels")[0]; idm_label = idm_label ? idm_label.parentElement.getAttribute("class")=="webtop"?idm_label:"":"";
+                        let idm_variant = idmg_top.getElementsByClassName("variants")[0];
+                        //let idm_v_label = idm_variant ? idm_variant.getElementsByClassName("labels")[0]:"";
+                        //let idm_v = idm_variant ? idm_variant.getElementsByClassName("v")[0]:"";
+                        //idioms_all.push(idm.innerText);
+                        //idm_lables_all.push(idm_label?idm_label.innerText:"");
+                        //idm_variants_all.push(idm_variant?[idm_v_label.innerText,idm_v ? idm_v.innerText:""]:"");
+                        if (idioms_startfrom == 0){
+                            idioms_startfrom = scount+1;
+                        }
+                        if (idcuts[0].includes(idm.innerText)){
+                            idcuts[3][idcuts[3].length-1].push(scount);
+                        } else {
+                            idcuts[0].push(idm.innerText);
+                            idcuts[1].push(idm_label?idm_label.innerHTML:"");
+                            idcuts[2].push(idm_variant?idm_variant.innerHTML:"");//push(idm_variant?[idm_v_label? idm_v_label.innerText:"",idm_v ? idm_v.innerText:""]:"");
+                            idcuts[3].push([scount]);
+                        }
+                    } //else {
+                    //    idioms_all.push("");
+                    //    idm_lables_all.push("");
+                    //    idm_variants_all.push("");
+                    //};
+                    if (sense.parentElement.parentElement.getAttribute("class")=="pv-g"){
+                        let idmg = sense.parentElement.parentElement;
+                        let idmg_top = idmg.getElementsByClassName("top-container")[0];
+                        let idm = idmg.getElementsByClassName("pv")[0];
+                        let idm_label = idmg.getElementsByClassName("labels")[0]; idm_label = idm_label ? idm_label.parentElement.getAttribute("class")=="webtop"?idm_label:"":"";
+                        let idm_variant = idmg_top.getElementsByClassName("variants")[0];
+                        let idm_v_label = idm_variant ? idm_variant.getElementsByClassName("labels")[0]:"";
+                        let idm_v = idm_variant ? idm_variant.getElementsByClassName("v")[0]:"";
+                        //idioms_all.push(idm.innerText);
+                        //idm_lables_all.push(idm_label?idm_label.innerText:"");
+                        //idm_variants_all.push(idm_variant?[idm_v_label.innerText,idm_v ? idm_v.innerText:""]:"");
+                        if (idioms_startfrom == 0){
+                            idioms_startfrom = scount+1;
+                        }
+                        if (idcuts[0].includes(idm.innerText)){
+                            idcuts[3][idcuts[3].length-1].push(scount);
+                        } else {
+                            idcuts[0].push(idm.innerText);
+                            idcuts[1].push(idm_label?idm_label.innerText:"");
+                            idcuts[2].push(idm_variant?[idm_v_label.innerText,idm_v ? idm_v.innerText:""]:"");
+                            idcuts[3].push([scount]);
+                        }
+                    }
+                    imgs_all.push([imgox,imgname]);
+                    if (cefr){cefr_all.push(cefr);}else{cefr_all.push(cefr_1)};
+                    def_inf_all.push(def_inf);
+                    uses_all.push(use);
+                    labels_all.push(label);
+                    context_all.push(context);
+                    dtxt_all.push(dtxt);
+                    definitions_all.push(def);
+                    examples_all.push(example);
+                    if (extra_example){
+                        if (extra_example.parentElement.parentElement.getAttribute("class")=="sense"){
+                        extra_examples_all.push(extra_example);
+                        } else {
+                            extra_examples_all.push("");
+                        }
+                    } else {
+                        extra_examples_all.push("");
+                    };
+
+                    if (variant){// variants
+                        let vri = [];
+                        for (let x of variant){
+                            vri.push(x.innerText);
+                        }
+                        variants_all.push(vri);
+                    };
+                    if (topic.length){
+                        let tpcs = [[],[]];
+                        for (let x of topic){
+                            let topic_name = x.getElementsByClassName("topic_name")[0]??"";
+                            let topic_cefr = x.getElementsByClassName("topic_cefr")[0]??"";
+                            tpcs[0].push(topic_name.innerText);
+                            tpcs[1].push(topic_cefr?topic_cefr.innerText:"");
+                        };
+                        topics_all.push(tpcs);
+                    } else {
+                        topics_all.push("");
+                    };
+                    if (xrefs){// synonyms, antonyms, compares
+                        for (let x of xrefs){
+                            if (x.getAttribute("xt")=="cp"){
+                                let cps = x.getElementsByClassName("xh");
+                                let cpo = [];
+                                for (let cp of cps){
+                                    cpo.push(cp.innerText);
+                                };
+                                compares_all.push(cpo);
+                            } else if (x.getAttribute("xt")=="syn" || x.getAttribute("xt")=="nsyn"){
+                                let syns = x.getElementsByClassName("xh");
+                                let syns_1 = x.getElementsByClassName("xw");
+                                let syno = [];
+                                for (let syn of syns){
+                                    syno.push(syn.innerText);
+                                };
+                                for (let syn of syns_1){
+                                    syno.push(syn.innerText);
+                                };
+                                synonyms_all.push(syno);
+                            } else if (x.getAttribute("xt")=="opp"){
+                                let opps = x.getElementsByClassName("xh");
+                                let opps_1 = x.getElementsByClassName("xw");
+                                let oppo = [];
+                                for (let opp of opps){
+                                    oppo.push(opp.innerText);
+                                };
+                                for (let opp of opps_1){
+                                    oppo.push(opp.innerText);
+                                };
+                                antonyms_all.push(oppo);
+                            } else if (x.getAttribute("xt")=="see"){
+                                let sees = x.getElementsByClassName("xh");
+                                let see = [];
+                                for (let s of sees){
+                                    see.push(s.innerText);
+                                };
+                                see_also_all.push(see);
+                            } else if (x.getAttribute("xt")=="ptppof"){
+                                let opps = x.getElementsByClassName("xh");
+                                let opps_1 = x.getElementsByClassName("xw");
+                                let oppo = [];
+                                for (let opp of opps){
+                                    oppo.push(opp.innerText);
+                                };
+                                for (let opp of opps_1){
+                                    oppo.push(opp.innerText);
+                                };
+                                ptppofs.push(oppo);
+                            };
+                        };
+                    };
+
+                    scount++;
+                }
+            }
+            {// Examples
+                var examples = [];
+                var usages = [];
+                for (let x of examples_all){
+                    let ex = x ? x.getElementsByClassName("x") : "";
+                    let cx = x ? x.getElementsByClassName("cf") : "";
+                    let exs = []; // example
+                    let cxs = []; // usage
+
+                    for (let y of ex){
+                        let cl = y.getElementsByClassName("cl");
+                        if (cl.length){// bold words in example
+                            for (let z of cl){
+                                exs.push(y.innerText.replace(z.innerText,"*"+z.innerText+"*"));
+                            }
+                        } else {
+                            exs.push(y.innerText);
+                        }
+                    }
+                    examples.push(exs);
+
+                    for (let y of cx){
+                        cxs.push(y.innerText);
+                    }
+                    usages.push(cxs);
+                }
+            }
+            {// Extra Examples
+                var extra_examples = [];
+                for (let x of extra_examples_all){
+                    let ex = x ? x.getElementsByClassName("unx") : "";
+                    let exs = []; // example
+
+                    for (let y of ex){
+                        exs.push(y.innerText);
+                    }
+                    extra_examples.push(exs);
+                }
+            }
+
+            var html = `
+                <div class="mb-2"><span class="text-primary fs-1 fw-bold">${word}</span> ${pos} ${w_cefr}</div>
+                ${pruk ? `<div id="ukpron" class="mb-2">UK `+pronounciation.uk.texts+`</div>`:""}
+                ${prus ? `<div id="uspron" class="mb-2">US `+pronounciation.us.texts+`</div>`:""}
+                <div>${variants ? variants_htm : ""}</div>
+                <div>${inflections ? inf_htm : ""}</div>
+                ${help ? `<div class="bg-warning p-2 mb-2">`+help.innerHTML+`</div>`:''}
+                ${use ? `<div>`+use+`</div>` : ""}
+                ${labels ? `<div>`+labels_main+`</div>` : ""}
+                ${gra ? `<div>`+gra.innerText+`</div>` : ""}
+                Idioms start from sense ${idioms_startfrom}
+            `;
+            if (pos == "verb"){//forms
+                let forms_ele = content.getElementsByClassName("verb_forms_table")[0];
+                let form_ele = forms_ele ? forms_ele.getElementsByTagName("tr") : "";
+                var forms = [];
+                for (let x of form_ele){
+                    let vphons = x.getElementsByClassName("verb_phons")[0];
+                    let mp3br = vphons.getElementsByClassName("phons_br")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3").split("/");
+                    let oggbr = vphons.getElementsByClassName("phons_br")[0].getElementsByClassName("sound")[0].getAttribute("data-src-ogg").split("/");
+                    let mp3us = vphons.getElementsByClassName("phons_n_am")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3").split("/");
+                    let oggus = vphons.getElementsByClassName("phons_n_am")[0].getElementsByClassName("sound")[0].getAttribute("data-src-ogg").split("/");
+
+                    forms.push([
+                    x.getAttribute("form"),
+                    x.getElementsByClassName("verb_form")[0].innerText,
+                    [vphons.getElementsByClassName("phons_br")[0].innerText, vphons.getElementsByClassName("phons_n_am")[0].innerText],
+                    [[mp3br[mp3br.length-1],oggbr[oggbr.length-1]],
+                    [mp3us[mp3us.length-1],oggus[oggus.length-1]]],
+                    ]);
+                }
+                var forms_html = ``;
+
+                for (let x of forms){
+                    forms_html += `
+                    <div class="mb-2">${x[0]}</div>
+                    <div class="mb-2">${x[1]}</div>
+                    <div class="mb-2">${x[2][0]} ${x[3][0][1]}</div>
+                    <div class="mb-2">${x[2][1]} ${x[3][1][1]}</div>
+                    `;
+                }
+
+                html += forms_html;
+            }
+
+            //${idioms_all[x] ? idioms_all[x]+" "+idm_lables_all[x]+" (idiom)":""}
+            for (let x = 0; x<definitions_all.length; x++){
+                html+=`
+                    <div class="fs-4">${def_head_all[x] ?? ""}</div>
+
+                    <hr class="mt-0">
+                    <div class="bg-primary bg-opacity-50 p-2 mb-2">
+                        <span class="bg-secondary text-light p-3 rounded">${x+1}</span>
+                        ${cefr_all[x] ? cefr_all[x] : ""}
+                        ${def_inf_all[x] ? def_inf_all[x].innerText : ""} 
+                        ${dtxt_all[x] ? dtxt_all[x].innerText : ""} 
+                        <span class="fw-bold">${context_all[x] ? context_all[x].innerText : ""}</span>
+                    </div>
+
+                    <div class="mb-2">
+                        <div>${imgs_all[x]?`<img src="`+imgs_all[x][0]+`"/>`:""}</div>
+                        ${variants_all[x] ? `<div>`+variants_all[x]+`</div>` :""}
+                        ${labels_all[x] ? `<div>`+labels_all[x].innerText+`</div>` : ""}
+                        ${definitions_all[x]? `<div>`+definitions_all[x].innerText+`</div>` :""}
+                    </div>
+
+                    <div class="mb-2">${usages[x].map((cx)=>{return cx = `<div>${cx}</div>`}).join('')}</div>
+
+                    <div class="mb-2">${examples[x].map((ex)=>{return ex = `<div>${ex}</div>`}).join('')}</div>
+                    
+                    ${extra_examples[x].length ? '<div class="fw-bold">Extra Examples</div>':""}
+                    <div class="mb-2">${extra_examples[x].map((ex)=>{return ex = `<div>${ex}</div>`}).join('')}</div>
+
+                    ${synonyms_all[x] ? `<div class="mb-2"><small>SYNONYMS</small> `+synonyms_all[x]+`</div>` : ""}
+                    ${antonyms_all[x] ? `<div class="mb-2"><small>ANTONYMS</small> `+antonyms_all[x]+`</div>` : ""}
+                    ${compares_all[x] ? `<div class="mb-2"><small>COMPARE</small> `+compares_all[x]+`</div>` : ""}
+                    ${ptppofs[x] ? `<div class="mb-2"><small>past tense, past participle of</small> <a href="{% url 'dictionary' %}?q=`+ptppofs[x]+`">`+ptppofs[x]+`</div>` : ""}
+
+                    <div class="mb-5">
+                        ${topics_all[x] ? `<small>TOPIC</small> `+topics_all[x][0]+" "+topics_all[x][1] : ""}
+                    </div>
+                `;
+            }
+
+            {// Footer
+                html +=`
+                    ${unboxes.word_origin?
+                        `<div class="fw-bold">`+unboxes.word_origin.title+`</div>`+
+                        `<div class="">`+unboxes.word_origin.body:""
+                    }
+                `;
+            }
+
+            //document.getElementById("getter").innerHTML = html;
+
+            //{//pronounce
+            //    if (pruk){
+            //        let audukmp3 = pruk.getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+            //        let audukogg = pruk.getElementsByClassName("sound")[0].getAttribute("data-src-ogg");
+            //        let audusmp3 = prus.getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+            //        let audusogg = prus.getElementsByClassName("sound")[0].getAttribute("data-src-ogg");
+            //        let ukp = document.getElementById("ukpron");
+            //        let usp = document.getElementById("uspron");
+
+            //        ukp.addEventListener('click', function() {
+            //            let audio1 = new Audio(audukmp3);
+            //            audio1.play();
+            //            //textToSpeech(r_obj.word,"UK")
+            //        });
+            //        usp.addEventListener('click', function() {
+            //            let audio2 = new Audio(audusmp3);
+            //            audio2.play();
+            //            //textToSpeech(r_obj.word,"US")
+            //        });
+            ///    }
+            //}
+
+            function makeEntry(){
+                let entry = {
+                    "word":word,
+                    "pos":pos ?? "",
+                    "cefr":w_cefr ?? "",
+                    "pronounciation":pronounciation??"",
+                    "forms":forms?forms:"",
+                    "senses":[],
+                    "phrasal_verbs":[],
+                    "word_details":{
+                        "oxs":"{{request.GET.t}}",
+                        "grammar":gra,
+                        "variants":variants ? variants_htm :"",
+                        "inflections":inflections ? inf_htm : "",
+                        "use":use,
+                        "labels":labels_main,
+                        "word_origin":unboxes.word_origin?unboxes.word_origin:"",
+                        "culture":unboxes.culture?unboxes.culture:""
+                    },
+                    "idioms_startfrom":idioms_startfrom,
+                    "idcuts":idcuts
+                };
+
+                for (let x = 0; x<definitions_all.length; x++){
+                    if (def_head_all[0].includes((x+1).toString())){
+                        var def_head = def_head_all[1][def_head_all[0].indexOf((x+1).toString())];
+                    } else {
+                        var def_head = "";
+                    }
+                    //"idiom":idioms_all[x]?idioms_all[x]:"",
+                    //"idiom_label":idm_lables_all[x]?idm_lables_all[x]:"",
+                    //"idiom_variant":idm_variants_all[x]?idm_variants_all[x]:"",
+                    entry.senses.push({
+                        "sensenum":x+1,
+                        "def_head":def_head,
+                        "cefr":cefr_all[x]??"",
+                        "pic":imgs_all[x]?imgs_all[x][1]:"",
+                        "pic_url":"",
+                        "context":context_all[x] ? context_all[x].innerText : "",
+                        "labels":labels_all[x] ? labels_all[x].innerText : "",
+                        "variants":variants_all[x] ? variants_all[x] : "",
+                        "grammar":def_inf_all[x] ? def_inf_all[x].innerText : "",
+                        "definition":definitions_all[x] ? definitions_all[x].innerText : "",
+                        "examples":examples[x] ? examples[x].concat(extra_examples[x]) :"",
+                        "usages":usages[x],
+                        "synonyms":synonyms_all[x] ? synonyms_all[x] : [],
+                        "antonyms":antonyms_all[x] ? antonyms_all[x] : [],
+                        "compares":compares_all[x] ? compares_all[x] : [],
+                        "see_also":see_also_all[x] ? see_also_all[x] : [],
+                        "topics":topics_all[x] ? topics_all[x] : []
+                    });
+                };
+
+                addEntry(entry);
+            }
+
+            function addEntry(entry){
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = ()=>{
+                    document.getElementById("done").innerHTML = "Done!";
+                }
+                xhttp.open("POST","{% url 'oxtems' %}", true);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send(`csrfmiddlewaretoken={{csrf_token}}&data=${JSON.stringify(entry).replaceAll("&","ampp")}`);
+            }
+
+            function parent(ele,pele){
+                return ele.parentElement.parentElement.parentElement.parentElement.getAttribute("class")==pele
+            }
+            //len += 1;
+            //len += idcuts[0].length;
+            //document.getElementById("done").innerHTML = len;
+
+            makeEntry();
+            //myTimeOut = setTimeout(()=>{window.location.assign('?t={{request.GET.t|add:1}}')}, 1000);
+        }
+        let nn = 0;
+        myTimeOut = setInterval(()=>{maked(nn);nn++;}, 1000);
+    </script>
+{% endblock body %}

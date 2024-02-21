@@ -15,142 +15,54 @@
     });
 </script>
 
-<!-- Generating HTML content of Sentence Usage -->
-<script>
-    // Sentence Usage
-    if ("{{word.context|length}}" != "0"){
-    let contextSt = `{{word.context}}`.split("\n"); // context converted into list
-    var context = [];
-    var contextDoc = ``;
-
-    for ( let x of contextSt ){
-        xx = x.split("+");
-        context.push(xx);
-    } // making list of context substrings
-
-
-    for ( let x of context ){
-        contextDoc += `<div class="mb-2">`;
-        for ( let y=0; y < x.length; y++ ){
-            if (y==x.length-1){
-                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span>`;
-            } else {
-                contextDoc += `<span class="d-inline-block bg-secondary bg-opacity-25 px-2 py-1 rounded-3">${x[y]}</span><span class="py-1">+</span>`;
-            }
-        }
-        contextDoc += `</div>`;
-    } // generating HTML content from context list
-    document.getElementById("context").innerHTML = contextDoc;
-    //console.log(contextDoc);
-    }
-</script>
-
-<!-- Generating content -->
-<script>
-    
-    let synonymsSt = `{{word.synonyms}}`.split(","); // context converted into list
-    var synonymsDoc = ``;
-
-    if ("{{word.synonyms}}"){
-        for ( let x of synonymsSt ){
-            x = x.trim()
-            synonymsDoc += `<span class="d-inline-block border-bottom border-3 border-primary pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
-        } // generating HTML content from context list
-
-        document.getElementById("synonyms").innerHTML = synonymsDoc;
-    }
-
-
-    let relatedSt = `{{word.compare}}`.split(","); // context converted into list
-    var relatedDoc = ``;
-
-    if ("{{word.compare}}"){
-        for ( let x of relatedSt ){
-            x = x.trim()
-            relatedDoc += `<span class="d-inline-block border-bottom border-3 border-info pb-1 me-2 mb-2 cursor-pointer" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</span>`;
-        } // generating HTML content from context list
-
-        document.getElementById("related").innerHTML = relatedDoc;
-    }
-
-    let antonymsSt = `{{word.antonyms}}`.split(","); // context converted into list
-    var antonymsDoc = ``;
-
-    if ("{{word.antonyms}}"){
-        for ( let x of antonymsSt ){
-            x = x.trim()
-            antonymsDoc += `<button class="btn btn-outline-danger me-2 mb-2" onclick="window.location.assign('{% url 'dictionary' %}?q=${x}')">${x}</button>`;
-        } // generating HTML content from context list
-
-        document.getElementById("antonyms").innerHTML = antonymsDoc;
-    }
-</script>
-
 <script>
     let def = document.getElementById("definition");
     def.innerHTML = def.innerHTML.replace(/[;]/g, "<span class='fw-bold text-primary'> ; </span>");
 
-    var example = document.getElementById("example");
-    var examples = example.getElementsByTagName("li");
- 
+    var example = document.getElementsByClassName("example");
+
+    for (let x of example){
+        // Bolding
+        let examples = x.getElementsByTagName("li");
+        for (let y of examples) {
+            let tag_start = false;
     
+            if (tag_start == false){
+                y.innerHTML = y.innerHTML.replace("*", "<span class='fw-bold'>");
+                tag_start = true;
+            }
     
-    for (let x of examples) {
-        let tag_start = false;
-
-        x.innerHTML = x.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-
-        if (tag_start == false){
-            x.innerHTML = x.innerHTML.replace("**", "<span style='font-style:normal;'>[");
-            tag_start = true;
+            if (tag_start == true){
+                y.innerHTML = y.innerHTML.replace("*", "</span>");
+                tag_start = false;
+            }
         }
 
-        if (tag_start == true){
-            x.innerHTML = x.innerHTML.replace("**", "]</span>");
-            tag_start = false;
+        // Example Shadows
+        let exampleHeight = x.scrollHeight;//example.getBoundingClientRect().height;
+        if ( exampleHeight > 300 ){
+            x.classList.add("shadow-b");
         }
-
-        if (tag_start == false){
-            x.innerHTML = x.innerHTML.replace("*", "<span class='fst-normal'>");
-            tag_start = true;
-        }
-
-        if (tag_start == true){
-            x.innerHTML = x.innerHTML.replace("*", "</span>");
-            tag_start = false;
-        }
+        x.addEventListener("scroll", function(){
+            if (x.scrollTop > 40){
+                x.classList.remove("shadow-b");
+                x.classList.add("shadow-y");
+            }
+            if (x.scrollTop > (exampleHeight-x.offsetHeight-2)){
+                x.classList.remove("shadow-y");
+                x.classList.add("shadow-t");
+            }
+            if (x.scrollTop < 10){
+                x.classList.remove("shadow-y");
+                x.classList.add("shadow-b");
+            }
+            //console.log(example.classList);
+        });
     }
-
-    // Example Shadows
-    let exampleHeight = example.scrollHeight;//example.getBoundingClientRect().height;
-    if ( exampleHeight > 300 ){
-        example.classList.add("shadow-b");
-    }
-    example.addEventListener("scroll", function(){
-        if (example.scrollTop > 40){
-            example.classList.remove("shadow-b");
-            example.classList.add("shadow-y");
-        }
-        if (example.scrollTop > (exampleHeight-example.offsetHeight-2)){
-            example.classList.remove("shadow-y");
-            example.classList.add("shadow-t");
-        }
-        if (example.scrollTop < 10){
-            example.classList.remove("shadow-y");
-            example.classList.add("shadow-b");
-        }
-        //console.log(example.classList);
-    });
-
-    //var forms = document.getElementById("forms");
-    //let formlen = `{{word.forms}}`.length;
-    //if(formlen > 0){
-    //    forms.innerHTML = forms.innerHTML.replace(/{{word.word}}/gi, "<span style='color:#0d6efd;'>{{word.word}}</span>");
-    //}
 </script>
 
 <!--AUTO REFRESHER SCRIPT-->
-<script>
+<!--script>
     if ("{{refresh}}" == "True") {
         setTimeout(function() {
             location.reload();
@@ -160,4 +72,4 @@
             location.reload();
         }, 60000);
     };
-</script>
+</script-->

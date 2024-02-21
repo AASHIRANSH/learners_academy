@@ -3,9 +3,9 @@
         <div id="title">
             <a href="/"><img src="/static/img/dark-logo_ad.svg"/></a>
         </div>
-        <div id="user" class="me-5">
+        <div id="user" class="">
             {% if request.user.is_authenticated %}
-                <div id="ui_container" class="ui_container pb-4">
+                <div id="ui_container" class="ui_container">
                     <div class="d-none d-md-block">{{request.user.username}}</div>
                     <div class="d-block d-md-none">{{request.user.username|slice:"0:1"}}</div>
                     <div class="hidden">

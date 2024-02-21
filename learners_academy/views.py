@@ -34,3 +34,20 @@ def index(request):
         "notifications":notifications
     }
     return render(request,"index.html", vars)
+
+# from django.conf import settings
+def vacuum_db(request):
+    # print("Vacuuming database...")
+    # before = os.stat(settings.default).st_size
+    # print("Size before: %s bytes" % before)
+
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute("VACUUM")
+    connection.close()
+    
+    # after = os.stat(settings.default).st_size
+    # print("Size after: %s bytes" % after)
+    # print("Reclaimed: %s bytes" % (before - after))
+
+    return None

@@ -1,0 +1,814 @@
+[
+    {
+        "word": "A",
+        "pos": "noun",
+        "cefr": "",
+        "pronounciation": {
+            "uk": {
+                "texts": [
+                    "/e\u026a/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "a_1_gb_1_abbr.mp3"
+                    ],
+                    "ogg": [
+                        "a_1_gb_1_abbr.ogg"
+                    ]
+                }
+            },
+            "us": {
+                "texts": [
+                    "/e\u026a/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "a__us_1.mp3"
+                    ],
+                    "ogg": [
+                        "a__us_1.ogg"
+                    ]
+                }
+            }
+        },
+        "forms": "",
+        "senses": [
+            {
+                "sensenum": 1,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "[countable, uncountable]",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "the first letter of the English alphabet",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "\u2018Apple\u2019 begins with (an) A/\u2018A\u2019."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 2,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "(music)",
+                "variants": [
+                    "A"
+                ],
+                "grammar": "[countable, uncountable]",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "the 6th note in the scale of C major",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 3,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "A (in/for something)",
+                "labels": "",
+                "variants": [],
+                "grammar": "[countable, uncountable]",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "a grade that a student can get for a piece of work or course of study that shows that it is excellent",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "She got (an) A in biology.",
+                    "He had *straight A's* (= nothing but A's) all through high school."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 4,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [
+                    "A"
+                ],
+                "grammar": "[uncountable]",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "used to represent the first of two or more possibilities",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "Shall we go for plan A or plan B?"
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 5,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [
+                    "A"
+                ],
+                "grammar": "[uncountable]",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "used to represent a person, for example in an imagined situation or to hide their identity",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "Assume A knows B is guilty."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 6,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "from one place to another",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "For me a car is just a means of getting from A to B."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            },
+            {
+                "sensenum": 7,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "including everything there is to know about something",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "He knew his subject from A to Z."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            }
+        ],
+        "phrasal_verbs": [],
+        "word_details": {
+            "variants": "(also a)",
+            "inflections": "(plural As, A\u2019s, a\u2019s \u00a0/e\u026az/ \u00a0/e\u026az/)",
+            "use": "",
+            "labels": [],
+            "word_origin": "",
+            "culture": ""
+        },
+        "idioms_startfrom": 6,
+        "idcuts": [
+            [
+                "from A to B",
+                "from A to Z"
+            ],
+            [
+                "",
+                ""
+            ],
+            [
+                "",
+                ""
+            ],
+            [
+                [
+                    5
+                ],
+                [
+                    6
+                ]
+            ]
+        ]
+    },
+    {
+        "word": "ab initio",
+        "pos": "adjective",
+        "cefr": "",
+        "pronounciation": {
+            "uk": {
+                "texts": [
+                    "/\u02cc\u00e6b \u026a\u02c8n\u026a\u0283i\u0259\u028a/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "ab_initio_1_gb_1.mp3"
+                    ],
+                    "ogg": [
+                        "ab_initio_1_gb_1.ogg"
+                    ]
+                }
+            },
+            "us": {
+                "texts": [
+                    "/\u02cc\u00e6b \u026a\u02c8n\u026a\u0283i\u0259\u028a/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "ab_initio_1_us_1.mp3"
+                    ],
+                    "ogg": [
+                        "ab_initio_1_us_1.ogg"
+                    ]
+                }
+            }
+        },
+        "forms": "",
+        "senses": [
+            {
+                "sensenum": 1,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "starting from the beginning",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "the ab initio design of a new car"
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            }
+        ],
+        "phrasal_verbs": [],
+        "word_details": {
+            "variants": "",
+            "inflections": "",
+            "use": "",
+            "labels": [
+                "(from Latin, law or formal)"
+            ],
+            "word_origin": "",
+            "culture": ""
+        },
+        "idioms_startfrom": 0,
+        "idcuts": [
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "word": "aback",
+        "pos": "adverb",
+        "cefr": "",
+        "pronounciation": {
+            "uk": {
+                "texts": [
+                    "/\u0259\u02c8b\u00e6k/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "aback__gb_1.mp3"
+                    ],
+                    "ogg": [
+                        "aback__gb_1.ogg"
+                    ]
+                }
+            },
+            "us": {
+                "texts": [
+                    "/\u0259\u02c8b\u00e6k/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "aback__us_1.mp3"
+                    ],
+                    "ogg": [
+                        "aback__us_1.ogg"
+                    ]
+                }
+            }
+        },
+        "forms": "",
+        "senses": [
+            {
+                "sensenum": 1,
+                "def_head": "",
+                "cefr": "c2",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "to be shocked or surprised by somebody/something",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [
+                    "She was completely taken aback by his anger."
+                ],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": "Feelings",
+                "topic_cefr": "c2"
+            }
+        ],
+        "phrasal_verbs": [],
+        "word_details": {
+            "variants": "",
+            "inflections": "",
+            "use": "",
+            "labels": [],
+            "word_origin": {
+                "title": "Word Origin",
+                "heading": "",
+                "body": "<span class=\"p\">Old English <span class=\"ei\">on b\u00e6c</span>, from <span class=\"ei\">a-</span> \u2018to, towards\u2019 and <span class=\"eb\">back</span>. The term came to be treated as a single word in nautical use.</span>"
+            },
+            "culture": ""
+        },
+        "idioms_startfrom": 1,
+        "idcuts": [
+            [
+                "be taken aback (by somebody/something)"
+            ],
+            [
+                ""
+            ],
+            [
+                ""
+            ],
+            [
+                [
+                    0
+                ]
+            ]
+        ]
+    },
+    {
+        "word": "abacus",
+        "pos": "noun",
+        "cefr": "",
+        "pronounciation": {
+            "uk": {
+                "texts": [
+                    "/\u02c8\u00e6b\u0259k\u0259s/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "abacus__gb_1.mp3"
+                    ],
+                    "ogg": [
+                        "abacus__gb_1.ogg"
+                    ]
+                }
+            },
+            "us": {
+                "texts": [
+                    "/\u02c8\u00e6b\u0259k\u0259s/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "abacus__us_1.mp3"
+                    ],
+                    "ogg": [
+                        "abacus__us_1.ogg"
+                    ]
+                }
+            }
+        },
+        "forms": "",
+        "senses": [
+            {
+                "sensenum": 1,
+                "def_head": "",
+                "cefr": "",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "a frame with small balls that slide along wires. It is used as a tool or toy for counting.",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": [],
+                "topic_cefr": []
+            }
+        ],
+        "phrasal_verbs": [],
+        "word_details": {
+            "variants": "",
+            "inflections": "(plural abacuses \u00a0/\u02c8\u00e6b\u0259k\u0259s\u026az/ \u00a0/\u02c8\u00e6b\u0259k\u0259s\u026az/)",
+            "use": "",
+            "labels": [],
+            "word_origin": "",
+            "culture": ""
+        },
+        "idioms_startfrom": 0,
+        "idcuts": [
+            [],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "word": "abaft",
+        "pos": "adverb",
+        "cefr": "",
+        "pronounciation": {
+            "uk": {
+                "texts": [
+                    "/\u0259\u02c8b\u0251\u02d0ft/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "abaft__gb_1.mp3"
+                    ],
+                    "ogg": [
+                        "abaft__gb_1.ogg"
+                    ]
+                }
+            },
+            "us": {
+                "texts": [
+                    "/\u0259\u02c8b\u00e6ft/"
+                ],
+                "audios": {
+                    "mp3": [
+                        "abaft__us_1.mp3"
+                    ],
+                    "ogg": [
+                        "abaft__us_1.ogg"
+                    ]
+                }
+            }
+        },
+        "forms": "",
+        "senses": [
+            {
+                "sensenum": 1,
+                "def_head": "",
+                "cefr": "c2",
+                "pic": "",
+                "pic_url": "",
+                "context": "",
+                "labels": "",
+                "variants": [],
+                "grammar": "",
+                "definition": {
+                    "ar": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "en": {
+                        "main": "in or behind the stern (= back end) of a ship",
+                        "basic": ""
+                    },
+                    "hi": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "ur": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "tr": {
+                        "main": "",
+                        "basic": ""
+                    },
+                    "gr": {
+                        "main": "",
+                        "basic": ""
+                    }
+                },
+                "examples": [],
+                "usages": [],
+                "synonyms": [],
+                "antonyms": [],
+                "compares": [],
+                "see_also": [],
+                "topic": "Transport by water",
+                "topic_cefr": "c2"
+            }
+        ],
+        "phrasal_verbs": [],
+        "word_details": {
+            "variants": "",
+            "inflections": "",
+            "use": "",
+            "labels": [
+                "(specialist)"
+            ],
+            "word_origin": "",
+            "culture": ""
+        },
+        "idioms_startfrom": 0,
+        "idcuts": [
+            [],
+            [],
+            [],
+            []
+        ]
+    }
+]

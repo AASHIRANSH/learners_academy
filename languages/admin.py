@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Topic, Post, Comment, Like, Dislike, Exercise
-from .models import Word, Revise, WordOfTheDay, Quote, Thesaurus, Collocation
+from .models import Word, Revise, WordOfTheDay, Quote, Thesaurus, Collocation, Dictionary#, Fav
 
 # Register your models here.
 @admin.register(Exercise)
@@ -12,6 +12,15 @@ class ExerciseView(admin.ModelAdmin):
 @admin.register(Word)
 class WordsView(admin.ModelAdmin):
     list_display = ['word','pos','pk']
+
+
+@admin.register(Dictionary)
+class DictionaryView(admin.ModelAdmin):
+    list_display = ['word','pos','pk']
+
+# @admin.register(Fav)
+# class FavView(admin.ModelAdmin):
+#     list_display = ['word','user','pk']
 
 
 @admin.register(Collocation)
